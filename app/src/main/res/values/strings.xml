@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Drill</string>
+    <string name="widget_name">Drill card</string>
+    <string name="widget_description">One flashcard at a time. Tap to flip, then grade yourself.</string>
+</resources>

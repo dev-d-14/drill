@@ -1,0 +1,1836 @@
+[
+ {
+  "id": "ml-01",
+  "deck": "ml",
+  "topic": "Bias and variance",
+  "q": "Train error and validation error are both high. Bias or variance?",
+  "a": "High bias (underfitting). Try a bigger model, better features, or longer training. High variance shows up as a big train/validation gap."
+ },
+ {
+  "id": "ml-02",
+  "deck": "ml",
+  "topic": "Bias and variance",
+  "q": "Train error is low but validation error is high. What is it and how do you fix it?",
+  "a": "Overfitting (high variance). Get more data, add regularization, simplify the model, use early stopping or dropout."
+ },
+ {
+  "id": "ml-03",
+  "deck": "ml",
+  "topic": "Regularization",
+  "q": "Why does L1 give sparse weights while L2 only shrinks them?",
+  "a": "L1's gradient has constant size (sign of w), so it pushes weights to exactly 0. L2's gradient is proportional to w and fades near 0."
+ },
+ {
+  "id": "ml-04",
+  "deck": "ml",
+  "topic": "Regularization",
+  "q": "How is MAP estimation related to regularization?",
+  "a": "MAP is MLE plus a prior on the weights. A Gaussian prior gives L2 (ridge), a Laplace prior gives L1 (lasso)."
+ },
+ {
+  "id": "ml-05",
+  "deck": "ml",
+  "topic": "Optimization",
+  "q": "What happens if the learning rate is too high? Too low?",
+  "a": "Too high: loss oscillates or diverges. Too low: slow progress and getting stuck on plateaus."
+ },
+ {
+  "id": "ml-06",
+  "deck": "ml",
+  "topic": "Optimization",
+  "q": "Why does mini-batch SGD usually beat full-batch gradient descent?",
+  "a": "Cheaper steps, gradient noise helps escape saddles and sharp minima, and GPUs process batches efficiently."
+ },
+ {
+  "id": "ml-07",
+  "deck": "ml",
+  "topic": "Optimization",
+  "q": "What does Adam add on top of SGD with momentum?",
+  "a": "Per-parameter adaptive step sizes from running averages of the gradient (m) and squared gradient (v), with bias correction."
+ },
+ {
+  "id": "ml-08",
+  "deck": "ml",
+  "topic": "Optimization",
+  "q": "Why not initialize all weights to zero?",
+  "a": "Symmetry: every neuron in a layer gets identical gradients and stays identical. Random init (Xavier/He) breaks the tie."
+ },
+ {
+  "id": "ml-09",
+  "deck": "ml",
+  "topic": "Deep learning",
+  "q": "What is backpropagation actually computing?",
+  "a": "The gradient of the loss with respect to every parameter, using the chain rule and reusing values from the forward pass."
+ },
+ {
+  "id": "ml-10",
+  "deck": "ml",
+  "topic": "Deep learning",
+  "q": "Why do deep sigmoid/tanh nets suffer vanishing gradients? What helps?",
+  "a": "Small derivatives (sigmoid's max is 0.25) multiply across layers. ReLU, residual connections, normalization and good init help."
+ },
+ {
+  "id": "ml-11",
+  "deck": "ml",
+  "topic": "Deep learning",
+  "q": "Why do we need nonlinear activation functions?",
+  "a": "Without them, stacked linear layers collapse into a single linear map, so depth adds no power."
+ },
+ {
+  "id": "ml-12",
+  "deck": "ml",
+  "topic": "Deep learning",
+  "q": "How does dropout regularize, and what changes at inference?",
+  "a": "It randomly zeroes units in training to reduce co-adaptation. At inference all units are used (inverted dropout rescales during training)."
+ },
+ {
+  "id": "ml-13",
+  "deck": "ml",
+  "topic": "Deep learning",
+  "q": "BatchNorm vs LayerNorm: what does each normalize over?",
+  "a": "BatchNorm: each feature across the batch (needs batch stats). LayerNorm: all features of one sample, so Transformers use it."
+ },
+ {
+  "id": "ml-14",
+  "deck": "ml",
+  "topic": "Loss functions",
+  "q": "Why pair softmax with cross-entropy?",
+  "a": "Cross-entropy is the negative log-likelihood of a categorical model, and the combined gradient is simply (p - y). Log-softmax is stable."
+ },
+ {
+  "id": "ml-15",
+  "deck": "ml",
+  "topic": "Loss functions",
+  "q": "MSE vs MAE vs Huber: when do you pick each?",
+  "a": "MSE punishes outliers hard. MAE is robust but not smooth at 0. Huber is quadratic near 0 and linear in the tails."
+ },
+ {
+  "id": "ml-16",
+  "deck": "ml",
+  "topic": "Classification",
+  "q": "Why not use linear regression with MSE for classification?",
+  "a": "Outputs are unbounded, outliers tilt the fit, and MSE on a sigmoid is non-convex. Logistic regression with cross-entropy is convex."
+ },
+ {
+  "id": "ml-17",
+  "deck": "ml",
+  "topic": "Evaluation",
+  "q": "Precision vs recall in one line each.",
+  "a": "Precision = TP/(TP+FP): of predicted positives, how many are right. Recall = TP/(TP+FN): of real positives, how many you found."
+ },
+ {
+  "id": "ml-18",
+  "deck": "ml",
+  "topic": "Evaluation",
+  "q": "When is accuracy misleading, and what do you use instead?",
+  "a": "With imbalanced classes (99% negatives). Use precision, recall, F1 or PR-AUC."
+ },
+ {
+  "id": "ml-19",
+  "deck": "ml",
+  "topic": "Evaluation",
+  "q": "What does ROC-AUC mean probabilistically?",
+  "a": "The probability that a randomly chosen positive is scored higher than a randomly chosen negative."
+ },
+ {
+  "id": "ml-20",
+  "deck": "ml",
+  "topic": "Evaluation",
+  "q": "Name common sources of data leakage.",
+  "a": "Scaling or feature selection fit on all data, future info in features, duplicates across splits, features derived from the target."
+ },
+ {
+  "id": "ml-21",
+  "deck": "ml",
+  "topic": "Evaluation",
+  "q": "Why use k-fold cross-validation, and what is the classic mistake?",
+  "a": "It gives a more stable estimate on limited data. Mistake: fitting preprocessing outside the folds, which leaks validation info."
+ },
+ {
+  "id": "ml-22",
+  "deck": "ml",
+  "topic": "Evaluation",
+  "q": "How do you handle class imbalance?",
+  "a": "Class weights, resampling (e.g. SMOTE), threshold tuning, and better metrics. Never resample the validation or test set."
+ },
+ {
+  "id": "ml-23",
+  "deck": "ml",
+  "topic": "Classic models",
+  "q": "Bagging vs boosting?",
+  "a": "Bagging trains models in parallel on bootstrap samples to cut variance. Boosting trains sequentially, each fixing the last, to cut bias."
+ },
+ {
+  "id": "ml-24",
+  "deck": "ml",
+  "topic": "Classic models",
+  "q": "How does a random forest reduce variance?",
+  "a": "Trees see bootstrap samples and random feature subsets, so their errors decorrelate and averaging cancels noise."
+ },
+ {
+  "id": "ml-25",
+  "deck": "ml",
+  "topic": "Classic models",
+  "q": "What does each new tree in gradient boosting fit?",
+  "a": "The negative gradient of the loss at the current ensemble's predictions (plain residuals for squared error)."
+ },
+ {
+  "id": "ml-26",
+  "deck": "ml",
+  "topic": "Classic models",
+  "q": "What is the kernel trick in SVMs?",
+  "a": "It computes dot products in a high-dimensional feature space through a kernel function, without building that space explicitly."
+ },
+ {
+  "id": "ml-27",
+  "deck": "ml",
+  "topic": "Unsupervised",
+  "q": "What does PCA find, and what should you do before it?",
+  "a": "Orthogonal directions of maximum variance (top eigenvectors of the covariance matrix). Center the data, and usually scale it."
+ },
+ {
+  "id": "ml-28",
+  "deck": "ml",
+  "topic": "Unsupervised",
+  "q": "What are the weaknesses of k-means?",
+  "a": "You must pick k, it assumes similar-size round clusters, and it is sensitive to init and outliers. Use k-means++ and restarts."
+ },
+ {
+  "id": "ml-29",
+  "deck": "ml",
+  "topic": "Transformers",
+  "q": "What does scaled dot-product attention compute?",
+  "a": "softmax(QK^T / sqrt(d_k)) V. The scaling keeps dot products from saturating the softmax."
+ },
+ {
+  "id": "ml-30",
+  "deck": "ml",
+  "topic": "Transformers",
+  "q": "Why do Transformers need positional encodings?",
+  "a": "Self-attention is permutation-invariant, so order must be injected (sinusoidal, learned, or rotary)."
+ },
+ {
+  "id": "ml-31",
+  "deck": "ml",
+  "topic": "Transformers",
+  "q": "What is the cost of self-attention in sequence length n?",
+  "a": "O(n^2) time and memory for the attention matrix, which is what limits context length."
+ },
+ {
+  "id": "ml-32",
+  "deck": "ml",
+  "topic": "Embeddings",
+  "q": "Why use cosine similarity for embeddings?",
+  "a": "It compares direction and ignores vector length. For unit-norm vectors it equals the dot product."
+ },
+ {
+  "id": "ml-33",
+  "deck": "ml",
+  "topic": "Transfer learning",
+  "q": "Why fine-tune a pretrained model when you have little data?",
+  "a": "It reuses general features, so you need less data and compute. Use a small learning rate and maybe freeze early layers."
+ },
+ {
+  "id": "ml-34",
+  "deck": "ml",
+  "topic": "Reinforcement learning",
+  "q": "What does the discount factor gamma do?",
+  "a": "It weights future rewards. Near 0 the agent is short-sighted, near 1 it values long-term return."
+ },
+ {
+  "id": "ml-35",
+  "deck": "ml",
+  "topic": "Reinforcement learning",
+  "q": "Write the Q-learning update.",
+  "a": "Q(s,a) <- Q(s,a) + alpha [ r + gamma * max_a' Q(s',a') - Q(s,a) ]"
+ },
+ {
+  "id": "ml-36",
+  "deck": "ml",
+  "topic": "Reinforcement learning",
+  "q": "On-policy vs off-policy? Which is Q-learning/DQN?",
+  "a": "On-policy learns about the policy it is following (SARSA, PPO). Off-policy learns a different target policy from other data (Q-learning, DQN)."
+ },
+ {
+  "id": "ml-37",
+  "deck": "ml",
+  "topic": "Classic models",
+  "q": "How does the choice of k affect kNN?",
+  "a": "Small k: low bias, high variance (overfits). Large k: higher bias, lower variance. Scale features first."
+ },
+ {
+  "id": "ml-38",
+  "deck": "ml",
+  "topic": "Classic models",
+  "q": "What is the gradient of logistic regression's log loss?",
+  "a": "X^T (p - y) / n, where p is the predicted probability. Loss is the negative log-likelihood of a Bernoulli model."
+ },
+ {
+  "id": "ml-39",
+  "deck": "ml",
+  "topic": "Classic models",
+  "q": "What does Naive Bayes assume?",
+  "a": "Features are conditionally independent given the class. It is simple and fast, and often works despite violations."
+ },
+ {
+  "id": "ml-40",
+  "deck": "ml",
+  "topic": "Classic models",
+  "q": "Decision tree split criteria?",
+  "a": "Gini impurity or entropy (information gain) for classification; variance reduction for regression."
+ },
+ {
+  "id": "ml-41",
+  "deck": "ml",
+  "topic": "Classic models",
+  "q": "How do you stop a decision tree from overfitting?",
+  "a": "Limit depth, require a minimum samples per leaf, or use cost-complexity pruning."
+ },
+ {
+  "id": "ml-42",
+  "deck": "ml",
+  "topic": "Data prep",
+  "q": "Which models need feature scaling?",
+  "a": "Distance and gradient based ones: kNN, SVM, k-means, PCA, regularized regression, neural nets. Tree models don't."
+ },
+ {
+  "id": "ml-43",
+  "deck": "ml",
+  "topic": "Data prep",
+  "q": "One-hot vs target encoding?",
+  "a": "One-hot: no false ordering but wide for high cardinality. Target encoding: compact but leaks unless computed out-of-fold."
+ },
+ {
+  "id": "ml-44",
+  "deck": "ml",
+  "topic": "Data prep",
+  "q": "How do you handle missing values?",
+  "a": "Impute (mean, median or a model), add a missing indicator, or use models that accept NaNs. Fit imputers on training data only."
+ },
+ {
+  "id": "ml-45",
+  "deck": "ml",
+  "topic": "Training",
+  "q": "What do learning curves tell you?",
+  "a": "A big train/validation gap means variance. Both errors high and converged means bias."
+ },
+ {
+  "id": "ml-46",
+  "deck": "ml",
+  "topic": "Training",
+  "q": "Grid vs random vs Bayesian hyperparameter search?",
+  "a": "Random often beats grid for the same budget since few parameters matter. Bayesian search uses past trials to choose the next."
+ },
+ {
+  "id": "ml-47",
+  "deck": "ml",
+  "topic": "Training",
+  "q": "Why decay the learning rate?",
+  "a": "Big steps early for speed, small steps later to settle into a minimum."
+ },
+ {
+  "id": "ml-48",
+  "deck": "ml",
+  "topic": "Training",
+  "q": "What is early stopping?",
+  "a": "Stop training when validation loss stops improving. It acts as regularization."
+ },
+ {
+  "id": "ml-49",
+  "deck": "ml",
+  "topic": "Training",
+  "q": "How does batch size affect training?",
+  "a": "Small: noisier gradients, sometimes better generalization, slower epochs. Large: faster throughput but may need a higher LR and generalize worse."
+ },
+ {
+  "id": "ml-50",
+  "deck": "ml",
+  "topic": "Training",
+  "q": "Why clip gradients?",
+  "a": "Capping the gradient norm prevents exploding gradients, common in RNNs and Transformers."
+ },
+ {
+  "id": "ml-51",
+  "deck": "ml",
+  "topic": "Deep learning",
+  "q": "Why convolutions for images?",
+  "a": "Local connectivity and weight sharing give translation equivariance with far fewer parameters than dense layers."
+ },
+ {
+  "id": "ml-52",
+  "deck": "ml",
+  "topic": "Deep learning",
+  "q": "CNN output size formula?",
+  "a": "(W - K + 2P) / S + 1 for input W, kernel K, padding P, stride S."
+ },
+ {
+  "id": "ml-53",
+  "deck": "ml",
+  "topic": "Deep learning",
+  "q": "What does pooling do?",
+  "a": "Downsamples feature maps, adds small translation invariance and reduces compute."
+ },
+ {
+  "id": "ml-54",
+  "deck": "ml",
+  "topic": "Deep learning",
+  "q": "Why do ResNet skip connections help?",
+  "a": "Layers learn a residual F(x) + x. Gradients flow through the shortcut, which makes very deep nets trainable."
+ },
+ {
+  "id": "ml-55",
+  "deck": "ml",
+  "topic": "Deep learning",
+  "q": "How does an LSTM fix vanishing gradients?",
+  "a": "Input, forget and output gates around a cell state let information and gradients persist over long ranges."
+ },
+ {
+  "id": "ml-56",
+  "deck": "ml",
+  "topic": "Deep learning",
+  "q": "Transformers vs RNNs?",
+  "a": "Self-attention processes tokens in parallel and links any two positions directly. RNNs are sequential."
+ },
+ {
+  "id": "ml-57",
+  "deck": "ml",
+  "topic": "Deep learning",
+  "q": "Why multi-head attention?",
+  "a": "Several heads attend in parallel to different relations or subspaces; their outputs are concatenated."
+ },
+ {
+  "id": "ml-58",
+  "deck": "ml",
+  "topic": "LLMs",
+  "q": "What is BPE tokenization?",
+  "a": "Repeatedly merges the most frequent symbol pairs into subwords, so rare words split into known pieces and the vocabulary stays bounded."
+ },
+ {
+  "id": "ml-59",
+  "deck": "ml",
+  "topic": "LLMs",
+  "q": "What is RAG?",
+  "a": "Retrieve relevant documents (often by vector search) and put them in the prompt so the LLM answers grounded in them."
+ },
+ {
+  "id": "ml-60",
+  "deck": "ml",
+  "topic": "LLMs",
+  "q": "Prompting vs RAG vs fine-tuning?",
+  "a": "Prompting is fastest. RAG adds fresh or private knowledge. Fine-tuning changes behavior, style or specialized skills."
+ },
+ {
+  "id": "ml-61",
+  "deck": "ml",
+  "topic": "LLMs",
+  "q": "What does LoRA do?",
+  "a": "Freezes the pretrained weights and trains small low-rank update matrices, cutting trainable parameters and memory."
+ },
+ {
+  "id": "ml-62",
+  "deck": "ml",
+  "topic": "LLMs",
+  "q": "What does sampling temperature do?",
+  "a": "It scales logits before the softmax: low is more deterministic, high is more random."
+ },
+ {
+  "id": "ml-63",
+  "deck": "ml",
+  "topic": "LLMs",
+  "q": "How do you reduce hallucinations?",
+  "a": "Ground answers with retrieval, constrain outputs, ask for citations, verify with tools, and lower the temperature."
+ },
+ {
+  "id": "ml-64",
+  "deck": "ml",
+  "topic": "Evaluation",
+  "q": "How does the decision threshold trade precision and recall?",
+  "a": "Raising it increases precision and lowers recall. Pick it from the relative cost of false positives and false negatives."
+ },
+ {
+  "id": "ml-65",
+  "deck": "ml",
+  "topic": "Statistics",
+  "q": "How do you run a sound A/B test?",
+  "a": "Randomize users, fix the metric and sample size up front, test significance (p-value or CI), and don't peek early."
+ },
+ {
+  "id": "ml-66",
+  "deck": "ml",
+  "topic": "Statistics",
+  "q": "Type I vs type II error?",
+  "a": "Type I: false positive (rejecting a true null). Type II: false negative (missing a real effect)."
+ },
+ {
+  "id": "ml-67",
+  "deck": "ml",
+  "topic": "Statistics",
+  "q": "State the central limit theorem.",
+  "a": "Sample means approach a normal distribution as n grows, whatever the population's shape (finite variance)."
+ },
+ {
+  "id": "ml-68",
+  "deck": "ml",
+  "topic": "Statistics",
+  "q": "Bayes' theorem?",
+  "a": "P(A | B) = P(B | A) P(A) / P(B)."
+ },
+ {
+  "id": "ml-69",
+  "deck": "ml",
+  "topic": "Statistics",
+  "q": "What is the curse of dimensionality?",
+  "a": "As dimensions grow, data gets sparse and distances concentrate, so distance-based methods and density estimates degrade."
+ },
+ {
+  "id": "ml-70",
+  "deck": "ml",
+  "topic": "MLOps",
+  "q": "What is data drift and how do you handle it?",
+  "a": "Inputs or relationships change after deployment. Monitor feature distributions and live metrics, then retrain on a schedule or trigger."
+ },
+ {
+  "id": "ml-71",
+  "deck": "ml",
+  "topic": "MLOps",
+  "q": "What is train-serving skew?",
+  "a": "Features computed differently in training and production. Share feature code or use a feature store."
+ },
+ {
+  "id": "ds-01",
+  "deck": "design",
+  "topic": "Trade-offs",
+  "q": "OLTP vs OLAP: how do the access patterns differ?",
+  "a": "OLTP: point queries by key, small reads and writes, low latency. OLAP: scans that aggregate many rows, read-heavy, loaded in bulk."
+ },
+ {
+  "id": "ds-02",
+  "deck": "design",
+  "topic": "Trade-offs",
+  "q": "Why keep a data warehouse separate from the operational database?",
+  "a": "Big analytic scans would hurt OLTP latency. The warehouse holds a read-only copy in a layout built for scans."
+ },
+ {
+  "id": "ds-03",
+  "deck": "design",
+  "topic": "Trade-offs",
+  "q": "Cloud-native data systems: what is the key architectural idea?",
+  "a": "Build on object stores and separate storage from compute so each scales independently and elastically."
+ },
+ {
+  "id": "ds-04",
+  "deck": "design",
+  "topic": "Nonfunctional requirements",
+  "q": "Why use p99 instead of the average response time?",
+  "a": "The average hides the tail. Percentiles show what real users feel, and SLOs are written on them (e.g. p99 under 1 s)."
+ },
+ {
+  "id": "ds-05",
+  "deck": "design",
+  "topic": "Nonfunctional requirements",
+  "q": "What is tail latency amplification?",
+  "a": "A request that fans out to many backend calls waits for the slowest one, so a small share of slow calls slows a large share of requests."
+ },
+ {
+  "id": "ds-06",
+  "deck": "design",
+  "topic": "Nonfunctional requirements",
+  "q": "Fault vs failure?",
+  "a": "A fault is one part stopping working correctly (a disk, a machine, a service). A failure is the whole system no longer providing the required service. Fault tolerance stops faults becoming failures."
+ },
+ {
+  "id": "ds-07",
+  "deck": "design",
+  "topic": "Nonfunctional requirements",
+  "q": "Scaling up vs scaling out?",
+  "a": "Up: a bigger single machine. Out: spread load over many machines (shared-nothing), which adds distributed-systems complexity."
+ },
+ {
+  "id": "ds-08",
+  "deck": "design",
+  "topic": "Storage engines",
+  "q": "How does an LSM-tree handle a write?",
+  "a": "Append to the write-ahead log, insert into the in-memory memtable, flush it as a sorted SSTable, and merge SSTables by background compaction."
+ },
+ {
+  "id": "ds-09",
+  "deck": "design",
+  "topic": "Storage engines",
+  "q": "How do LSM-trees avoid disk reads for keys that don't exist?",
+  "a": "A Bloom filter per SSTable says a key is definitely absent, so most lookups for missing keys skip the disk."
+ },
+ {
+  "id": "ds-10",
+  "deck": "design",
+  "topic": "Storage engines",
+  "q": "B-tree vs LSM-tree: which fits which workload?",
+  "a": "LSM-trees give higher write throughput. B-trees tend to give better read throughput and more predictable response times."
+ },
+ {
+  "id": "ds-11",
+  "deck": "design",
+  "topic": "Storage engines",
+  "q": "Why do B-trees need a write-ahead log?",
+  "a": "Pages are overwritten in place, so a crash mid-update (e.g. a page split) could corrupt the tree. Logging first allows recovery."
+ },
+ {
+  "id": "ds-12",
+  "deck": "design",
+  "topic": "Storage engines",
+  "q": "Why is column-oriented storage good for analytics?",
+  "a": "Queries read only the columns they need, similar values compress well, and vectorized processing is CPU-efficient."
+ },
+ {
+  "id": "ds-13",
+  "deck": "design",
+  "topic": "Storage engines",
+  "q": "Vector indexes: flat vs IVF vs HNSW?",
+  "a": "Flat: exact, scans every vector. IVF: clusters vectors, probes a few partitions (approximate). HNSW: layered graph search (approximate, fast)."
+ },
+ {
+  "id": "ds-14",
+  "deck": "design",
+  "topic": "Encoding",
+  "q": "Backward vs forward compatibility?",
+  "a": "Backward: new code can read data written by old code. Forward: old code can read data written by new code."
+ },
+ {
+  "id": "ds-15",
+  "deck": "design",
+  "topic": "Encoding",
+  "q": "Why not treat a remote call (REST/RPC) like a local function call?",
+  "a": "It can fail, time out with an unknown outcome, be slow, duplicate on retry, and must serialize its data."
+ },
+ {
+  "id": "ds-16",
+  "deck": "design",
+  "topic": "Encoding",
+  "q": "What does durable execution give you?",
+  "a": "Frameworks like Temporal or Restate log each step so a crashed workflow replays and resumes without redoing completed side effects. Code must be deterministic."
+ },
+ {
+  "id": "ds-17",
+  "deck": "design",
+  "topic": "Replication",
+  "q": "Synchronous vs asynchronous followers in single-leader replication?",
+  "a": "Sync: follower is up to date but a slow one blocks writes. Async: fast writes, but lag and possible data loss if the leader dies."
+ },
+ {
+  "id": "ds-18",
+  "deck": "design",
+  "topic": "Replication",
+  "q": "Name three replication-lag guarantees users expect.",
+  "a": "Read-your-writes, monotonic reads, and consistent prefix reads (see writes in the order they happened)."
+ },
+ {
+  "id": "ds-19",
+  "deck": "design",
+  "topic": "Replication",
+  "q": "What can go wrong in leader failover?",
+  "a": "Lost writes from async lag, split brain (two leaders), and a timeout set too short causing needless failovers."
+ },
+ {
+  "id": "ds-20",
+  "deck": "design",
+  "topic": "Replication",
+  "q": "When do you use multi-leader replication, and what is its main problem?",
+  "a": "Multi-datacenter, offline clients, collaborative editing. The problem is write conflicts, which need resolution (LWW, merging, CRDTs)."
+ },
+ {
+  "id": "ds-21",
+  "deck": "design",
+  "topic": "Replication",
+  "q": "In leaderless replication, what does w + r > n guarantee?",
+  "a": "The write set and read set overlap, so a read sees at least one replica with the latest value (n replicas, w write acks, r read acks)."
+ },
+ {
+  "id": "ds-22",
+  "deck": "design",
+  "topic": "Replication",
+  "q": "How does a leaderless store catch up a replica that missed writes?",
+  "a": "Read repair (a client writes newer values back when it sees stale ones) and background anti-entropy."
+ },
+ {
+  "id": "ds-23",
+  "deck": "design",
+  "topic": "Sharding",
+  "q": "Key-range vs hash sharding?",
+  "a": "Key range: efficient range scans but hot spots (e.g. timestamps). Hash: spreads load evenly but loses range-query locality."
+ },
+ {
+  "id": "ds-24",
+  "deck": "design",
+  "topic": "Sharding",
+  "q": "What are the two properties of consistent hashing?",
+  "a": "Keys spread roughly equally across shards, and when the shard count changes, as few keys as possible move."
+ },
+ {
+  "id": "ds-25",
+  "deck": "design",
+  "topic": "Sharding",
+  "q": "A celebrity key creates a hot spot. How do you relieve it?",
+  "a": "Split the key (e.g. add a random suffix) to spread its writes over shards. Reads must then combine the pieces."
+ },
+ {
+  "id": "ds-26",
+  "deck": "design",
+  "topic": "Sharding",
+  "q": "Local vs global secondary indexes in a sharded database?",
+  "a": "Local: each shard indexes its own data, cheap writes but reads scatter/gather. Global: sharded by indexed term, efficient reads but writes touch several shards."
+ },
+ {
+  "id": "ds-27",
+  "deck": "design",
+  "topic": "Transactions",
+  "q": "What does 'isolation' mean in ACID?",
+  "a": "Concurrent transactions don't step on each other: each behaves as if it ran alone."
+ },
+ {
+  "id": "ds-28",
+  "deck": "design",
+  "topic": "Transactions",
+  "q": "What does Read Committed guarantee?",
+  "a": "No dirty reads and no dirty writes: you only read, and overwrite, committed data."
+ },
+ {
+  "id": "ds-29",
+  "deck": "design",
+  "topic": "Transactions",
+  "q": "How does snapshot isolation work?",
+  "a": "Each transaction reads a consistent snapshot from when it began. The database keeps multiple row versions (MVCC), so readers never block writers."
+ },
+ {
+  "id": "ds-30",
+  "deck": "design",
+  "topic": "Transactions",
+  "q": "What is write skew?",
+  "a": "Two transactions read overlapping data, then write different rows and break an invariant (both doctors go off call). Snapshot isolation allows it."
+ },
+ {
+  "id": "ds-31",
+  "deck": "design",
+  "topic": "Transactions",
+  "q": "Three ways to implement serializability?",
+  "a": "Actual serial execution, two-phase locking, and serializable snapshot isolation (optimistic)."
+ },
+ {
+  "id": "ds-32",
+  "deck": "design",
+  "topic": "Transactions",
+  "q": "What is the main weakness of two-phase commit?",
+  "a": "The coordinator is a single point of failure: if it crashes after the prepare phase, participants are stuck in doubt, holding locks."
+ },
+ {
+  "id": "ds-33",
+  "deck": "design",
+  "topic": "Distributed systems",
+  "q": "Why can't you rely on a timeout to know a node is dead?",
+  "a": "Network delay is unbounded, so a slow node looks like a dead one. Clocks can't be fully trusted either."
+ },
+ {
+  "id": "ds-34",
+  "deck": "design",
+  "topic": "Distributed systems",
+  "q": "What is a fencing token?",
+  "a": "An increasing number issued with each lock or lease. The storage rejects writes carrying an older token, which stops paused or zombie clients."
+ },
+ {
+  "id": "ds-35",
+  "deck": "design",
+  "topic": "Consistency",
+  "q": "What does linearizability mean?",
+  "a": "The system behaves as if there is one copy of the data and every operation is atomic: once a read returns the new value, no later read returns the old one."
+ },
+ {
+  "id": "ds-36",
+  "deck": "design",
+  "topic": "Consistency",
+  "q": "What is consensus used for, and how many nodes do you need?",
+  "a": "Leader election, atomic commit, total order broadcast. Raft/Paxos need a majority, so tolerating f failures takes 2f + 1 nodes."
+ },
+ {
+  "id": "ds-37",
+  "deck": "design",
+  "topic": "Batch and stream",
+  "q": "Batch vs stream processing?",
+  "a": "Batch: bounded input processed periodically. Stream: unbounded events processed as they arrive, with low latency."
+ },
+ {
+  "id": "ds-38",
+  "deck": "design",
+  "topic": "Batch and stream",
+  "q": "What is event sourcing?",
+  "a": "Store an immutable log of events as the source of truth and derive current state and read models by replaying it (CQRS separates read and write models)."
+ },
+ {
+  "id": "ds-39",
+  "deck": "design",
+  "topic": "Batch and stream",
+  "q": "What is change data capture (CDC)?",
+  "a": "Streaming a database's changes, taken from its log, into caches, search indexes and warehouses so they stay in sync."
+ },
+ {
+  "id": "ds-40",
+  "deck": "design",
+  "topic": "Batch and stream",
+  "q": "How do you get effectively exactly-once processing?",
+  "a": "At-least-once delivery plus idempotent processing (deduplicate with operation IDs or transactional offsets)."
+ },
+ {
+  "id": "ds-41",
+  "deck": "design",
+  "topic": "Interview method",
+  "q": "What are the steps of a system design interview?",
+  "a": "Clarify requirements and scale, estimate load, sketch the high-level design, deep-dive on bottlenecks, then discuss trade-offs and failures."
+ },
+ {
+  "id": "ds-42",
+  "deck": "design",
+  "topic": "Estimation",
+  "q": "Quick numbers for back-of-envelope math?",
+  "a": "A day is about 86,400 s (~10^5), so 1M requests per day is about 12 per second. 99.9% uptime is about 8.8 hours of downtime a year; 99.99% about 53 minutes."
+ },
+ {
+  "id": "ds-43",
+  "deck": "design",
+  "topic": "Estimation",
+  "q": "Rough latencies: memory, SSD, network?",
+  "a": "Memory ~100 ns, SSD ~100 us, same-datacenter round trip ~0.5 ms, cross-continent ~100+ ms."
+ },
+ {
+  "id": "ds-44",
+  "deck": "design",
+  "topic": "Caching",
+  "q": "What is the cache-aside pattern?",
+  "a": "The app checks the cache; on a miss it reads the DB and fills the cache. On writes, update the DB, then invalidate the cache entry."
+ },
+ {
+  "id": "ds-45",
+  "deck": "design",
+  "topic": "Caching",
+  "q": "Write-through vs write-back cache?",
+  "a": "Write-through writes cache and DB together (consistent, slower). Write-back writes the cache and flushes later (fast, risks data loss)."
+ },
+ {
+  "id": "ds-46",
+  "deck": "design",
+  "topic": "Caching",
+  "q": "Common cache eviction policies?",
+  "a": "LRU, LFU, FIFO, and TTL expiry. LRU is the usual default."
+ },
+ {
+  "id": "ds-47",
+  "deck": "design",
+  "topic": "Caching",
+  "q": "What is a cache stampede and how do you prevent it?",
+  "a": "Many requests hit the DB when a hot key expires. Use request coalescing or locks, staggered TTLs, or refresh-ahead."
+ },
+ {
+  "id": "ds-48",
+  "deck": "design",
+  "topic": "Caching",
+  "q": "What is a CDN for?",
+  "a": "It serves static content from edge locations near users, cutting latency and origin load."
+ },
+ {
+  "id": "ds-49",
+  "deck": "design",
+  "topic": "Caching",
+  "q": "Why does consistent hashing suit cache clusters?",
+  "a": "Adding or removing a cache node moves only a small share of keys instead of reshuffling everything."
+ },
+ {
+  "id": "ds-50",
+  "deck": "design",
+  "topic": "Traffic",
+  "q": "Common load balancing algorithms?",
+  "a": "Round robin, least connections, hashing (sticky), and weighted variants. Health checks remove bad nodes."
+ },
+ {
+  "id": "ds-51",
+  "deck": "design",
+  "topic": "Traffic",
+  "q": "Name the main rate-limiting algorithms.",
+  "a": "Token bucket (allows bursts), leaky bucket (smooth rate), fixed window (simple, edge bursts), sliding window (more accurate)."
+ },
+ {
+  "id": "ds-52",
+  "deck": "design",
+  "topic": "Traffic",
+  "q": "What does an API gateway do?",
+  "a": "A single entry point that handles routing, auth, rate limiting and aggregation for backend services."
+ },
+ {
+  "id": "ds-53",
+  "deck": "design",
+  "topic": "Traffic",
+  "q": "Why keep services stateless?",
+  "a": "Any instance can serve any request, so you scale out behind a load balancer. Session state lives in a shared store."
+ },
+ {
+  "id": "ds-54",
+  "deck": "design",
+  "topic": "Building blocks",
+  "q": "Design a URL shortener: key points?",
+  "a": "Generate unique short IDs (base62 of a counter or hash), store the mapping in a key-value store, cache hot reads, redirect with 301/302, plan for expiry and analytics."
+ },
+ {
+  "id": "ds-55",
+  "deck": "design",
+  "topic": "Building blocks",
+  "q": "How do you generate unique IDs across servers?",
+  "a": "Snowflake style: timestamp + machine ID + sequence gives sortable unique IDs without coordination."
+ },
+ {
+  "id": "ds-56",
+  "deck": "design",
+  "topic": "Building blocks",
+  "q": "Why use a message queue?",
+  "a": "It decouples producers and consumers, smooths bursts and enables retries and async work (Kafka, RabbitMQ, SQS)."
+ },
+ {
+  "id": "ds-57",
+  "deck": "design",
+  "topic": "Building blocks",
+  "q": "Kafka in one paragraph?",
+  "a": "A partitioned, replicated append-only log. Consumers track offsets, and ordering is guaranteed within a partition."
+ },
+ {
+  "id": "ds-58",
+  "deck": "design",
+  "topic": "Building blocks",
+  "q": "What is a Bloom filter used for?",
+  "a": "A probabilistic set with no false negatives and some false positives. It lets you skip lookups for keys that are definitely absent."
+ },
+ {
+  "id": "ds-59",
+  "deck": "design",
+  "topic": "Building blocks",
+  "q": "How does leader election work in practice?",
+  "a": "Use a consensus-backed service (etcd, ZooKeeper, Raft) with leases, and fencing tokens to stop a stale leader."
+ },
+ {
+  "id": "ds-60",
+  "deck": "design",
+  "topic": "Patterns",
+  "q": "Fan-out on write vs fan-out on read for a news feed?",
+  "a": "On write: precompute feeds (fast reads, expensive for celebrities). On read: compute at request time. Hybrids are common."
+ },
+ {
+  "id": "ds-61",
+  "deck": "design",
+  "topic": "Patterns",
+  "q": "SQL vs NoSQL: how do you choose?",
+  "a": "SQL for relations, transactions and ad hoc queries. NoSQL for huge scale, a flexible schema or simple access patterns."
+ },
+ {
+  "id": "ds-62",
+  "deck": "design",
+  "topic": "Patterns",
+  "q": "Replication vs sharding?",
+  "a": "Replication copies the same data for availability and read scale. Sharding splits data for storage and write scale. Usually combined."
+ },
+ {
+  "id": "ds-63",
+  "deck": "design",
+  "topic": "Patterns",
+  "q": "How do you handle stale reads from read replicas?",
+  "a": "Route a user's reads to the leader briefly after they write, or use read-your-writes techniques."
+ },
+ {
+  "id": "ds-64",
+  "deck": "design",
+  "topic": "Patterns",
+  "q": "Microservices vs monolith?",
+  "a": "Microservices: independent deploys and scaling, but network failures, data consistency and ops overhead. A monolith is simpler until it grows."
+ },
+ {
+  "id": "ds-65",
+  "deck": "design",
+  "topic": "Reliability",
+  "q": "What are idempotency keys?",
+  "a": "A unique key sent with a request so retries don't repeat the side effect (e.g. charging twice)."
+ },
+ {
+  "id": "ds-66",
+  "deck": "design",
+  "topic": "Reliability",
+  "q": "What is the saga pattern?",
+  "a": "A distributed transaction as a series of local transactions, each with a compensating action to undo it on failure."
+ },
+ {
+  "id": "ds-67",
+  "deck": "design",
+  "topic": "Reliability",
+  "q": "What does a circuit breaker do?",
+  "a": "After errors cross a threshold it stops calling a failing dependency, then probes later, preventing cascading failures."
+ },
+ {
+  "id": "ds-68",
+  "deck": "design",
+  "topic": "Reliability",
+  "q": "Why retry with exponential backoff and jitter?",
+  "a": "Waiting longer after each failure, plus randomness, stops many clients retrying in lockstep."
+ },
+ {
+  "id": "ds-69",
+  "deck": "design",
+  "topic": "Reliability",
+  "q": "Metrics, logs, traces: what is each for?",
+  "a": "Metrics show trends, logs record events, traces follow a request across services."
+ },
+ {
+  "id": "ds-70",
+  "deck": "design",
+  "topic": "Consistency",
+  "q": "Give an example of eventual consistency.",
+  "a": "DNS or Dynamo-style stores: replicas converge if writes stop, but readers may see stale data meanwhile."
+ },
+ {
+  "id": "ds-71",
+  "deck": "design",
+  "topic": "Case studies",
+  "q": "Design a chat system: transport and storage?",
+  "a": "Persistent WebSocket connections, a presence and connection service, a queue with per-chat message IDs for ordering, and history in a sharded DB."
+ },
+ {
+  "id": "ds-72",
+  "deck": "design",
+  "topic": "Case studies",
+  "q": "Design search autocomplete?",
+  "a": "A trie or prefix index of top queries with precomputed ranked suggestions, cached at the edge and refreshed from query logs."
+ },
+ {
+  "id": "ds-73",
+  "deck": "design",
+  "topic": "Case studies",
+  "q": "How do you pick between read-heavy and write-heavy designs?",
+  "a": "Read-heavy: indexes, caching, read replicas. Write-heavy: sharding, batching and LSM-based stores."
+ },
+ {
+  "id": "dsa-01",
+  "deck": "dsa",
+  "topic": "Two pointers",
+  "q": "When does the two-pointer technique work on a sorted array?",
+  "a": "When moving the left or right pointer has a predictable effect (sum too small: move left up). It turns O(n^2) pair searches into O(n)."
+ },
+ {
+  "id": "dsa-02",
+  "deck": "dsa",
+  "topic": "Sliding window",
+  "q": "Fixed vs variable sliding window: when do you use each?",
+  "a": "Fixed: a subarray of size k. Variable: longest or shortest subarray meeting a condition; expand right, shrink left while invalid. O(n)."
+ },
+ {
+  "id": "dsa-03",
+  "deck": "dsa",
+  "topic": "Prefix sums",
+  "q": "How do prefix sums answer range-sum queries, and count subarrays with sum k?",
+  "a": "sum(l..r) = P[r+1] - P[l] in O(1) after O(n) setup. For count of sum k, keep a hash map of prefix-sum frequencies and look up P - k."
+ },
+ {
+  "id": "dsa-04",
+  "deck": "dsa",
+  "topic": "Binary search",
+  "q": "How do you avoid off-by-one bugs in binary search?",
+  "a": "Pick an invariant (answer stays in [lo, hi]) and shrink to keep it. Use mid = lo + (hi - lo) / 2 and loop while lo < hi with hi = mid or lo = mid + 1."
+ },
+ {
+  "id": "dsa-05",
+  "deck": "dsa",
+  "topic": "Binary search",
+  "q": "When can you binary search on the answer?",
+  "a": "When feasibility is monotonic in the answer (min capacity, max-min distance). Check feasibility in O(n): total O(n log range)."
+ },
+ {
+  "id": "dsa-06",
+  "deck": "dsa",
+  "topic": "Monotonic stack",
+  "q": "What problems does a monotonic stack solve?",
+  "a": "Next greater or smaller element, daily temperatures, largest rectangle in a histogram. Each element is pushed and popped once: O(n)."
+ },
+ {
+  "id": "dsa-07",
+  "deck": "dsa",
+  "topic": "Monotonic deque",
+  "q": "How do you get the sliding window maximum in O(n)?",
+  "a": "Keep a deque of indices with decreasing values: pop the back while smaller than the new value, pop the front when it leaves the window. The front is the max."
+ },
+ {
+  "id": "dsa-08",
+  "deck": "dsa",
+  "topic": "Heaps",
+  "q": "Best way to get the top K largest elements?",
+  "a": "A min-heap of size k gives O(n log k). Quickselect gives O(n) on average."
+ },
+ {
+  "id": "dsa-09",
+  "deck": "dsa",
+  "topic": "Heaps",
+  "q": "Complexities of binary heap operations?",
+  "a": "Push and pop are O(log n), peek is O(1), and building a heap from n items is O(n)."
+ },
+ {
+  "id": "dsa-10",
+  "deck": "dsa",
+  "topic": "Heaps",
+  "q": "How do you maintain a running median?",
+  "a": "Two heaps: a max-heap for the lower half and a min-heap for the upper half, sizes differing by at most 1. The median is at the tops. O(log n) per insert."
+ },
+ {
+  "id": "dsa-11",
+  "deck": "dsa",
+  "topic": "Hashing",
+  "q": "Two Sum in O(n)?",
+  "a": "One pass: for each x, check whether target - x is already in a hash map, then store x. O(n) time and space."
+ },
+ {
+  "id": "dsa-12",
+  "deck": "dsa",
+  "topic": "Linked lists",
+  "q": "Detect a cycle in a linked list and find where it starts?",
+  "a": "Floyd: slow and fast pointers meet if there is a cycle. Reset one to the head and move both one step at a time; they meet at the cycle start. O(1) space."
+ },
+ {
+  "id": "dsa-13",
+  "deck": "dsa",
+  "topic": "Linked lists",
+  "q": "Reverse a linked list iteratively?",
+  "a": "Keep prev and cur: save cur.next, point cur.next to prev, advance both. O(n) time, O(1) space."
+ },
+ {
+  "id": "dsa-14",
+  "deck": "dsa",
+  "topic": "Graphs",
+  "q": "BFS vs DFS: which gives shortest paths?",
+  "a": "BFS gives fewest-edge paths in unweighted graphs. DFS suits exhaustive search, cycle detection and topological sort."
+ },
+ {
+  "id": "dsa-15",
+  "deck": "dsa",
+  "topic": "Graphs",
+  "q": "Dijkstra's complexity and its limitation?",
+  "a": "O((V + E) log V) with a binary heap. It fails with negative edge weights; use Bellman-Ford."
+ },
+ {
+  "id": "dsa-16",
+  "deck": "dsa",
+  "topic": "Graphs",
+  "q": "Bellman-Ford: complexity and what it adds?",
+  "a": "O(VE). Handles negative weights and detects negative cycles (the V-th round of relaxation still improves something)."
+ },
+ {
+  "id": "dsa-17",
+  "deck": "dsa",
+  "topic": "Graphs",
+  "q": "Two ways to topologically sort a DAG?",
+  "a": "Kahn's algorithm (repeatedly remove in-degree 0 nodes, O(V + E)) or DFS with reverse post-order. If Kahn's can't remove every node, there is a cycle."
+ },
+ {
+  "id": "dsa-18",
+  "deck": "dsa",
+  "topic": "Graphs",
+  "q": "Union-Find: optimizations and cost?",
+  "a": "Path compression plus union by rank or size gives near-constant amortized time. Used for connectivity, Kruskal and cycle detection."
+ },
+ {
+  "id": "dsa-19",
+  "deck": "dsa",
+  "topic": "Graphs",
+  "q": "Kruskal vs Prim for a minimum spanning tree?",
+  "a": "Kruskal sorts edges and adds them if no cycle forms (union-find), O(E log E). Prim grows a tree with a heap, O(E log V), good for dense graphs."
+ },
+ {
+  "id": "dsa-20",
+  "deck": "dsa",
+  "topic": "Graphs",
+  "q": "How do you detect a cycle in directed vs undirected graphs?",
+  "a": "Undirected: DFS with a parent check or union-find. Directed: DFS with a recursion-stack (3 colors) or Kahn's algorithm."
+ },
+ {
+  "id": "dsa-21",
+  "deck": "dsa",
+  "topic": "Graphs",
+  "q": "How do you check whether a graph is bipartite?",
+  "a": "BFS or DFS 2-coloring. If an edge joins two same-colored nodes, it isn't. Equivalent to having no odd cycle."
+ },
+ {
+  "id": "dsa-22",
+  "deck": "dsa",
+  "topic": "Graphs",
+  "q": "How do you find strongly connected components?",
+  "a": "Tarjan or Kosaraju in O(V + E). Kosaraju: DFS for finishing order, then DFS on the transposed graph in decreasing finish order."
+ },
+ {
+  "id": "dsa-23",
+  "deck": "dsa",
+  "topic": "Graphs",
+  "q": "Floyd-Warshall: complexity and use?",
+  "a": "O(V^3) all-pairs shortest paths; dp over allowed intermediate vertices k."
+ },
+ {
+  "id": "dsa-24",
+  "deck": "dsa",
+  "topic": "Graphs",
+  "q": "Adjacency list vs adjacency matrix?",
+  "a": "List: O(V + E) space, fast neighbor iteration. Matrix: O(V^2) space, O(1) edge check, better for dense graphs."
+ },
+ {
+  "id": "dsa-25",
+  "deck": "dsa",
+  "topic": "Trees",
+  "q": "What does an inorder traversal of a BST give?",
+  "a": "The keys in sorted order. Also a way to validate a BST: the sequence must be strictly increasing."
+ },
+ {
+  "id": "dsa-26",
+  "deck": "dsa",
+  "topic": "Trees",
+  "q": "Lowest common ancestor in a binary tree?",
+  "a": "Recurse: return the node if it is p or q; if both subtrees return non-null, the current node is the LCA; else return the non-null side. O(n)."
+ },
+ {
+  "id": "dsa-27",
+  "deck": "dsa",
+  "topic": "Trees",
+  "q": "Compute a tree's diameter in O(n)?",
+  "a": "DFS returning heights; at each node the candidate is left height + right height. Track the maximum."
+ },
+ {
+  "id": "dsa-28",
+  "deck": "dsa",
+  "topic": "Tries",
+  "q": "When use a trie, and what does it cost?",
+  "a": "Prefix queries, autocomplete, word search. Insert and search are O(L) for word length L, but memory can be large."
+ },
+ {
+  "id": "dsa-29",
+  "deck": "dsa",
+  "topic": "Dynamic programming",
+  "q": "How do you recognize a DP problem?",
+  "a": "Overlapping subproblems plus optimal substructure. Define the state and recurrence, start with recursion, add memoization, then convert to a table."
+ },
+ {
+  "id": "dsa-30",
+  "deck": "dsa",
+  "topic": "Dynamic programming",
+  "q": "0/1 knapsack recurrence and complexity?",
+  "a": "dp[i][w] = max(dp[i-1][w], dp[i-1][w - wt] + val). O(nW) time; O(W) space by iterating w downward."
+ },
+ {
+  "id": "dsa-31",
+  "deck": "dsa",
+  "topic": "Dynamic programming",
+  "q": "Longest increasing subsequence in O(n log n)?",
+  "a": "Keep a tails array: for each x, binary-search the first tail >= x and replace it (append if none). The array length is the answer."
+ },
+ {
+  "id": "dsa-32",
+  "deck": "dsa",
+  "topic": "Dynamic programming",
+  "q": "Edit distance recurrence?",
+  "a": "Equal chars: dp[i-1][j-1]. Otherwise 1 + min(insert dp[i][j-1], delete dp[i-1][j], replace dp[i-1][j-1]). O(mn)."
+ },
+ {
+  "id": "dsa-33",
+  "deck": "dsa",
+  "topic": "Dynamic programming",
+  "q": "Longest common subsequence recurrence?",
+  "a": "Equal: 1 + dp[i-1][j-1]; otherwise max(dp[i-1][j], dp[i][j-1]). O(mn)."
+ },
+ {
+  "id": "dsa-34",
+  "deck": "dsa",
+  "topic": "Dynamic programming",
+  "q": "Coin change (minimum coins) recurrence?",
+  "a": "dp[a] = 1 + min(dp[a - c]) over coins c <= a, with dp[0] = 0. O(amount x coins)."
+ },
+ {
+  "id": "dsa-35",
+  "deck": "dsa",
+  "topic": "Dynamic programming",
+  "q": "Maximum subarray sum in O(n)?",
+  "a": "Kadane: cur = max(x, cur + x); best = max(best, cur)."
+ },
+ {
+  "id": "dsa-36",
+  "deck": "dsa",
+  "topic": "Backtracking",
+  "q": "What is the backtracking template?",
+  "a": "Choose, explore (recurse), unchoose. Prune as soon as a partial choice can't lead to a valid answer. Subsets are 2^n, permutations n!."
+ },
+ {
+  "id": "dsa-37",
+  "deck": "dsa",
+  "topic": "Greedy",
+  "q": "How do you justify a greedy algorithm?",
+  "a": "With an exchange argument or by showing greedy stays ahead. Classic: interval scheduling by earliest finish time."
+ },
+ {
+  "id": "dsa-38",
+  "deck": "dsa",
+  "topic": "Intervals",
+  "q": "Merge overlapping intervals?",
+  "a": "Sort by start; extend the last merged interval if next.start <= last.end, otherwise start a new one. O(n log n)."
+ },
+ {
+  "id": "dsa-39",
+  "deck": "dsa",
+  "topic": "Bit tricks",
+  "q": "Check a power of two, and count set bits?",
+  "a": "n > 0 and (n & (n - 1)) == 0. Count bits with Kernighan: repeat n &= n - 1 until 0."
+ },
+ {
+  "id": "dsa-40",
+  "deck": "dsa",
+  "topic": "Bit tricks",
+  "q": "Find the one number that appears once while the rest appear twice?",
+  "a": "XOR everything: pairs cancel (a ^ a = 0), leaving the single number. O(n) time, O(1) space."
+ },
+ {
+  "id": "dsa-41",
+  "deck": "dsa",
+  "topic": "Sorting",
+  "q": "Compare quicksort, mergesort and heapsort.",
+  "a": "Quick: O(n log n) average, O(n^2) worst, in place, not stable. Merge: O(n log n) always, O(n) extra space, stable. Heap: O(n log n), in place, not stable."
+ },
+ {
+  "id": "dsa-42",
+  "deck": "dsa",
+  "topic": "Sorting",
+  "q": "Why can't comparison sorts beat O(n log n)?",
+  "a": "A decision tree with n! leaves has height at least log2(n!) = Theta(n log n). Counting and radix sort avoid comparisons."
+ },
+ {
+  "id": "dsa-43",
+  "deck": "dsa",
+  "topic": "Sorting",
+  "q": "Quickselect complexity?",
+  "a": "O(n) on average, O(n^2) worst case. A random pivot makes the worst case unlikely."
+ },
+ {
+  "id": "dsa-44",
+  "deck": "dsa",
+  "topic": "Hashing",
+  "q": "Hash table lookup: average and worst case?",
+  "a": "O(1) on average, O(n) worst case with heavy collisions. Resize at a load factor to keep chains short."
+ },
+ {
+  "id": "dsa-45",
+  "deck": "dsa",
+  "topic": "Design",
+  "q": "Design an LRU cache with O(1) operations.",
+  "a": "A hash map from key to node plus a doubly linked list ordered by recency. Get and put move a node to the front; evict from the tail."
+ },
+ {
+  "id": "dsa-46",
+  "deck": "dsa",
+  "topic": "Arrays",
+  "q": "Sort an array of 0s, 1s and 2s in one pass?",
+  "a": "Dutch national flag: low, mid, high pointers. Swap 0s to low, 2s to high, advance mid on 1s. O(n), O(1) space."
+ },
+ {
+  "id": "dsa-47",
+  "deck": "dsa",
+  "topic": "Arrays",
+  "q": "Find the missing number in 0..n?",
+  "a": "n(n+1)/2 minus the array sum, or XOR all indices and values. O(n) time, O(1) space."
+ },
+ {
+  "id": "dsa-48",
+  "deck": "dsa",
+  "topic": "Arrays",
+  "q": "Three Sum in O(n^2)?",
+  "a": "Sort, fix one element, and use two pointers for the other two. Skip duplicates."
+ },
+ {
+  "id": "dsa-49",
+  "deck": "dsa",
+  "topic": "Grids",
+  "q": "Shortest path in a grid with obstacles?",
+  "a": "BFS from the start over 4 (or 8) neighbors with a visited set. O(rows x cols)."
+ },
+ {
+  "id": "dsa-50",
+  "deck": "dsa",
+  "topic": "Complexity",
+  "q": "Why is appending to a dynamic array amortized O(1)?",
+  "a": "Doubling capacity makes the occasional O(n) copy average out: n appends cost O(n) in total."
+ },
+ {
+  "id": "dsa-51",
+  "deck": "dsa",
+  "topic": "Complexity",
+  "q": "Solve T(n) = 2T(n/2) + O(n).",
+  "a": "O(n log n), as in merge sort (master theorem, case 2)."
+ },
+ {
+  "id": "dsa-52",
+  "deck": "dsa",
+  "topic": "Range queries",
+  "q": "Segment tree vs Fenwick tree?",
+  "a": "Both give O(log n) point updates and range queries. Fenwick is shorter and lighter; segment trees support more (lazy range updates, min/max)."
+ },
+ {
+  "id": "dsa-53",
+  "deck": "dsa",
+  "topic": "Strings",
+  "q": "What is the idea behind KMP?",
+  "a": "Precompute the longest proper prefix that is also a suffix (failure function) so a mismatch never moves the text pointer back. O(n + m)."
+ },
+ {
+  "id": "dsa-54",
+  "deck": "dsa",
+  "topic": "Strings",
+  "q": "What is Rabin-Karp?",
+  "a": "Compare rolling hashes of the window with the pattern's hash and verify on a match. Average O(n + m), worst O(nm)."
+ },
+ {
+  "id": "dsa-55",
+  "deck": "dsa",
+  "topic": "Strings",
+  "q": "Longest palindromic substring in O(n^2)?",
+  "a": "Expand around each of the 2n - 1 centers. Manacher's algorithm gets O(n)."
+ },
+ {
+  "id": "dsa-56",
+  "deck": "dsa",
+  "topic": "Strings",
+  "q": "Check if two strings are anagrams in O(n)?",
+  "a": "Count character frequencies (array or hash map) and compare the counts."
+ },
+ {
+  "id": "dsa-57",
+  "deck": "dsa",
+  "topic": "Stacks and queues",
+  "q": "Valid parentheses?",
+  "a": "Push opening brackets; each closing bracket must match the stack top. Valid only if the stack ends empty."
+ },
+ {
+  "id": "dsa-58",
+  "deck": "dsa",
+  "topic": "Stacks and queues",
+  "q": "Implement a queue with two stacks?",
+  "a": "Push onto an in-stack; to pop, if the out-stack is empty move everything over. Amortized O(1)."
+ },
+ {
+  "id": "dsa-59",
+  "deck": "dsa",
+  "topic": "Trees",
+  "q": "Validate a binary search tree?",
+  "a": "Recurse with (low, high) bounds, or check that the inorder traversal is strictly increasing."
+ },
+ {
+  "id": "dsa-60",
+  "deck": "dsa",
+  "topic": "Number theory",
+  "q": "Fast modular exponentiation and modular inverse?",
+  "a": "Square-and-multiply in O(log e). For prime p, the inverse of a is a^(p-2) mod p (Fermat)."
+ },
+ {
+  "id": "dsa-61",
+  "deck": "dsa",
+  "topic": "Number theory",
+  "q": "Sieve of Eratosthenes complexity?",
+  "a": "O(n log log n) time and O(n) space."
+ },
+ {
+  "id": "dsa-62",
+  "deck": "dsa",
+  "topic": "Number theory",
+  "q": "Complexity of Euclid's GCD?",
+  "a": "O(log min(a, b))."
+ },
+ {
+  "id": "dsa-63",
+  "deck": "dsa",
+  "topic": "Interview technique",
+  "q": "What should you do first in a coding interview?",
+  "a": "Clarify the problem and constraints, work a small example, state the brute force and its cost, then optimize and test edge cases aloud."
+ },
+ {
+  "id": "dsa-64",
+  "deck": "dsa",
+  "topic": "Interview technique",
+  "q": "How do you pick a technique from the constraints?",
+  "a": "n <= 20: bitmask or backtracking. n <= 10^3 to 10^4: O(n^2). n up to 10^5 to 10^6: O(n log n) or O(n). n up to 10^18: math or binary search."
+ },
+ {
+  "id": "cs-01",
+  "deck": "cs",
+  "topic": "Operating systems",
+  "q": "Process vs thread?",
+  "a": "A process has its own address space (isolated, heavier). Threads share a process's memory and resources, so they are cheaper but need synchronization."
+ },
+ {
+  "id": "cs-02",
+  "deck": "cs",
+  "topic": "Operating systems",
+  "q": "What is a context switch and why is it costly?",
+  "a": "Saving one task's CPU state and loading another's. It costs time and hurts cache and TLB locality."
+ },
+ {
+  "id": "cs-03",
+  "deck": "cs",
+  "topic": "Operating systems",
+  "q": "What are the four conditions for deadlock?",
+  "a": "Mutual exclusion, hold and wait, no preemption, circular wait. Breaking any one prevents deadlock."
+ },
+ {
+  "id": "cs-04",
+  "deck": "cs",
+  "topic": "Operating systems",
+  "q": "Mutex vs semaphore?",
+  "a": "A mutex is a lock owned by one thread for mutual exclusion. A semaphore is a counter allowing N concurrent holders or signaling between threads."
+ },
+ {
+  "id": "cs-05",
+  "deck": "cs",
+  "topic": "Operating systems",
+  "q": "What is a race condition and how do you fix it?",
+  "a": "The result depends on the timing of unsynchronized access to shared data. Use locks, atomics, or avoid shared mutable state."
+ },
+ {
+  "id": "cs-06",
+  "deck": "cs",
+  "topic": "Operating systems",
+  "q": "How does virtual memory work?",
+  "a": "Each process sees a private address space; page tables map pages to physical frames. It gives isolation, demand paging and more memory than RAM."
+ },
+ {
+  "id": "cs-07",
+  "deck": "cs",
+  "topic": "Operating systems",
+  "q": "What is the TLB?",
+  "a": "A small cache of recent page-table translations. A miss forces a page-table walk."
+ },
+ {
+  "id": "cs-08",
+  "deck": "cs",
+  "topic": "Operating systems",
+  "q": "LRU vs FIFO page replacement, and Belady's anomaly?",
+  "a": "LRU evicts the least recently used page. FIFO can show Belady's anomaly: giving it more frames can cause more page faults."
+ },
+ {
+  "id": "cs-09",
+  "deck": "cs",
+  "topic": "Operating systems",
+  "q": "What is thrashing?",
+  "a": "The system spends most of its time swapping pages because the working sets don't fit in memory."
+ },
+ {
+  "id": "cs-10",
+  "deck": "cs",
+  "topic": "Operating systems",
+  "q": "Round-robin scheduling trade-off?",
+  "a": "Fair and responsive, but the quantum matters: too small wastes time on context switches, too large behaves like FCFS."
+ },
+ {
+  "id": "cs-11",
+  "deck": "cs",
+  "topic": "Operating systems",
+  "q": "What are starvation and aging?",
+  "a": "Starvation: a process never gets the resource. Aging raises a waiting process's priority over time to prevent it."
+ },
+ {
+  "id": "cs-12",
+  "deck": "cs",
+  "topic": "Operating systems",
+  "q": "What happens on a system call?",
+  "a": "User code traps into the kernel (mode switch), the kernel performs the service, then returns to user mode."
+ },
+ {
+  "id": "cs-13",
+  "deck": "cs",
+  "topic": "Operating systems",
+  "q": "Solve producer-consumer.",
+  "a": "A bounded buffer guarded by a mutex plus two semaphores (empty slots, full slots), or a condition variable."
+ },
+ {
+  "id": "cs-14",
+  "deck": "cs",
+  "topic": "Operating systems",
+  "q": "Stack vs heap memory?",
+  "a": "Stack: per thread, automatic, LIFO, fast. Heap: dynamic allocation freed manually or by a GC, slower and shared."
+ },
+ {
+  "id": "cs-15",
+  "deck": "cs",
+  "topic": "Databases",
+  "q": "What does ACID stand for?",
+  "a": "Atomicity, Consistency, Isolation, Durability."
+ },
+ {
+  "id": "cs-16",
+  "deck": "cs",
+  "topic": "Databases",
+  "q": "1NF, 2NF, 3NF in one line each?",
+  "a": "1NF: atomic values. 2NF: no partial dependency on part of a composite key. 3NF: no transitive dependency of non-key attributes on the key."
+ },
+ {
+  "id": "cs-17",
+  "deck": "cs",
+  "topic": "Databases",
+  "q": "How does an index speed up reads and what does it cost?",
+  "a": "A B+tree turns a scan into an O(log n) lookup, but costs space and slows writes because the index must be updated."
+ },
+ {
+  "id": "cs-18",
+  "deck": "cs",
+  "topic": "Databases",
+  "q": "Clustered vs non-clustered index?",
+  "a": "Clustered: rows are stored in index order (one per table). Non-clustered: a separate structure pointing to rows."
+ },
+ {
+  "id": "cs-19",
+  "deck": "cs",
+  "topic": "Databases",
+  "q": "INNER JOIN vs LEFT JOIN?",
+  "a": "INNER keeps only matching rows. LEFT keeps all left rows, with NULLs where the right side has no match."
+ },
+ {
+  "id": "cs-20",
+  "deck": "cs",
+  "topic": "Databases",
+  "q": "WHERE vs HAVING?",
+  "a": "WHERE filters rows before grouping; HAVING filters groups after aggregation."
+ },
+ {
+  "id": "cs-21",
+  "deck": "cs",
+  "topic": "Databases",
+  "q": "Primary key vs unique key?",
+  "a": "A primary key uniquely identifies rows, one per table, no NULLs. A unique key is also unique but a table can have several (NULL handling varies)."
+ },
+ {
+  "id": "cs-22",
+  "deck": "cs",
+  "topic": "Databases",
+  "q": "Which anomalies does each SQL isolation level prevent?",
+  "a": "Read uncommitted: none. Read committed: dirty reads. Repeatable read: also non-repeatable reads. Serializable: also phantoms."
+ },
+ {
+  "id": "cs-23",
+  "deck": "cs",
+  "topic": "Databases",
+  "q": "DELETE vs TRUNCATE vs DROP?",
+  "a": "DELETE removes chosen rows (logged, can be rolled back). TRUNCATE removes all rows quickly. DROP removes the table itself."
+ },
+ {
+  "id": "cs-24",
+  "deck": "cs",
+  "topic": "Databases",
+  "q": "Find the second highest salary in SQL.",
+  "a": "SELECT MAX(sal) FROM t WHERE sal < (SELECT MAX(sal) FROM t); or rank with DENSE_RANK() and pick rank 2."
+ },
+ {
+  "id": "cs-25",
+  "deck": "cs",
+  "topic": "Databases",
+  "q": "What does CAP say?",
+  "a": "During a network partition a distributed store must give up either consistency or availability. Partitions happen, so the real choice is made when they do."
+ },
+ {
+  "id": "cs-26",
+  "deck": "cs",
+  "topic": "Databases",
+  "q": "SQL vs NoSQL?",
+  "a": "SQL: structured schema, joins, ACID. NoSQL: flexible schema and horizontal scale in several models (document, key-value, wide-column, graph)."
+ },
+ {
+  "id": "cs-27",
+  "deck": "cs",
+  "topic": "Databases",
+  "q": "How do databases handle deadlocks?",
+  "a": "Detect them with a wait-for graph and abort a victim, or use lock timeouts."
+ },
+ {
+  "id": "cs-28",
+  "deck": "cs",
+  "topic": "Databases",
+  "q": "What does EXPLAIN show?",
+  "a": "The query plan: index vs full scan, join order and estimated cost, so you can find slow steps."
+ },
+ {
+  "id": "cs-29",
+  "deck": "cs",
+  "topic": "Networks",
+  "q": "TCP vs UDP?",
+  "a": "TCP: connection-oriented, reliable, ordered, congestion-controlled. UDP: connectionless, no guarantees, lower latency (DNS, video, games)."
+ },
+ {
+  "id": "cs-30",
+  "deck": "cs",
+  "topic": "Networks",
+  "q": "TCP three-way handshake?",
+  "a": "SYN, SYN-ACK, ACK."
+ },
+ {
+  "id": "cs-31",
+  "deck": "cs",
+  "topic": "Networks",
+  "q": "What happens when you type a URL and press Enter?",
+  "a": "DNS lookup, TCP (and TLS) handshake, HTTP request, server response, then the browser parses and renders the page."
+ },
+ {
+  "id": "cs-32",
+  "deck": "cs",
+  "topic": "Networks",
+  "q": "HTTP vs HTTPS?",
+  "a": "HTTPS is HTTP over TLS: encryption, integrity, and server authentication via certificates."
+ },
+ {
+  "id": "cs-33",
+  "deck": "cs",
+  "topic": "Networks",
+  "q": "Which HTTP methods are idempotent?",
+  "a": "GET, PUT, DELETE (and HEAD, OPTIONS). POST is not."
+ },
+ {
+  "id": "cs-34",
+  "deck": "cs",
+  "topic": "Networks",
+  "q": "401 vs 403, and 502 vs 504?",
+  "a": "401: not authenticated. 403: authenticated but not allowed. 502: bad response from an upstream server. 504: upstream timed out."
+ },
+ {
+  "id": "cs-35",
+  "deck": "cs",
+  "topic": "Networks",
+  "q": "What makes an API RESTful?",
+  "a": "Stateless client-server calls on resources (URLs) using standard HTTP verbs and status codes."
+ },
+ {
+  "id": "cs-36",
+  "deck": "cs",
+  "topic": "Networks",
+  "q": "How does DNS resolve a name?",
+  "a": "A resolver walks root, TLD, then authoritative servers and caches answers for their TTL."
+ },
+ {
+  "id": "cs-37",
+  "deck": "cs",
+  "topic": "Networks",
+  "q": "TCP/IP layers?",
+  "a": "Link, Internet (IP), Transport (TCP/UDP), Application (HTTP, DNS)."
+ },
+ {
+  "id": "cs-38",
+  "deck": "cs",
+  "topic": "Networks",
+  "q": "L4 vs L7 load balancing?",
+  "a": "L4 routes by IP and port (fast). L7 inspects HTTP (path, headers, cookies) for smarter routing."
+ },
+ {
+  "id": "cs-39",
+  "deck": "cs",
+  "topic": "OOP",
+  "q": "Four pillars of OOP?",
+  "a": "Encapsulation, abstraction, inheritance, polymorphism."
+ },
+ {
+  "id": "cs-40",
+  "deck": "cs",
+  "topic": "OOP",
+  "q": "Overloading vs overriding?",
+  "a": "Overloading: same name, different parameters, resolved at compile time. Overriding: a subclass redefines a method, resolved at runtime."
+ },
+ {
+  "id": "cs-41",
+  "deck": "cs",
+  "topic": "OOP",
+  "q": "Abstract class vs interface?",
+  "a": "Abstract class: shared state and partial implementation, single inheritance. Interface: a behavior contract a class can implement many of."
+ },
+ {
+  "id": "cs-42",
+  "deck": "cs",
+  "topic": "OOP",
+  "q": "What does SOLID stand for?",
+  "a": "Single responsibility, Open/closed, Liskov substitution, Interface segregation, Dependency inversion."
+ },
+ {
+  "id": "cs-43",
+  "deck": "cs",
+  "topic": "OOP",
+  "q": "Composition vs inheritance?",
+  "a": "Prefer composition ('has-a') for flexibility. Inheritance ('is-a') ties the subclass tightly to its parent."
+ },
+ {
+  "id": "cs-44",
+  "deck": "cs",
+  "topic": "OOP",
+  "q": "Observer pattern?",
+  "a": "A subject notifies registered observers of state changes without knowing their concrete types."
+ },
+ {
+  "id": "cs-45",
+  "deck": "cs",
+  "topic": "Languages",
+  "q": "Python list vs tuple, and the GIL?",
+  "a": "Lists are mutable, tuples immutable. The GIL lets one thread run Python bytecode at a time, so CPU-bound threads don't run in parallel."
+ },
+ {
+  "id": "cs-46",
+  "deck": "cs",
+  "topic": "Languages",
+  "q": "What is RAII in C++?",
+  "a": "Tie a resource's lifetime to an object's: the destructor releases memory or locks, even when exceptions occur."
+ },
+ {
+  "id": "cs-47",
+  "deck": "cs",
+  "topic": "Languages",
+  "q": "Memory leak vs dangling pointer?",
+  "a": "Leak: memory allocated and never freed. Dangling pointer: points at memory that has already been freed."
+ },
+ {
+  "id": "cs-48",
+  "deck": "cs",
+  "topic": "Languages",
+  "q": "How do virtual functions work in C++?",
+  "a": "A vtable lets a call through a base pointer dispatch to the derived override at runtime."
+ },
+ {
+  "id": "hr-01",
+  "deck": "hr",
+  "topic": "Behavioral",
+  "q": "What is the STAR method?",
+  "a": "Situation, Task, Action, Result. Be specific, focus on your actions, and end with a measurable outcome."
+ },
+ {
+  "id": "hr-02",
+  "deck": "hr",
+  "topic": "Behavioral",
+  "q": "How do you answer 'Tell me about yourself'?",
+  "a": "Present, past, future in about a minute: what you do now, the relevant experience and projects, and what you want next."
+ },
+ {
+  "id": "hr-03",
+  "deck": "hr",
+  "topic": "Behavioral",
+  "q": "How do you handle a technical disagreement?",
+  "a": "Listen, return to the goal and the data, propose a test or compromise, and commit once the decision is made."
+ },
+ {
+  "id": "hr-04",
+  "deck": "hr",
+  "topic": "Behavioral",
+  "q": "How do you answer 'Describe a failure'?",
+  "a": "Pick a real one, own your part, and say concretely what you changed afterward."
+ },
+ {
+  "id": "hr-05",
+  "deck": "hr",
+  "topic": "Behavioral",
+  "q": "How do you explain a project in an interview?",
+  "a": "Problem, your role, one key technical decision and why, the result with numbers, and what you would do differently."
+ },
+ {
+  "id": "hr-06",
+  "deck": "hr",
+  "topic": "Behavioral",
+  "q": "What should you ask the interviewer?",
+  "a": "The team's biggest challenge, how success is measured in the first months, how engineers grow, and how decisions get made."
+ }
+]

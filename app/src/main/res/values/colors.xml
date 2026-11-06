@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- thermal palette -->
+    <color name="bg">#06124A</color>
+    <color name="warn">#FAE226</color>
+    <color name="hot">#FA8E24</color>
+</resources>
