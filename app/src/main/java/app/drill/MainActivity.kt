@@ -233,7 +233,7 @@ private fun Root() {
     val store = remember { Store(ctx) }
     var tick by remember { mutableIntStateOf(0) }
     var tab by remember { mutableIntStateOf(0) }
-    val bump = { tick++ }
+    val bump: () -> Unit = { tick++ }
 
     Column(modifier = Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
         Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
