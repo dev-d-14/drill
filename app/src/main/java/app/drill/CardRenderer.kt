@@ -28,7 +28,7 @@ object CardRenderer {
     const val PAD_B = 16f
     const val HEADER_H = 28f
     const val FOOTER_H = 28f
-    const val BTN_START = 0.36f   // share of content width left of the buttons
+    const val BTN_W = 76f         // buttons are anchored to the right edge at fixed size
     const val BTN_GAP = 8f
 
     private const val WHITE = 0xFFF4F7FF.toInt()
@@ -50,6 +50,8 @@ object CardRenderer {
         0xFFFFD6D6.toInt(), 0xFFFFFCF6.toInt(),
     )
     private val BAR_POS = floatArrayOf(0f, .20f, .36f, .48f, .52f, .58f, .70f, .82f, .92f, 1f)
+
+    private val cache = HashMap<Int, Bitmap>()
 
     private fun bgRes(deck: String, flipped: Boolean): Int {
         if (flipped) return R.drawable.thermal_back
@@ -80,14 +82,14 @@ object CardRenderer {
 
         // ---- thermal background (crop to fill, anchored to the right)
         val opts = BitmapFactory.Options().apply { inScaled = false }
-        val bg = BitmapFactory.decodeResource(ctx.resources, bgRes(deck, st.flipped || card == null), opts)
+        val key = bgRes(deck, st.flipped || card == null)
+        val bg = cache.getOrPut(key) { BitmapFactory.decodeResource(ctx.resources, key, opts) }
         val sc = maxOf(w / bg.width.toFloat(), h / bg.height.toFloat())
         val dw = bg.width * sc
         val dh = bg.height * sc
         val ox = w - dw
         val oy = (h - dh) / 2f
         c.drawBitmap(bg, null, RectF(ox, oy, ox + dw, oy + dh), Paint(Paint.FILTER_BITMAP_FLAG))
-        bg.recycle()
 
         if (card == null) {
             drawPlate(c, ::d, w, h, "No cards in this deck. Open Drill to add or import some.")
@@ -237,9 +239,8 @@ object CardRenderer {
         val cy = h - d(PAD_B + FOOTER_H / 2f)
         c.drawText("HEAT ${6 - st.box}/5", d(PAD_L), cy + d(10.5f) * 0.35f, text(WHITE, 10.5f, px, MONO, 0.12f))
 
-        val contentW = w - d(PAD_L + PAD_R)
-        val left = d(PAD_L) + contentW * BTN_START
-        val btnW = (contentW * (1f - BTN_START) - d(BTN_GAP)) / 2f
+        val btnW = d(BTN_W)
+        val left = w - d(PAD_R) - btnW * 2 - d(BTN_GAP)
         val top = h - d(PAD_B + FOOTER_H)
         val bottom = h - d(PAD_B)
 

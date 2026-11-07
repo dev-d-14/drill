@@ -3,7 +3,6 @@ package app.drill
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
@@ -108,7 +107,7 @@ private fun Root(context: Context, snap: Snapshot) {
         )
         if (snap.card != null) {
             if (snap.flipped) {
-                GradeRow(w, h)
+                GradeRow()
             } else {
                 Column(modifier = GlanceModifier.fillMaxSize()) {
                     Spacer(GlanceModifier.height(CardRenderer.PAD_T.dp))
@@ -116,8 +115,8 @@ private fun Root(context: Context, snap: Snapshot) {
                         Spacer(GlanceModifier.width(CardRenderer.PAD_L.dp))
                         Box(
                             modifier = GlanceModifier
-                                .width(86.dp)
-                                .height(CardRenderer.HEADER_H.dp)
+                                .width(110.dp)
+                                .height((CardRenderer.HEADER_H + 8f).dp)
                                 .clickable(actionRunCallback<DeckAction>()),
                         ) {}
                     }
@@ -128,28 +127,28 @@ private fun Root(context: Context, snap: Snapshot) {
 }
 
 @Composable
-private fun GradeRow(w: Float, h: Float) {
-    val contentW = w - CardRenderer.PAD_L - CardRenderer.PAD_R
-    val left = CardRenderer.PAD_L + contentW * CardRenderer.BTN_START
-    val btnW = (contentW * (1f - CardRenderer.BTN_START) - CardRenderer.BTN_GAP) / 2f
-    val top = h - CardRenderer.PAD_B - CardRenderer.FOOTER_H
+private fun GradeRow() {
+    // anchored to the bottom-right in fixed dp, so it stays on the drawn buttons at any widget size.
+    // The hit areas are a little taller than the drawn buttons.
     Column(modifier = GlanceModifier.fillMaxSize()) {
-        Spacer(GlanceModifier.height(top.dp))
+        Spacer(GlanceModifier.defaultWeight())
         Row(modifier = GlanceModifier.fillMaxWidth()) {
-            Spacer(GlanceModifier.width(left.dp))
-            GradeHit(btnW.dp, "again")
+            Spacer(GlanceModifier.defaultWeight())
+            GradeHit("again")
             Spacer(GlanceModifier.width(CardRenderer.BTN_GAP.dp))
-            GradeHit(btnW.dp, "got")
+            GradeHit("got")
+            Spacer(GlanceModifier.width(CardRenderer.PAD_R.dp))
         }
+        Spacer(GlanceModifier.height((CardRenderer.PAD_B - 4f).dp))
     }
 }
 
 @Composable
-private fun GradeHit(width: Dp, grade: String) {
+private fun GradeHit(grade: String) {
     Box(
         modifier = GlanceModifier
-            .width(width)
-            .height(CardRenderer.FOOTER_H.dp)
+            .width(CardRenderer.BTN_W.dp)
+            .height((CardRenderer.FOOTER_H + 8f).dp)
             .clickable(actionRunCallback<GradeAction>(actionParametersOf(GradeAction.GRADE_KEY to grade))),
     ) {}
 }
