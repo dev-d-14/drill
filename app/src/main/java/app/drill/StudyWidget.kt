@@ -21,12 +21,13 @@ import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
 import androidx.glance.layout.Box
+import androidx.glance.layout.Column
 import androidx.glance.layout.ContentScale
 import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
-import androidx.glance.layout.padding
 import androidx.glance.layout.width
 
 /** Thermal-camera palette. */
@@ -93,28 +94,34 @@ private fun Root(context: Context, snap: Snapshot) {
     val h = size.height.value
     val bmp = CardRenderer.render(context, snap, w, h)
 
-    Box(modifier = GlanceModifier.fillMaxSize()) {
+    // tap anywhere flips; the deck label (front) and the two buttons (back) sit on top
+    Box(
+        modifier = GlanceModifier
+            .fillMaxSize()
+            .clickable(actionRunCallback<FlipAction>()),
+    ) {
         Image(
             provider = ImageProvider(bmp),
             contentDescription = snap.card?.let { if (snap.flipped) it.a else it.q },
             contentScale = ContentScale.FillBounds,
-            modifier = GlanceModifier.fillMaxSize().clickable(actionRunCallback<FlipAction>()),
+            modifier = GlanceModifier.fillMaxSize(),
         )
         if (snap.card != null) {
             if (snap.flipped) {
                 GradeRow(w, h)
             } else {
-                // deck switcher sits over the deck label in the header
-                Box(
-                    modifier = GlanceModifier
-                        .padding(
-                            start = CardRenderer.PAD_L.dp,
-                            top = CardRenderer.PAD_T.dp,
-                        )
-                        .width(86.dp)
-                        .height(CardRenderer.HEADER_H.dp)
-                        .clickable(actionRunCallback<DeckAction>()),
-                ) {}
+                Column(modifier = GlanceModifier.fillMaxSize()) {
+                    Spacer(GlanceModifier.height(CardRenderer.PAD_T.dp))
+                    Row(modifier = GlanceModifier.fillMaxWidth()) {
+                        Spacer(GlanceModifier.width(CardRenderer.PAD_L.dp))
+                        Box(
+                            modifier = GlanceModifier
+                                .width(86.dp)
+                                .height(CardRenderer.HEADER_H.dp)
+                                .clickable(actionRunCallback<DeckAction>()),
+                        ) {}
+                    }
+                }
             }
         }
     }
@@ -126,10 +133,14 @@ private fun GradeRow(w: Float, h: Float) {
     val left = CardRenderer.PAD_L + contentW * CardRenderer.BTN_START
     val btnW = (contentW * (1f - CardRenderer.BTN_START) - CardRenderer.BTN_GAP) / 2f
     val top = h - CardRenderer.PAD_B - CardRenderer.FOOTER_H
-    Row(modifier = GlanceModifier.padding(start = left.dp, top = top.dp)) {
-        GradeHit(btnW.dp, "again")
-        Spacer(GlanceModifier.width(CardRenderer.BTN_GAP.dp))
-        GradeHit(btnW.dp, "got")
+    Column(modifier = GlanceModifier.fillMaxSize()) {
+        Spacer(GlanceModifier.height(top.dp))
+        Row(modifier = GlanceModifier.fillMaxWidth()) {
+            Spacer(GlanceModifier.width(left.dp))
+            GradeHit(btnW.dp, "again")
+            Spacer(GlanceModifier.width(CardRenderer.BTN_GAP.dp))
+            GradeHit(btnW.dp, "got")
+        }
     }
 }
 
