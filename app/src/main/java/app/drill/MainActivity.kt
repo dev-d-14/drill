@@ -1,7 +1,5 @@
 package app.drill
 
-import android.appwidget.AppWidgetManager
-import android.content.ComponentName
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -10,7 +8,13 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,7 +38,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -42,9 +45,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.glance.appwidget.updateAll
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
                     outline = Palette.Soft,
                 ),
             ) {
-                Screen()
+                Root()
             }
         }
     }
@@ -72,9 +72,6 @@ class MainActivity : ComponentActivity() {
 
 private val Mono = FontFamily.Monospace
 
-private fun refresh(scope: CoroutineScope, ctx: Context) {
-    scope.launch { StudyWidget().updateAll(ctx) }
-}
 
 @Composable
 private fun Label(text: String) {
@@ -82,11 +79,8 @@ private fun Label(text: String) {
 }
 
 @Composable
-private fun Screen() {
+private fun ManageScreen(store: Store, tick: Int, onChange: () -> Unit) {
     val ctx = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val store = remember { Store(ctx) }
-    var tick by remember { mutableIntStateOf(0) }
     var message by remember { mutableStateOf("") }
 
     var newDeck by remember { mutableStateOf("ml") }
@@ -104,8 +98,7 @@ private fun Screen() {
                 runCatching { "Imported ${store.importCustom(text)} cards." }
                     .getOrElse { "That is not a valid cards file." }
             }
-            tick++
-            refresh(scope, ctx)
+            onChange()
         }
     }
 
@@ -117,7 +110,6 @@ private fun Screen() {
 
     Column(
         modifier = Modifier
-            .statusBarsPadding()
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp, vertical = 28.dp),
         verticalArrangement = Arrangement.spacedBy(28.dp),
@@ -138,9 +130,8 @@ private fun Screen() {
                         selected = d == deck,
                         onClick = {
                             store.setDeck(d)
-                            tick++
-                            refresh(scope, ctx)
-                        },
+                            onChange()
+                                        },
                         label = { Text(d.uppercase(), fontFamily = Mono, fontWeight = FontWeight.Bold) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = Palette.Warn,
@@ -203,9 +194,8 @@ private fun Screen() {
                         newQ = ""
                         newA = ""
                         message = "Card saved."
-                        tick++
-                        refresh(scope, ctx)
-                    } else {
+                        onChange()
+                                } else {
                         message = "Write both a question and an answer."
                     }
                 },
@@ -220,28 +210,13 @@ private fun Screen() {
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Label("WIDGET")
-            Button(
-                onClick = {
-                    val awm = AppWidgetManager.getInstance(ctx)
-                    if (awm.isRequestPinAppWidgetSupported) {
-                        awm.requestPinAppWidget(ComponentName(ctx, StudyWidgetReceiver::class.java), null, null)
-                    } else {
-                        message = "Long-press your home screen, tap Widgets, and pick Drill."
-                    }
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Palette.Ink,
-                    contentColor = Palette.Bg,
-                ),
-            ) { Text("Add to home screen", fontWeight = FontWeight.Bold) }
+            Label("PROGRESS")
             OutlinedButton(
                 onClick = {
                     store.resetProgress()
                     message = "Progress reset."
-                    tick++
-                    refresh(scope, ctx)
-                },
+                    onChange()
+                        },
             ) { Text("Reset progress", color = Palette.Ink) }
         }
 
@@ -249,5 +224,36 @@ private fun Screen() {
             Text(message, fontFamily = Mono, color = Palette.Pale, fontSize = 13.sp)
         }
         Spacer(Modifier.height(24.dp))
+    }
+}
+
+@Composable
+private fun Root() {
+    val ctx = LocalContext.current
+    val store = remember { Store(ctx) }
+    var tick by remember { mutableIntStateOf(0) }
+    var tab by remember { mutableIntStateOf(0) }
+    val bump = { tick++ }
+
+    Column(modifier = Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
+        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+            if (tab == 0) StudyScreen(store, tick, bump) else ManageScreen(store, tick, bump)
+        }
+        Row(modifier = Modifier.fillMaxWidth().background(Palette.Deeper)) {
+            listOf("STUDY", "CARDS").forEachIndexed { i, name ->
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(52.dp)
+                        .clickable { tab = i },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        name, fontFamily = Mono, fontWeight = FontWeight.Bold, fontSize = 13.sp,
+                        color = if (tab == i) Palette.Warn else Palette.Soft,
+                    )
+                }
+            }
+        }
     }
 }

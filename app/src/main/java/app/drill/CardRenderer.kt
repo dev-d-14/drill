@@ -64,7 +64,7 @@ object CardRenderer {
         }
     }
 
-    fun render(ctx: Context, st: Snapshot, wDp: Float, hDp: Float): Bitmap {
+    fun render(ctx: Context, st: Snapshot, wDp: Float, hDp: Float, withButtons: Boolean = true): Bitmap {
         val density = ctx.resources.displayMetrics.density
         val px = minOf(density, 1100f / maxOf(wDp, hDp))
         val w = (wDp * px).toInt().coerceAtLeast(2)
@@ -92,7 +92,7 @@ object CardRenderer {
         c.drawBitmap(bg, null, RectF(ox, oy, ox + dw, oy + dh), Paint(Paint.FILTER_BITMAP_FLAG))
 
         if (card == null) {
-            drawPlate(c, ::d, w, h, "No cards in this deck. Open Drill to add or import some.")
+            drawPlate(c, ::d, w, h, "No cards in this deck. Open the CARDS tab to add or import some.")
             drawHud(c, ::d, w, h, st.box)
             return bmp
         }
@@ -111,7 +111,7 @@ object CardRenderer {
         drawHeader(c, ::d, w, card, st)
         if (st.flipped) {
             drawAnswer(c, ::d, w, h, card)
-            drawBackFooter(c, ::d, w, h, st)
+            drawBackFooter(c, ::d, w, h, st, withButtons)
         } else {
             drawQuestion(c, ::d, w, h, card)
             drawFrontFooter(c, ::d, w, h, st)
@@ -234,11 +234,12 @@ object CardRenderer {
         c.drawText("TAP TO FLIP · %02d".format(st.today), w - d(PAD_R), base, r)
     }
 
-    private fun drawBackFooter(c: Canvas, d: (Float) -> Float, w: Int, h: Int, st: Snapshot) {
+    private fun drawBackFooter(c: Canvas, d: (Float) -> Float, w: Int, h: Int, st: Snapshot, withButtons: Boolean) {
         val px = pxOf(d)
         val cy = h - d(PAD_B + FOOTER_H / 2f)
         c.drawText("HEAT ${6 - st.box}/5", d(PAD_L), cy + d(10.5f) * 0.35f, text(WHITE, 10.5f, px, MONO, 0.12f))
 
+        if (!withButtons) return
         val btnW = d(BTN_W)
         val left = w - d(PAD_R) - btnW * 2 - d(BTN_GAP)
         val top = h - d(PAD_B + FOOTER_H)
