@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Drill"
 include(":app")
+include(":sthira")

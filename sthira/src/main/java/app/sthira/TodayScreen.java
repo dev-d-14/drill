@@ -1,0 +1,211 @@
+package app.sthira;
+
+import android.view.Gravity;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import org.json.JSONObject;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.YearMonth;
+import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+/** The first tab: one day, with calendar events and the day's habits in the order they happen. */
+final class TodayScreen {
+
+    private static final int PENDING = 0, DONE = 1, NEXT = 2;
+
+    private static final class Item {
+        final int minute;
+        final View view;
+
+        Item(int minute, View view) {
+            this.minute = minute;
+            this.view = view;
+        }
+    }
+
+    private TodayScreen() {
+    }
+
+    static View build(MainActivity a) {
+        LocalDate today = LocalDate.now();
+        LocalDate d = a.day;
+        boolean isToday = d.equals(today);
+        String label = d.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " · " + d.getDayOfMonth()
+                + " " + d.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+        String title = isToday ? "TODAY" : d.equals(today.plusDays(1)) ? "TOMORROW"
+                : d.equals(today.minusDays(1)) ? "YESTERDAY"
+                : d.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toUpperCase(Locale.ROOT) + " " + d.getDayOfMonth();
+        View calendar = Ui.iconButton(a, Ui.I_CAL, Ui.CREAM, true, "Open the month calendar", v -> {
+            a.calDay = d;
+            a.calMonth = YearMonth.from(d);
+            a.open(MainActivity.CAL);
+        });
+
+        LinearLayout body = Ui.col(a);
+        body.addView(weekStrip(a), Ui.lp(Ui.MATCH, Ui.WRAP));
+
+        List<Item> items = new ArrayList<>();
+        if (!Cal.allowed(a)) {
+            LinearLayout connect = Ui.card(a, Ui.CREAM, v -> a.askCalendar());
+            LinearLayout texts = Ui.col(a);
+            texts.addView(Ui.text(a, "Connect your calendar", 15, Ui.BLACK, Ui.bold));
+            texts.addView(Ui.text(a, "Tap to show your events here", 13, 0xFF4A3520, Ui.regular),
+                    Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 0, 3, 0, 0));
+            connect.addView(texts, Ui.lp(0, Ui.WRAP, 1));
+            items.add(new Item(-2, connect));
+        }
+        for (Cal.Ev e : Cal.on(a, d)) items.add(new Item(e.startMinute(), eventCard(a, e)));
+
+        if (isToday) addHabits(a, items);
+        else if (d.isBefore(today)) items.add(new Item(1500, pastSummary(a, d)));
+        else if (Store.isTrainingDay(a, d)) {
+            LinearLayout planned = Ui.card(a, Ui.BLACK, null);
+            planned.addView(Ui.titled(a, "TRAINING DAY", "Planned in " + Store.activePlan(a).optString("name"),
+                    Ui.CREAM, Ui.MUTED), Ui.lp(0, Ui.WRAP, 1));
+            items.add(new Item(Store.minutes(Store.trainTime(a)), planned));
+        }
+
+        items.sort((x, y) -> Integer.compare(x.minute, y.minute));
+        for (Item it : items) body.addView(it.view, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 8, 0, 0));
+        if (items.isEmpty()) {
+            body.addView(Ui.text(a, "Nothing on this day.", 14, Ui.CREAM, Ui.regular),
+                    Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 0, 16, 0, 0));
+        }
+
+        View spacer = new View(a);
+        body.addView(spacer, Ui.lp(Ui.MATCH, 0, 1));
+        body.addView(Ui.ghost(a, "+ New event", Ui.CREAM, true, v -> EventEditor.create(a, d)),
+                Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 14, 0, 0));
+        return Ui.page(a, Ui.header(a, label, title, calendar), body);
+    }
+
+    private static View weekStrip(MainActivity a) {
+        LinearLayout strip = Ui.row(a);
+        LocalDate monday = Store.monday(LocalDate.now());
+        for (int i = 0; i < 7; i++) {
+            LocalDate d = monday.plusDays(i);
+            boolean on = d.equals(a.day);
+            LinearLayout cell = Ui.col(a);
+            cell.setGravity(Gravity.CENTER);
+            cell.setMinimumHeight(Ui.dp(52));
+            cell.setBackground(Ui.press(Ui.fill(on ? Ui.OCHRE : Ui.BLACK, 4), 4));
+            int fg = on ? Ui.BLACK : Ui.CREAM;
+            cell.addView(Ui.text(a, d.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
+                    .toUpperCase(Locale.ROOT), 10, fg, Ui.bold));
+            cell.addView(Ui.text(a, String.valueOf(d.getDayOfMonth()), 16, fg, Ui.bold),
+                    Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 0, 3, 0, 0));
+            cell.setOnClickListener(v -> {
+                a.day = d;
+                a.refresh();
+            });
+            strip.addView(cell, Ui.gap(Ui.lp(0, Ui.WRAP, 1), i == 0 ? 0 : 3, 0, i == 6 ? 0 : 3, 6));
+        }
+        return strip;
+    }
+
+    private static View eventCard(MainActivity a, Cal.Ev e) {
+        LinearLayout card = Ui.card(a, Ui.CREAM, v -> EventEditor.edit(a, e));
+        card.setMinimumHeight(Ui.dp(56));
+        LinearLayout texts = Ui.col(a);
+        texts.addView(Ui.text(a, e.title, 15, Ui.BLACK, Ui.bold));
+        texts.addView(Ui.text(a, e.timeText(), 13, 0xFF4A3520, Ui.regular), Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 0, 3, 0, 0));
+        card.addView(texts, Ui.lp(0, Ui.WRAP, 1));
+        card.addView(Ui.label(a, "cal", 0xFF6B0F0F));
+        return card;
+    }
+
+    private static void addHabits(MainActivity a, List<Item> items) {
+        LocalDate today = LocalDate.now();
+        JSONObject log = Store.dayOrEmpty(a, today);
+        boolean hideDigest = Store.root(a).optBoolean("hideDigest", false);
+        boolean digestDone = log.optBoolean("digest", false);
+        boolean medDone = Store.meditated(a, today);
+        String trained = Store.trained(a, today);
+        boolean trainDue = Store.isTrainingDay(a, today) || Store.sessionDone(a);
+        boolean trainDone = !trained.isEmpty();
+        boolean shutDone = Store.shutDown(a, today);
+
+        // The first habit not yet done, in the order of the day, is the one to highlight.
+        int[] minutes = {Store.minutes(Store.digestTime(a)), Store.minutes(Store.homeTime(a)),
+                Store.minutes(Store.trainTime(a)), Store.minutes(Store.shutTime(a))};
+        boolean[] pending = {!hideDigest && !digestDone, !medDone, trainDue && !trainDone, !shutDone};
+        int next = -1;
+        for (int i = 0; i < 4; i++) {
+            if (pending[i] && (next < 0 || minutes[i] < minutes[next])) next = i;
+        }
+
+        if (!hideDigest) {
+            items.add(new Item(minutes[0], habit(a, "DIGEST", digestDone ? "Read today" : "Five items, about 4 minutes",
+                    digestDone ? DONE : next == 0 ? NEXT : PENDING, "READ", v -> a.open(MainActivity.DIGEST))));
+        }
+        String medSub = medDone ? "Done at " + log.optString("medAt") + " · " + log.optInt("med") + " min"
+                : Store.medMinutes(a) + " minutes, when you get home";
+        items.add(new Item(minutes[1], habit(a, "MEDITATE", medSub, medDone ? DONE : next == 1 ? NEXT : PENDING,
+                "START", v -> a.open(MainActivity.MEDITATE))));
+        if (trainDue) {
+            JSONObject w = Store.nextWorkout(a);
+            String name = Store.sessionDone(a) ? Store.session(a).optString("name") : w == null ? "" : w.optString("name");
+            int count = w == null || w.optJSONArray("ex") == null ? 0 : w.optJSONArray("ex").length();
+            String sub = "done".equals(trained) ? "Logged" : "rest".equals(trained) ? "Marked as a rest day"
+                    : "missed".equals(trained) ? "Marked as missed" : count + " exercises, about 30 minutes";
+            items.add(new Item(minutes[2], habit(a, "TRAIN · " + name.toUpperCase(Locale.ROOT), sub,
+                    trainDone ? DONE : next == 2 ? NEXT : PENDING, "OPEN", v -> a.open(MainActivity.TRAIN))));
+        }
+        boolean lateEnough = LocalTime.now().toSecondOfDay() / 60 >= minutes[3] - 120;
+        items.add(new Item(minutes[3], habit(a, "SHUTDOWN", shutDone ? "Done. Phone on the charger."
+                        : "A few taps, then the charger",
+                shutDone ? DONE : next == 3 ? NEXT : PENDING, lateEnough ? "OPEN" : "LATER",
+                v -> a.open(MainActivity.SHUTDOWN))));
+    }
+
+    private static View habit(MainActivity a, String title, String sub, int state, String action, View.OnClickListener l) {
+        boolean next = state == NEXT;
+        LinearLayout card = Ui.card(a, next ? Ui.OCHRE : Ui.BLACK, l);
+        LinearLayout texts = Ui.col(a);
+        if (next) {
+            card.setMinimumHeight(Ui.dp(80));
+            texts.addView(Ui.label(a, "up next", Ui.BLACK), Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 0, 0, 0, 3));
+        }
+        texts.addView(Ui.titled(a, title, sub, next ? Ui.BLACK : Ui.CREAM, next ? Ui.BLACK : Ui.MUTED));
+        card.addView(texts, Ui.lp(0, Ui.WRAP, 1));
+        if (state == DONE) {
+            FrameLayout dot = new FrameLayout(a);
+            dot.setBackground(Ui.fill(Ui.JADE, 16));
+            FrameLayout.LayoutParams p = new FrameLayout.LayoutParams(Ui.dp(18), Ui.dp(18));
+            p.gravity = Gravity.CENTER;
+            dot.addView(new Ui.Icon(a, Ui.I_CHECK, Ui.BLACK), p);
+            card.addView(dot, Ui.lp(Ui.dp(32), Ui.dp(32)));
+        } else if (next) {
+            card.addView(new Ui.Icon(a, Ui.I_RIGHT, Ui.BLACK), Ui.lp(Ui.dp(22), Ui.dp(22)));
+        } else {
+            card.addView(Ui.label(a, action, "LATER".equals(action) ? Ui.MUTED : Ui.OCHRE));
+        }
+        return card;
+    }
+
+    private static View pastSummary(MainActivity a, LocalDate d) {
+        LinearLayout card = Ui.card(a, Ui.BLACK, null);
+        LinearLayout texts = Ui.col(a);
+        texts.addView(Ui.display(a, "WHAT YOU LOGGED", 24, Ui.CREAM));
+        String trained = Store.trained(a, d);
+        String[] lines = {
+                Store.meditated(a, d) ? "Meditated, " + Store.dayOrEmpty(a, d).optInt("med") + " min" : "No meditation logged",
+                trained.isEmpty() ? "No training logged" : "Training: " + trained,
+                Store.journaled(a, d) ? "Journaled on paper" : "No journal logged",
+                Store.shutDown(a, d) ? "Shutdown done" : "No shutdown logged"};
+        for (String s : lines) {
+            TextView t = Ui.text(a, s, 13, Ui.MUTED, Ui.regular);
+            texts.addView(t, Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 0, 4, 0, 0));
+        }
+        card.addView(texts, Ui.lp(0, Ui.WRAP, 1));
+        return card;
+    }
+}

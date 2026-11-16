@@ -1,0 +1,239 @@
+package app.sthira;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+/**
+ * Five items a day, then it ends. A scheduled task writes the day's candidates to a JSON file
+ * in the repo; the phone ranks them with the taste it has learned from the more/less buttons.
+ */
+final class DigestScreen {
+
+    private static final String SOURCE = "https://raw.githubusercontent.com/dev-d-14/drill/main/digest/latest.json";
+    private static final int SHOWN = 5;
+
+    private static JSONObject data;
+    private static boolean loading, triedCache;
+    private static long lastFetch;
+    private static String problem;
+
+    private DigestScreen() {
+    }
+
+    static View build(MainActivity a) {
+        load(a);
+        LinearLayout body = Ui.col(a);
+        String date = data == null ? "" : data.optString("date");
+        boolean fresh = LocalDate.now().toString().equals(date);
+        String label = data == null ? "five items a day" : fresh ? "today · " + Store.digestTime(a) : "from " + date;
+
+        if (data == null || data.optJSONArray("items") == null || data.optJSONArray("items").length() == 0) {
+            String msg = loading ? "Fetching today's digest."
+                    : problem != null ? "Couldn't fetch the digest (" + problem + ")."
+                    : "No digest yet. The first one arrives around " + Store.digestTime(a) + ".";
+            body.addView(Ui.text(a, msg, 14, Ui.CREAM, Ui.regular));
+            body.addView(Ui.ghost(a, "Try again", Ui.CREAM, false, v -> {
+                lastFetch = 0;
+                a.refresh();
+            }), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 12, 0, 0));
+            return Ui.page(a, Ui.header(a, label, "DIGEST", null), body);
+        }
+
+        JSONObject root = Store.root(a);
+        if (!date.equals(root.optString("digestDate"))) {
+            Store.put(root, "digestDate", date);
+            Store.put(root, "votes", new JSONObject());
+            Store.put(root, "read", new JSONObject());
+            Store.save(a);
+        }
+        if (fresh && !Store.dayOrEmpty(a, LocalDate.now()).optBoolean("digest", false)) {
+            Store.put(Store.day(a, LocalDate.now()), "digest", true);
+            Store.save(a);
+        }
+        if (!fresh) {
+            body.addView(Ui.text(a, "Today's digest isn't in yet. This is the last one.", 13, Ui.CREAM, Ui.regular),
+                    Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 0, 0, 8));
+        }
+
+        List<JSONObject> items = ranked(a);
+        JSONObject votes = Store.obj(root, "votes"), read = Store.obj(root, "read");
+        int opened = 0;
+        for (int i = 0; i < items.size(); i++) {
+            final JSONObject item = items.get(i);
+            final String id = item.optString("id");
+            boolean science = "science".equals(item.optString("kind"));
+            if (read.optBoolean(id, false)) opened++;
+            LinearLayout card = Ui.row(a);
+            Ui.pad(card, 14, 12, 8, 12);
+            card.setBackground(science ? new android.graphics.drawable.LayerDrawable(new android.graphics.drawable.Drawable[]{
+                    Ui.fill(Ui.BLACK, 4), Ui.stroke(Ui.JADE, 4, false)}) : Ui.fill(Ui.BLACK, 4));
+            LinearLayout texts = Ui.col(a);
+            String tag = (i + 1) + " · " + item.optString("tag", "tech");
+            if (science && !item.optString("evidence").isEmpty()) tag += " · " + item.optString("evidence") + " evidence";
+            texts.addView(Ui.label(a, tag, science ? Ui.JADE : Ui.OCHRE));
+            TextView title = Ui.text(a, item.optString("title"), 16, Ui.CREAM, Ui.bold);
+            texts.addView(title, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 5, 0, 0));
+            texts.addView(Ui.text(a, item.optString("why"), 13, Ui.MUTED, Ui.regular), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 4, 0, 0));
+            if (!item.optString("source").isEmpty()) {
+                texts.addView(Ui.text(a, item.optString("source") + (read.optBoolean(id, false) ? " · opened" : " · tap to open"),
+                        12, Ui.MUTED, Ui.regular), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 4, 0, 0));
+            }
+            texts.setOnClickListener(v -> {
+                try {
+                    a.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(item.optString("url"))));
+                    Store.put(read, id, true);
+                    Store.put(root, "digestUsed", LocalDate.now().toString());
+                    Store.save(a);
+                } catch (Exception e) {
+                    Toast.makeText(a, "Couldn't open the link.", Toast.LENGTH_SHORT).show();
+                }
+            });
+            card.addView(texts, Ui.lp(0, Ui.WRAP, 1));
+            int vote = votes.optInt(id, 0);
+            card.addView(voteButton(a, item, 1, vote), Ui.gap(Ui.lp(Ui.dp(44), Ui.dp(44)), 8, 0, 0, 0));
+            card.addView(voteButton(a, item, -1, vote), Ui.gap(Ui.lp(Ui.dp(44), Ui.dp(44)), 6, 0, 0, 0));
+            body.addView(card, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, i == 0 ? 0 : 8, 0, 0));
+        }
+
+        JSONObject drill = data.optJSONObject("drill");
+        if (drill != null && drill.optJSONArray("options") != null) body.addView(drillCard(a, drill, date),
+                Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 8, 0, 0));
+
+        body.addView(new View(a), Ui.lp(Ui.MATCH, 0, 1));
+        LinearLayout foot = Ui.row(a);
+        foot.addView(Ui.text(a, opened >= items.size() ? "You're caught up. That's all for today."
+                : "That's the whole digest. No feed.", 14, Ui.CREAM, Ui.regular), Ui.lp(0, Ui.WRAP, 1));
+        foot.addView(Ui.display(a, opened + " / " + items.size(), 28, Ui.CREAM));
+        body.addView(foot, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 16, 0, 0));
+        return Ui.page(a, Ui.header(a, label, "DIGEST", null), body);
+    }
+
+    private static View voteButton(MainActivity a, JSONObject item, int direction, int current) {
+        boolean on = current == direction;
+        View b = Ui.iconButton(a, direction > 0 ? Ui.I_PLUS : Ui.I_MINUS, on ? Ui.BLACK : Ui.CREAM, !on,
+                direction > 0 ? "More like this" : "Less like this", v -> {
+                    JSONObject root = Store.root(a);
+                    JSONObject votes = Store.obj(root, "votes"), tags = Store.obj(root, "tags");
+                    String id = item.optString("id"), tag = item.optString("tag", "tech").toLowerCase(Locale.ROOT);
+                    int before = votes.optInt(id, 0);
+                    int after = before == direction ? 0 : direction;
+                    double weight = tags.optDouble(tag, 0) + 0.5 * (after - before);
+                    Store.put(tags, tag, Math.max(-3, Math.min(3, weight)));
+                    Store.put(votes, id, after);
+                    Store.put(root, "digestUsed", LocalDate.now().toString());
+                    Store.save(a);
+                    a.refresh();
+                });
+        if (on) b.setBackground(Ui.press(Ui.fill(Ui.OCHRE, 4), 4));
+        return b;
+    }
+
+    private static View drillCard(MainActivity a, JSONObject drill, String date) {
+        JSONObject answers = Store.obj(Store.root(a), "drills");
+        JSONArray options = drill.optJSONArray("options");
+        int picked = answers.optInt(date, -1);
+        LinearLayout card = Ui.col(a);
+        card.setBackground(Ui.fill(Ui.OCHRE, 4));
+        Ui.pad(card, 14, 12, 14, 12);
+        card.addView(Ui.label(a, "weekly drill · 60 seconds", Ui.BLACK));
+        card.addView(Ui.text(a, drill.optString("q"), 16, Ui.BLACK, Ui.bold), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 5, 0, 0));
+        if (picked < 0) {
+            card.addView(Ui.button(a, "Answer", Ui.BLACK, Ui.CREAM, v -> {
+                String[] names = new String[options.length()];
+                for (int i = 0; i < names.length; i++) names[i] = options.optString(i);
+                new AlertDialog.Builder(a).setTitle("Pick one").setItems(names, (dlg, which) -> {
+                    Store.put(answers, date, which);
+                    Store.put(Store.root(a), "digestUsed", LocalDate.now().toString());
+                    Store.save(a);
+                    a.refresh();
+                }).show();
+            }), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 10, 0, 0));
+        } else {
+            boolean right = picked == drill.optInt("answer", -1);
+            String verdict = (right ? "Right. " : "Not quite: " + options.optString(drill.optInt("answer", 0)) + ". ")
+                    + drill.optString("why");
+            card.addView(Ui.text(a, verdict, 13, Ui.BLACK, Ui.regular), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 8, 0, 0));
+        }
+        return card;
+    }
+
+    /** Orders the day's candidates by the picker's order plus the learned taste, and keeps the top five. */
+    private static List<JSONObject> ranked(Context c) {
+        JSONArray all = data.optJSONArray("items");
+        JSONObject tags = Store.obj(Store.root(c), "tags");
+        List<JSONObject> list = new ArrayList<>();
+        final List<Double> scores = new ArrayList<>();
+        for (int i = 0; i < all.length(); i++) {
+            JSONObject item = all.optJSONObject(i);
+            if (item == null) continue;
+            double score = (all.length() - i) + 3 * tags.optDouble(item.optString("tag", "tech").toLowerCase(Locale.ROOT), 0);
+            int at = 0;
+            while (at < list.size() && scores.get(at) >= score) at++;
+            list.add(at, item);
+            scores.add(at, score);
+        }
+        return list.size() > SHOWN ? new ArrayList<>(list.subList(0, SHOWN)) : list;
+    }
+
+    private static void load(MainActivity a) {
+        final File cache = new File(a.getFilesDir(), "digest.json");
+        if (!triedCache) {
+            triedCache = true;
+            try {
+                if (cache.exists()) data = new JSONObject(new String(Files.readAllBytes(cache.toPath()), StandardCharsets.UTF_8));
+            } catch (Exception ignored) {
+            }
+        }
+        long now = System.currentTimeMillis();
+        if (loading || now - lastFetch < 15 * 60_000L) return;
+        loading = true;
+        lastFetch = now;
+        new Thread(() -> {
+            try {
+                HttpURLConnection con = (HttpURLConnection) new URL(SOURCE + "?t=" + now / 600_000L).openConnection();
+                con.setConnectTimeout(8000);
+                con.setReadTimeout(8000);
+                if (con.getResponseCode() == 200) {
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    try (InputStream in = con.getInputStream()) {
+                        byte[] buf = new byte[8192];
+                        for (int n; (n = in.read(buf)) > 0; ) out.write(buf, 0, n);
+                    }
+                    JSONObject fetched = new JSONObject(new String(out.toByteArray(), StandardCharsets.UTF_8));
+                    Files.write(cache.toPath(), out.toByteArray());
+                    data = fetched;
+                    problem = null;
+                } else {
+                    problem = con.getResponseCode() == 404 ? null : "error " + con.getResponseCode();
+                }
+            } catch (Exception e) {
+                problem = "no connection";
+            }
+            loading = false;
+            a.handler.post(() -> {
+                if (a.current == MainActivity.DIGEST && !a.isFinishing()) a.refresh();
+            });
+        }, "digest").start();
+    }
+}
