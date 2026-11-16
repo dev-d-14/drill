@@ -27,7 +27,7 @@ final class MeditateScreen {
         final int minutes = running ? root.optInt("medLen", 10) : Store.medMinutes(a);
 
         LinearLayout page = Ui.col(a);
-        page.setBackgroundColor(Ui.BLACK);
+        page.setBackground(new Ui.Ground());
         Ui.pad(page, 20, 16, 20, 28);
 
         LinearLayout top = Ui.row(a);
@@ -46,7 +46,7 @@ final class MeditateScreen {
         ringBox.addView(ring, new FrameLayout.LayoutParams(Ui.MATCH, Ui.MATCH));
         LinearLayout inner = Ui.col(a);
         inner.setGravity(Gravity.CENTER);
-        final TextView time = Ui.display(a, minutes + ":00", 84, Ui.CREAM);
+        final TextView time = Ui.display(a, minutes + ":00", 80, Ui.CREAM);
         inner.addView(time);
         final TextView sub = Ui.text(a, "one bell at the end", 13, Ui.MUTED, Ui.regular);
         inner.addView(sub);

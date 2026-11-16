@@ -68,7 +68,7 @@ public final class Reminders extends BroadcastReceiver {
                     .setSmallIcon(R.drawable.ic_stat)
                     .setContentTitle(title)
                     .setContentText(text)
-                    .setColor(Ui.RED)
+                    .setColor(Ui.MAROON)
                     .setAutoCancel(true)
                     .setContentIntent(PendingIntent.getActivity(c, id, open,
                             PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE))

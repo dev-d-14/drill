@@ -45,11 +45,11 @@ public final class MainActivity extends Activity {
         super.onCreate(state);
         Ui.init(this);
         LinearLayout root = Ui.col(this);
-        root.setBackgroundColor(Ui.BLACK);
+        root.setBackgroundColor(Ui.DEEP);
         stage = new FrameLayout(this);
         root.addView(stage, Ui.lp(Ui.MATCH, 0, 1));
         nav = Ui.row(this);
-        nav.setBackgroundColor(Ui.BLACK);
+        nav.setBackgroundColor(Ui.DEEP);
         root.addView(nav, Ui.lp(Ui.MATCH, Ui.WRAP));
         root.setLayoutTransition(new LayoutTransition());
         setContentView(root);
@@ -197,13 +197,13 @@ public final class MainActivity extends Activity {
         int[] icons = {Ui.I_SUN, Ui.I_CAL, Ui.I_BELL, Ui.I_LINES, Ui.I_BARS};
         for (int tab : tabs) {
             boolean on = tabOf(current) == tab;
-            int color = on ? Ui.OCHRE : Ui.MUTED;
+            int color = on ? Ui.CREAM : 0x99F0E2D3;
             LinearLayout item = Ui.col(this);
             item.setGravity(Gravity.CENTER);
             item.setMinimumHeight(Ui.dp(60));
-            item.setBackground(Ui.press(Ui.fill(Ui.BLACK, 0), 0));
+            item.setBackground(Ui.press(Ui.fill(Ui.DEEP, 0), 0));
             View bar = new View(this);
-            bar.setBackgroundColor(on ? Ui.OCHRE : Ui.BLACK);
+            bar.setBackgroundColor(on ? Ui.CREAM : 0x33F0E2D3);
             item.addView(bar, Ui.lp(Ui.MATCH, Ui.dp(3)));
             item.addView(new Ui.Icon(this, icons[tab], color), Ui.gap(Ui.lp(Ui.dp(22), Ui.dp(22)), 0, 8, 0, 4));
             TextView t = Ui.text(this, names[tab], 10, color, Ui.bold);

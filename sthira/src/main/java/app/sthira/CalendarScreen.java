@@ -58,7 +58,7 @@ final class CalendarScreen {
         Ui.pad(panel, 8, 10, 8, 10);
         LinearLayout names = Ui.row(a);
         for (String n : new String[]{"M", "T", "W", "T", "F", "S", "S"}) {
-            TextView t = Ui.text(a, n, 12, Ui.OCHRE, Ui.bold);
+            TextView t = Ui.text(a, n, 12, Ui.MUTED, Ui.bold);
             t.setGravity(Gravity.CENTER);
             names.addView(t, Ui.lp(0, Ui.WRAP, 1));
         }
@@ -80,11 +80,16 @@ final class CalendarScreen {
                 TextView cell = Ui.text(a, String.valueOf(n), 16, isToday ? Ui.BLACK : Ui.CREAM, isToday ? Ui.bold : Ui.medium);
                 cell.setGravity(Gravity.CENTER);
                 Drawable base = Ui.fill(isToday ? Ui.OCHRE : Ui.CELL, 4);
-                int bar = Store.allDone(a, d) ? Ui.JADE : busy[n] ? Ui.CREAM : 0;
-                Drawable[] layers = bar == 0 ? new Drawable[]{base}
-                        : new Drawable[]{base, Ui.fill(isToday ? Ui.BLACK : bar, 2)};
+                // A small square marks a day with events; a bar marks a day with every habit done.
+                boolean all = Store.allDone(a, d);
+                Drawable[] layers = !all && !busy[n] ? new Drawable[]{base}
+                        : new Drawable[]{base, Ui.fill(isToday ? Ui.MAROON : Ui.CREAM, 0)};
                 LayerDrawable bg = new LayerDrawable(layers);
-                if (bar != 0) bg.setLayerInset(1, Ui.dp(9), cellH - Ui.dp(7), Ui.dp(9), Ui.dp(3));
+                if (layers.length > 1) {
+                    bg.setLayerSize(1, all ? Ui.dp(22) : Ui.dp(5), all ? Ui.dp(3) : Ui.dp(5));
+                    bg.setLayerGravity(1, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                    bg.setLayerInsetBottom(1, Ui.dp(4));
+                }
                 if (chosen && !isToday) {
                     cell.setBackground(Ui.press(new LayerDrawable(new Drawable[]{bg, Ui.stroke(Ui.CREAM, 4, false)}), 4));
                 } else {
@@ -100,7 +105,7 @@ final class CalendarScreen {
             }
             panel.addView(row, Ui.lp(Ui.MATCH, Ui.WRAP));
         }
-        panel.addView(Ui.text(a, "White bar: events that day. Green bar: every habit done.", 12, Ui.MUTED, Ui.regular),
+        panel.addView(Ui.text(a, "Small square: events that day. Bar: every habit done.", 12, Ui.MUTED, Ui.regular),
                 Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 2, 8, 0, 0));
         body.addView(panel, Ui.lp(Ui.MATCH, Ui.WRAP));
 
@@ -112,10 +117,11 @@ final class CalendarScreen {
         List<Cal.Ev> events = Cal.on(a, d);
         for (Cal.Ev e : events) {
             LinearLayout card = Ui.card(a, Ui.CREAM, v -> EventEditor.edit(a, e));
+            card.setBackground(Ui.press(Ui.stroke(Ui.CREAM, 4, false), 4));
             card.setMinimumHeight(Ui.dp(52));
             LinearLayout texts = Ui.col(a);
-            texts.addView(Ui.text(a, e.title, 15, Ui.BLACK, Ui.bold));
-            texts.addView(Ui.text(a, e.timeText(), 13, 0xFF4A3520, Ui.regular), Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 0, 3, 0, 0));
+            texts.addView(Ui.text(a, e.title, 15, Ui.CREAM, Ui.bold));
+            texts.addView(Ui.text(a, e.timeText(), 13, Ui.MUTED, Ui.regular), Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 0, 3, 0, 0));
             card.addView(texts, Ui.lp(0, Ui.WRAP, 1));
             body.addView(card, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 8, 0, 0));
         }

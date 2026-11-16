@@ -19,7 +19,7 @@ import java.util.Locale;
 /** The first tab: one day, with calendar events and the day's habits in the order they happen. */
 final class TodayScreen {
 
-    private static final int PENDING = 0, DONE = 1, NEXT = 2;
+    private static final int PENDING = 0, DONE = 1, NEXT = 2, MISSED = 3;
 
     private static final class Item {
         final int minute;
@@ -55,9 +55,10 @@ final class TodayScreen {
         List<Item> items = new ArrayList<>();
         if (!Cal.allowed(a)) {
             LinearLayout connect = Ui.card(a, Ui.CREAM, v -> a.askCalendar());
+            connect.setBackground(Ui.press(Ui.stroke(Ui.CREAM, 4, false), 4));
             LinearLayout texts = Ui.col(a);
-            texts.addView(Ui.text(a, "Connect your calendar", 15, Ui.BLACK, Ui.bold));
-            texts.addView(Ui.text(a, "Tap to show your events here", 13, 0xFF4A3520, Ui.regular),
+            texts.addView(Ui.text(a, "Connect your calendar", 15, Ui.CREAM, Ui.bold));
+            texts.addView(Ui.text(a, "Tap to show your events here", 13, Ui.MUTED, Ui.regular),
                     Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 0, 3, 0, 0));
             connect.addView(texts, Ui.lp(0, Ui.WRAP, 1));
             items.add(new Item(-2, connect));
@@ -98,10 +99,12 @@ final class TodayScreen {
             cell.setMinimumHeight(Ui.dp(52));
             cell.setBackground(Ui.press(Ui.fill(on ? Ui.OCHRE : Ui.BLACK, 4), 4));
             int fg = on ? Ui.BLACK : Ui.CREAM;
-            cell.addView(Ui.text(a, d.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
-                    .toUpperCase(Locale.ROOT), 10, fg, Ui.bold));
-            cell.addView(Ui.text(a, String.valueOf(d.getDayOfMonth()), 16, fg, Ui.bold),
-                    Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 0, 3, 0, 0));
+            TextView name = Ui.text(a, d.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
+                    .toUpperCase(Locale.ROOT), 10, fg, Ui.bold);
+            name.setLetterSpacing(0.1f);
+            cell.addView(name, Ui.lp(Ui.WRAP, Ui.WRAP));
+            cell.addView(Ui.text(a, String.valueOf(d.getDayOfMonth()), 17, fg, Ui.bebas),
+                    Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 0, 4, 0, 0));
             cell.setOnClickListener(v -> {
                 a.day = d;
                 a.refresh();
@@ -112,13 +115,15 @@ final class TodayScreen {
     }
 
     private static View eventCard(MainActivity a, Cal.Ev e) {
+        // Events are outlined in cream, so they read apart from the solid habit cards.
         LinearLayout card = Ui.card(a, Ui.CREAM, v -> EventEditor.edit(a, e));
+        card.setBackground(Ui.press(Ui.stroke(Ui.CREAM, 4, false), 4));
         card.setMinimumHeight(Ui.dp(56));
         LinearLayout texts = Ui.col(a);
-        texts.addView(Ui.text(a, e.title, 15, Ui.BLACK, Ui.bold));
-        texts.addView(Ui.text(a, e.timeText(), 13, 0xFF4A3520, Ui.regular), Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 0, 3, 0, 0));
+        texts.addView(Ui.text(a, e.title, 15, Ui.CREAM, Ui.bold));
+        texts.addView(Ui.text(a, e.timeText(), 13, Ui.MUTED, Ui.regular), Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 0, 3, 0, 0));
         card.addView(texts, Ui.lp(0, Ui.WRAP, 1));
-        card.addView(Ui.label(a, "cal", 0xFF6B0F0F));
+        card.addView(Ui.label(a, "cal", Ui.MUTED));
         return card;
     }
 
@@ -146,7 +151,8 @@ final class TodayScreen {
             items.add(new Item(minutes[0], habit(a, "DIGEST", digestDone ? "Read today" : "Five items, about 4 minutes",
                     digestDone ? DONE : next == 0 ? NEXT : PENDING, "READ", v -> a.open(MainActivity.DIGEST))));
         }
-        String medSub = medDone ? "Done at " + log.optString("medAt") + " · " + log.optInt("med") + " min"
+        String medAt = log.optString("medAt");
+        String medSub = medDone ? (medAt.isEmpty() ? "Done" : "Done at " + medAt) + " · " + log.optInt("med") + " min"
                 : Store.medMinutes(a) + " minutes, when you get home";
         items.add(new Item(minutes[1], habit(a, "MEDITATE", medSub, medDone ? DONE : next == 1 ? NEXT : PENDING,
                 "START", v -> a.open(MainActivity.MEDITATE))));
@@ -157,7 +163,8 @@ final class TodayScreen {
             String sub = "done".equals(trained) ? "Logged" : "rest".equals(trained) ? "Marked as a rest day"
                     : "missed".equals(trained) ? "Marked as missed" : count + " exercises, about 30 minutes";
             items.add(new Item(minutes[2], habit(a, "TRAIN · " + name.toUpperCase(Locale.ROOT), sub,
-                    trainDone ? DONE : next == 2 ? NEXT : PENDING, "OPEN", v -> a.open(MainActivity.TRAIN))));
+                    "missed".equals(trained) ? MISSED : trainDone ? DONE : next == 2 ? NEXT : PENDING, "OPEN",
+                    v -> a.open(MainActivity.TRAIN))));
         }
         boolean lateEnough = LocalTime.now().toSecondOfDay() / 60 >= minutes[3] - 120;
         items.add(new Item(minutes[3], habit(a, "SHUTDOWN", shutDone ? "Done. Phone on the charger."
@@ -183,6 +190,8 @@ final class TodayScreen {
             p.gravity = Gravity.CENTER;
             dot.addView(new Ui.Icon(a, Ui.I_CHECK, Ui.BLACK), p);
             card.addView(dot, Ui.lp(Ui.dp(32), Ui.dp(32)));
+        } else if (state == MISSED) {
+            card.addView(Ui.label(a, "missed", Ui.MUTED));
         } else if (next) {
             card.addView(new Ui.Icon(a, Ui.I_RIGHT, Ui.BLACK), Ui.lp(Ui.dp(22), Ui.dp(22)));
         } else {

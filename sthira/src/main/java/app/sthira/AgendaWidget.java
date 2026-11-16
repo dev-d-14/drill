@@ -92,17 +92,20 @@ public final class AgendaWidget extends AppWidgetProvider {
                 Store.minutes(Store.trainTime(c)), Store.minutes(Store.shutTime(c))};
         boolean[] shown = {!hideDigest, true, trainDue, true};
         boolean[] done = {log.optBoolean("digest", false), Store.meditated(c, today), !trained.isEmpty(), Store.shutDown(c, today)};
+        boolean missed = "missed".equals(trained);
         int next = -1, total = 0, finished = 0;
         for (int i = 0; i < 4; i++) {
             if (!shown[i]) continue;
             total++;
-            if (done[i]) finished++;
-            else if (next < 0 || minutes[i] < minutes[next]) next = i;
+            if (done[i]) {
+                if (!(i == 2 && missed)) finished++;
+            } else if (next < 0 || minutes[i] < minutes[next]) next = i;
         }
         for (int i = 0; i < 4; i++) {
             if (!shown[i]) continue;
-            lines.add(new StampRenderer.Line(names[i], done[i] ? StampRenderer.DONE : i == next ? StampRenderer.NEXT
-                    : StampRenderer.PENDING, minutes[i]));
+            boolean drawnDone = done[i] && !(i == 2 && missed);
+            lines.add(new StampRenderer.Line(i == 2 && missed ? names[i] + " · missed" : names[i],
+                    drawnDone ? StampRenderer.DONE : i == next ? StampRenderer.NEXT : StampRenderer.PENDING, minutes[i]));
         }
         lines.sort((x, y) -> Integer.compare(x.minute, y.minute));
         m.lines = lines;

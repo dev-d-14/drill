@@ -1,8 +1,8 @@
 <resources>
     <style name="Theme.Sthira" parent="android:Theme.Material.NoActionBar">
-        <item name="android:windowBackground">@color/black</item>
-        <item name="android:statusBarColor">@color/black</item>
-        <item name="android:navigationBarColor">@color/black</item>
-        <item name="android:colorAccent">@color/ochre</item>
+        <item name="android:windowBackground">@color/deep</item>
+        <item name="android:statusBarColor">@color/deep</item>
+        <item name="android:navigationBarColor">@color/deep</item>
+        <item name="android:colorAccent">@color/cream</item>
     </style>
 </resources>

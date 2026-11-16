@@ -18,4 +18,4 @@ A second app in this repo (`sthira/`), for the day rather than for study: calend
 - **Meditate, Shutdown, Review:** a one-tap timer with a bell, a night check-in, and a week that adds itself up.
 - **Widget:** a large home-screen stamp showing today, in the same design as the Ashtavakra widget.
 
-Plain Java with no libraries. Bebas Neue is bundled under the SIL Open Font License (`sthira/src/main/assets/fonts/OFL.txt`).
+Plain Java with no libraries, styled after the Ashtavakra app: deep maroon, cream ink, a halftone sun.

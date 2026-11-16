@@ -28,8 +28,10 @@ import java.util.Locale;
 /** Colours, type and the small set of view builders every screen shares. */
 final class Ui {
 
-    static final int RED = 0xFF9D2F21, BLACK = 0xFF140A08, OCHRE = 0xFFE2A32B, CREAM = 0xFFF3E3B8,
-            JADE = 0xFF5FB89A, MUTED = 0xFFCDBE96, CELL = 0xFF2A1512, SHADOW = 0xFF3A0707;
+    // The Ashtavakra stamp palette: deep maroon ground, maroon panels, cream ink.
+    static final int DEEP = 0xFF3A0610, MAROON = 0xFF7A0E22, CREAM = 0xFFF0E2D3;
+    static final int RED = DEEP, BLACK = MAROON, OCHRE = CREAM, JADE = CREAM,
+            MUTED = 0xB8F0E2D3, CELL = 0xFF5A0A1A, ON_CREAM_SOFT = 0xCC7A0E22;
     static final int MATCH = ViewGroup.LayoutParams.MATCH_PARENT, WRAP = ViewGroup.LayoutParams.WRAP_CONTENT;
     static final int SCROLL_ID = View.generateViewId();
 
@@ -42,11 +44,7 @@ final class Ui {
 
     static void init(Context c) {
         d = c.getResources().getDisplayMetrics().density;
-        try {
-            bebas = Typeface.createFromAsset(c.getAssets(), "fonts/BebasNeue-Regular.ttf");
-        } catch (Exception e) {
-            bebas = Typeface.create("sans-serif-condensed", Typeface.BOLD);
-        }
+        bebas = Typeface.create("sans-serif-black", Typeface.NORMAL);
         regular = Typeface.create("sans-serif", Typeface.NORMAL);
         medium = Typeface.create("sans-serif-medium", Typeface.NORMAL);
         bold = Typeface.create("sans-serif", Typeface.BOLD);
@@ -68,35 +66,37 @@ final class Ui {
 
     static TextView label(Context c, String s, int color) {
         TextView t = text(c, s.toUpperCase(Locale.ROOT), 12, color, bold);
-        t.setLetterSpacing(0.12f);
+        t.setLetterSpacing(0.14f);
         return t;
     }
 
     static TextView display(Context c, String s, float sp, int color) {
-        TextView t = text(c, s, sp, color, bebas);
-        t.setLetterSpacing(0.03f);
+        // Heavy sans, like the stamp's denomination. It runs wider than a condensed face, hence the scale.
+        TextView t = text(c, s, sp * 0.72f, color, bebas);
+        t.setLetterSpacing(0.02f);
         return t;
     }
 
     static Drawable fill(int color, float r) {
         GradientDrawable g = new GradientDrawable();
         g.setColor(color);
-        g.setCornerRadius(dp(r));
+        g.setCornerRadius(r <= 4 ? 0 : dp(r)); // square corners, like a stamp; larger radii are circles
         return g;
     }
 
     static Drawable stroke(int color, float r, boolean dashed) {
         GradientDrawable g = new GradientDrawable();
         g.setColor(0x00000000);
-        g.setCornerRadius(dp(r));
-        if (dashed) g.setStroke(dp(2), color, dp(6), dp(4));
-        else g.setStroke(dp(2), color);
+        g.setCornerRadius(r <= 4 ? 0 : dp(r));
+        int w = Math.max(1, Math.round(1.5f * d));
+        if (dashed) g.setStroke(w, color, dp(6), dp(4));
+        else g.setStroke(w, color);
         return g;
     }
 
     /** Wraps a background so the view shows a touch ripple. */
     static Drawable press(Drawable base, float r) {
-        return new RippleDrawable(ColorStateList.valueOf(0x40FFFFFF), base, fill(0xFFFFFFFF, r));
+        return new RippleDrawable(ColorStateList.valueOf(0x33F0E2D3), base, fill(0xFFFFFFFF, r));
     }
 
     static LinearLayout col(Context c) {
@@ -173,7 +173,6 @@ final class Ui {
     /** The black band at the top of every tab: small label, big title, optional control on the right. */
     static LinearLayout header(Context c, String label, String title, View right) {
         LinearLayout band = row(c);
-        band.setBackgroundColor(BLACK);
         band.setGravity(Gravity.BOTTOM);
         pad(band, 20, 22, 20, 12);
         LinearLayout left = col(c);
@@ -192,8 +191,11 @@ final class Ui {
     /** A tab page: header band on top, scrolling body on the red ground. */
     static LinearLayout page(Context c, View header, LinearLayout body) {
         LinearLayout page = col(c);
-        page.setBackgroundColor(RED);
+        page.setBackground(new Ground());
         page.addView(header, lp(MATCH, WRAP));
+        View rule = new View(c);
+        rule.setBackgroundColor(CREAM);
+        page.addView(rule, gap(lp(MATCH, Math.max(1, Math.round(1.5f * d))), 20, 0, 20, 0));
         ScrollView scroll = new ScrollView(c);
         scroll.setId(SCROLL_ID);
         scroll.setFillViewport(true);
@@ -393,6 +395,60 @@ final class Ui {
                     }
             }
             c.restore();
+        }
+    }
+
+    /**
+     * The page ground from the Ashtavakra stamp: deep maroon, a halftone sun rising from the
+     * bottom-right corner, and a light print grain. Drawn once per screen size and shared.
+     */
+    static final class Ground extends android.graphics.drawable.Drawable {
+        private static android.graphics.Bitmap cache;
+
+        @Override
+        public void draw(Canvas canvas) {
+            android.graphics.Rect b = getBounds();
+            if (b.isEmpty()) return;
+            if (cache == null || cache.getWidth() != b.width() || cache.getHeight() != b.height()) {
+                cache = android.graphics.Bitmap.createBitmap(b.width(), b.height(), android.graphics.Bitmap.Config.RGB_565);
+                Canvas k = new Canvas(cache);
+                k.drawColor(DEEP);
+                Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+                p.setColor(CREAM);
+                p.setAlpha(24);
+                float w = b.width(), h = b.height(), pitch = 6 * d, reach = Math.min(w, h) * 0.95f;
+                int n = (int) (reach / pitch) + 2;
+                for (int i = -n; i <= n; i++) {
+                    for (int j = -n; j <= n; j++) {
+                        float x = w + (i - j) * pitch * 0.7071f, y = h + (i + j) * pitch * 0.7071f;
+                        if (x < 0 || x > w || y < 0 || y > h) continue;
+                        float dist = (float) Math.hypot(w - x, h - y) / reach;
+                        if (dist >= 1f) continue;
+                        float rad = pitch * 0.5f * (float) Math.pow(1f - dist, 0.9);
+                        if (rad >= 0.4f * d) k.drawCircle(x, y, rad, p);
+                    }
+                }
+                java.util.Random random = new java.util.Random(7);
+                int flecks = (int) ((w / d) * (h / d) * 0.03f);
+                for (int i = 0; i < flecks; i++) {
+                    p.setAlpha(10 + random.nextInt(28));
+                    k.drawCircle(random.nextFloat() * w, random.nextFloat() * h, (0.25f + random.nextFloat() * 0.55f) * d, p);
+                }
+            }
+            canvas.drawBitmap(cache, b.left, b.top, null);
+        }
+
+        @Override
+        public void setAlpha(int alpha) {
+        }
+
+        @Override
+        public void setColorFilter(android.graphics.ColorFilter filter) {
+        }
+
+        @Override
+        public int getOpacity() {
+            return android.graphics.PixelFormat.OPAQUE;
         }
     }
 

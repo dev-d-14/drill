@@ -28,7 +28,7 @@ final class ShutdownScreen {
         final int[] lights = {Store.minutes(log.optString("lights", Store.hhmm(Store.minutes(Store.shutTime(a)) + 30)))};
 
         LinearLayout page = Ui.col(a);
-        page.setBackgroundColor(Ui.BLACK);
+        page.setBackground(new Ui.Ground());
         Ui.pad(page, 20, 16, 20, 24);
         LinearLayout top = Ui.row(a);
         top.addView(Ui.iconButton(a, Ui.I_LEFT, Ui.CREAM, true, "Back to Today", v -> a.open(MainActivity.TODAY)),
