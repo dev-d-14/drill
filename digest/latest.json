@@ -1,0 +1,105 @@
+{
+  "date": "2026-11-16",
+  "items": [
+    {
+      "id": "2026-11-16-1",
+      "tag": "AI",
+      "kind": "news",
+      "title": "Alibaba ships Qwen4-Max as a closed model: 2.4T MoE, 1M-token context",
+      "why": "Qwen's flagship stops shipping weights, so your local-model options now trail the API frontier.",
+      "url": "https://thenextweb.com/news/alibaba-launches-qwen4-max-flagship-ai-model-without-open-weights",
+      "source": "The Next Web"
+    },
+    {
+      "id": "2026-11-16-2",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "Cursor says a vendor's leaked key led to a backdoored Claude Code extension",
+      "why": "An AI editor's marketplace served malware for 11 hours. Worth auditing what your extensions can do.",
+      "url": "https://cursor.com/blog/security-incident-update",
+      "source": "Cursor"
+    },
+    {
+      "id": "2026-11-16-3",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "Rust 1.100 stabilises the never type after ten years of attempts",
+      "why": "You can finally name ! in types like Result<T, !>, and the Allocator trait lands for custom allocators.",
+      "url": "https://blog.rust-lang.org/2026/11/12/Rust-1.100.0/",
+      "source": "Rust Blog"
+    },
+    {
+      "id": "2026-11-16-4",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "llama.cpp tags v1.0.0 and removes 35 deprecated functions",
+      "why": "The local-inference library you build against now has a stable surface, but old calls will break.",
+      "url": "https://github.com/ggml-org/llama.cpp/releases/tag/v1.0.0",
+      "source": "llama.cpp on GitHub"
+    },
+    {
+      "id": "2026-11-16-5",
+      "tag": "Research",
+      "kind": "news",
+      "title": "XRAID puts declustered-parity RAID inside XFS, claiming 20x faster writes",
+      "why": "A filesystem absorbing the RAID layer is a clean case study in where an abstraction boundary costs you.",
+      "url": "https://lwn.net/Articles/1107473/",
+      "source": "LWN.net"
+    },
+    {
+      "id": "2026-11-16-6",
+      "tag": "Research",
+      "kind": "news",
+      "title": "SPEC CPU2026 study: the compiler version alone can double a benchmark's IPC",
+      "why": "Read before you benchmark anything: their SimPoint sampling error reached 43% on non-steady workloads.",
+      "url": "https://arxiv.org/abs/2611.16376",
+      "source": "arXiv"
+    },
+    {
+      "id": "2026-11-16-7",
+      "tag": "India",
+      "kind": "news",
+      "title": "India signs a ten-country declaration on AI and chip supply chains",
+      "why": "The Pax Silica working groups will shape which AI hardware and tooling actually reaches Indian engineers.",
+      "url": "https://analyticsindiamag.com/ai-news/india-joins-us-led-pact-to-secure-ai-and-semiconductor-supply-chains",
+      "source": "Analytics India Magazine"
+    },
+    {
+      "id": "2026-11-16-8",
+      "tag": "India",
+      "kind": "news",
+      "title": "India opens consent-manager registration under the DPDP Act",
+      "why": "If a side project collects data from Indian users, consent plumbing is now a legal requirement, not a nicety.",
+      "url": "https://inc42.com/buzz/dpdp-act-implementation-meity-opens-consent-manager-registration-portal/",
+      "source": "Inc42"
+    },
+    {
+      "id": "2026-11-16-9",
+      "tag": "Industry",
+      "kind": "news",
+      "title": "LangChain raises $300M at a $3B valuation, with 7,000 orgs on LangSmith",
+      "why": "Agent tracing is turning into paid infrastructure, which is worth weighing before you commit to a stack.",
+      "url": "https://www.langchain.com/blog/series-c",
+      "source": "LangChain"
+    },
+    {
+      "id": "2026-11-16-10",
+      "tag": "Industry",
+      "kind": "news",
+      "title": "ChatGPT Wallet lets OpenAI's agents check out using payment tokens",
+      "why": "The pattern to study is the token standing in for the card number, not the shopping demo around it.",
+      "url": "https://techcrunch.com/2026/11/13/chatgpts-new-wallet-lets-ai-agents-shop-and-check-out-for-you/",
+      "source": "TechCrunch"
+    },
+    {
+      "id": "2026-11-16-11",
+      "tag": "Science",
+      "kind": "science",
+      "evidence": "early",
+      "title": "Sounds timed to slow brain waves raised spinal-fluid flow in 14 sleepers",
+      "why": "Mechanism only: no memory or sleep-quality gain was measured, so there is nothing to change tonight.",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261115085533.htm",
+      "source": "Science Translational Medicine, via MIT"
+    }
+  ]
+}
