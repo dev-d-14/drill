@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,13 +26,14 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Five items a day, then it ends. A scheduled task writes the day's candidates to a JSON file
- * in the repo; the phone ranks them with the taste it has learned from the more/less buttons.
+ * One list a day, then it ends. A scheduled task writes the day's items to a JSON file in the
+ * repo; the phone shows every one of them, ordered by the taste it has learned from the
+ * more/less buttons. The order is settled once per digest and then held, so a vote never
+ * shifts the list under your thumb.
  */
 final class DigestScreen {
 
     private static final String SOURCE = "https://raw.githubusercontent.com/dev-d-14/drill/main/digest/latest.json";
-    private static final int SHOWN = 5;
 
     private static JSONObject data;
     private static boolean loading, triedCache;
@@ -46,12 +48,12 @@ final class DigestScreen {
         LinearLayout body = Ui.col(a);
         String date = data == null ? "" : data.optString("date");
         boolean fresh = LocalDate.now().toString().equals(date);
-        String label = data == null ? "five items a day" : fresh ? "today · " + Store.digestTime(a) : "from " + date;
+        String label = data == null ? "one list a day" : fresh ? "today · " + Store.digestTime(a) : "from " + date;
 
         if (data == null || data.optJSONArray("items") == null || data.optJSONArray("items").length() == 0) {
             String msg = loading ? "Fetching today's digest."
                     : problem != null ? "Couldn't fetch the digest (" + problem + ")."
-                    : "No digest yet. The first one arrives around " + Store.digestTime(a) + ".";
+                    : "No digest yet. The first list arrives around " + Store.digestTime(a) + ".";
             body.addView(Ui.text(a, msg, 14, Ui.CREAM, Ui.regular));
             body.addView(Ui.ghost(a, "Try again", Ui.CREAM, false, v -> {
                 lastFetch = 0;
@@ -65,6 +67,7 @@ final class DigestScreen {
             Store.put(root, "digestDate", date);
             Store.put(root, "votes", new JSONObject());
             Store.put(root, "read", new JSONObject());
+            Store.put(root, "digestOrder", new JSONArray());
             Store.save(a);
         }
         if (fresh && !Store.dayOrEmpty(a, LocalDate.now()).optBoolean("digest", false)) {
@@ -76,7 +79,7 @@ final class DigestScreen {
                     Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 0, 0, 8));
         }
 
-        List<JSONObject> items = ranked(a);
+        List<JSONObject> items = ordered(a);
         JSONObject votes = Store.obj(root, "votes"), read = Store.obj(root, "read");
         int opened = 0;
         for (int i = 0; i < items.size(); i++) {
@@ -110,9 +113,7 @@ final class DigestScreen {
                 }
             });
             card.addView(texts, Ui.lp(0, Ui.WRAP, 1));
-            int vote = votes.optInt(id, 0);
-            card.addView(voteButton(a, item, 1, vote), Ui.gap(Ui.lp(Ui.dp(44), Ui.dp(44)), 8, 0, 0, 0));
-            card.addView(voteButton(a, item, -1, vote), Ui.gap(Ui.lp(Ui.dp(44), Ui.dp(44)), 6, 0, 0, 0));
+            card.addView(votePair(a, item, votes.optInt(id, 0)), Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 10, 0, 0, 0));
             body.addView(card, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, i == 0 ? 0 : 8, 0, 0));
         }
 
@@ -129,24 +130,45 @@ final class DigestScreen {
         return Ui.page(a, Ui.header(a, label, "DIGEST", null), body);
     }
 
-    private static View voteButton(MainActivity a, JSONObject item, int direction, int current) {
-        boolean on = current == direction;
-        View b = Ui.iconButton(a, direction > 0 ? Ui.I_PLUS : Ui.I_MINUS, on ? Ui.BLACK : Ui.CREAM, !on,
-                direction > 0 ? "More like this" : "Less like this", v -> {
-                    JSONObject root = Store.root(a);
-                    JSONObject votes = Store.obj(root, "votes"), tags = Store.obj(root, "tags");
-                    String id = item.optString("id"), tag = item.optString("tag", "tech").toLowerCase(Locale.ROOT);
-                    int before = votes.optInt(id, 0);
-                    int after = before == direction ? 0 : direction;
-                    double weight = tags.optDouble(tag, 0) + 0.5 * (after - before);
-                    Store.put(tags, tag, Math.max(-3, Math.min(3, weight)));
-                    Store.put(votes, id, after);
-                    Store.put(root, "digestUsed", LocalDate.now().toString());
-                    Store.save(a);
-                    a.refresh();
-                });
-        if (on) b.setBackground(Ui.press(Ui.fill(Ui.OCHRE, 4), 4));
-        return b;
+    /**
+     * The more/less pair. A tap writes the taste and repaints these two buttons where they
+     * stand: the screen is not rebuilt and the list is not reordered, so the button cannot
+     * walk out from under a second tap.
+     */
+    private static View votePair(MainActivity a, JSONObject item, int current) {
+        LinearLayout pair = Ui.row(a);
+        final int[] vote = {current};
+        final View up = Ui.iconButton(a, Ui.I_PLUS, Ui.CREAM, true, "More like this", null);
+        final View down = Ui.iconButton(a, Ui.I_MINUS, Ui.CREAM, true, "Less like this", null);
+        paint(up, current == 1);
+        paint(down, current == -1);
+        View.OnClickListener tap = v -> {
+            int direction = v == up ? 1 : -1;
+            int after = vote[0] == direction ? 0 : direction;
+            JSONObject root = Store.root(a);
+            JSONObject votes = Store.obj(root, "votes"), tags = Store.obj(root, "tags");
+            String tag = item.optString("tag", "tech").toLowerCase(Locale.ROOT);
+            double weight = tags.optDouble(tag, 0) + 0.5 * (after - vote[0]);
+            Store.put(tags, tag, Math.max(-3, Math.min(3, weight)));
+            Store.put(votes, item.optString("id"), after);
+            Store.put(root, "digestUsed", LocalDate.now().toString());
+            Store.save(a);
+            vote[0] = after;
+            paint(up, after == 1);
+            paint(down, after == -1);
+        };
+        up.setOnClickListener(tap);
+        down.setOnClickListener(tap);
+        pair.addView(up, Ui.lp(Ui.dp(46), Ui.dp(46)));
+        pair.addView(down, Ui.gap(Ui.lp(Ui.dp(46), Ui.dp(46)), 10, 0, 0, 0));
+        return pair;
+    }
+
+    /** Filled while the vote is on, outlined while it is off. */
+    private static void paint(View button, boolean on) {
+        button.setBackground(on ? Ui.press(Ui.fill(Ui.OCHRE, 4), 4) : Ui.press(Ui.stroke(Ui.CREAM, 4, false), 4));
+        View icon = button instanceof ViewGroup ? ((ViewGroup) button).getChildAt(0) : null;
+        if (icon instanceof Ui.Icon) ((Ui.Icon) icon).setColor(on ? Ui.BLACK : Ui.CREAM);
     }
 
     private static View drillCard(MainActivity a, JSONObject drill, String date) {
@@ -178,11 +200,29 @@ final class DigestScreen {
         return card;
     }
 
-    /** Orders the day's candidates by the picker's order plus the learned taste, and keeps the top five. */
-    private static List<JSONObject> ranked(Context c) {
+    /**
+     * Every item in the day's file, in the order it will keep: the picker's order plus the
+     * learned taste, worked out the first time the digest is opened and then held in the store.
+     * Today's votes move tomorrow's list, not the one being read. A digest file that changes
+     * under us (different items, same day) earns a fresh order.
+     */
+    private static List<JSONObject> ordered(Context c) {
         JSONArray all = data.optJSONArray("items");
-        JSONObject tags = Store.obj(Store.root(c), "tags");
+        JSONObject root = Store.root(c);
+        JSONArray held = root.optJSONArray("digestOrder");
         List<JSONObject> list = new ArrayList<>();
+        if (held != null && held.length() == all.length()) {
+            for (int i = 0; i < held.length(); i++) {
+                JSONObject item = byId(all, held.optString(i));
+                if (item == null) {
+                    list.clear();
+                    break;
+                }
+                list.add(item);
+            }
+            if (list.size() == all.length()) return list;
+        }
+        JSONObject tags = Store.obj(root, "tags");
         final List<Double> scores = new ArrayList<>();
         for (int i = 0; i < all.length(); i++) {
             JSONObject item = all.optJSONObject(i);
@@ -193,7 +233,19 @@ final class DigestScreen {
             list.add(at, item);
             scores.add(at, score);
         }
-        return list.size() > SHOWN ? new ArrayList<>(list.subList(0, SHOWN)) : list;
+        JSONArray order = new JSONArray();
+        for (JSONObject item : list) order.put(item.optString("id"));
+        Store.put(root, "digestOrder", order);
+        Store.save(c);
+        return list;
+    }
+
+    private static JSONObject byId(JSONArray all, String id) {
+        for (int i = 0; i < all.length(); i++) {
+            JSONObject item = all.optJSONObject(i);
+            if (item != null && id.equals(item.optString("id"))) return item;
+        }
+        return null;
     }
 
     private static void load(MainActivity a) {

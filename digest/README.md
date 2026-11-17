@@ -4,8 +4,10 @@
 a little before 13:00 India time. The app fetches it from
 `https://raw.githubusercontent.com/dev-d-14/drill/main/digest/latest.json`.
 
-The file holds about ten candidates, best first. The phone shows five of them, reordered by the taste it has
-learned from the more/less buttons, so the votes never leave the phone.
+The file holds about ten to twelve items, best first. The phone shows all of them, reordered by the taste it has
+learned from the more/less buttons, so the votes never leave the phone. That order is settled when the digest is
+first opened and then held for the day, so voting never shifts the list under your thumb; the taste it teaches
+lands on the next digest.
 
 ## Format
 

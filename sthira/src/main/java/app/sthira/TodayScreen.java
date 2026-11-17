@@ -148,7 +148,7 @@ final class TodayScreen {
         }
 
         if (!hideDigest) {
-            items.add(new Item(minutes[0], habit(a, "DIGEST", digestDone ? "Read today" : "Five items, about 4 minutes",
+            items.add(new Item(minutes[0], habit(a, "DIGEST", digestDone ? "Read today" : "Today's list, a few minutes",
                     digestDone ? DONE : next == 0 ? NEXT : PENDING, "READ", v -> a.open(MainActivity.DIGEST))));
         }
         String medAt = log.optString("medAt");

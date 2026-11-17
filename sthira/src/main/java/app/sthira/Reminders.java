@@ -46,7 +46,7 @@ public final class Reminders extends BroadcastReceiver {
         LocalDate today = LocalDate.now();
         if (kind == DIGEST) {
             if (Store.root(c).optBoolean("hideDigest", false) || Store.dayOrEmpty(c, today).optBoolean("digest", false)) return;
-            post(c, DIGEST, "remind", "Today's digest is ready", "Five items, about four minutes.", MainActivity.DIGEST);
+            post(c, DIGEST, "remind", "Today's digest is ready", "The whole list, a few minutes.", MainActivity.DIGEST);
         } else if (kind == MEDITATE) {
             if (Store.meditated(c, today)) return;
             post(c, MEDITATE, "remind", "Time to sit", Store.medMinutes(c) + " minutes. One tap to start.", MainActivity.MEDITATE);
