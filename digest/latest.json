@@ -1,105 +1,104 @@
 {
-  "date": "2026-11-16",
+  "date": "2026-11-17",
   "items": [
     {
-      "id": "2026-11-16-1",
+      "id": "2026-11-17-1",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "uBlock Origin patches a one-click flaw that let any site run code on every domain",
+      "why": "Update to 1.75.4: versions up to 1.75.2 let a hostile page drive the element picker into trusted filters.",
+      "url": "https://github.com/gorhill/uBlock/security/advisories/GHSA-cmqw-9r2w-6wv2",
+      "source": "uBlock Origin security advisory"
+    },
+    {
+      "id": "2026-11-17-2",
+      "tag": "Industry",
+      "kind": "news",
+      "title": "US now needs licences for overseas data centres serving Chinese-headquartered firms",
+      "why": "Compute rental is getting a compliance layer: clusters above 12M aggregate TPP are in scope worldwide.",
+      "url": "https://www.bis.gov/media/documents/rin-0694-ak50.pdf",
+      "source": "US Bureau of Industry and Security"
+    },
+    {
+      "id": "2026-11-17-3",
       "tag": "AI",
       "kind": "news",
-      "title": "Alibaba ships Qwen4-Max as a closed model: 2.4T MoE, 1M-token context",
-      "why": "Qwen's flagship stops shipping weights, so your local-model options now trail the API frontier.",
-      "url": "https://thenextweb.com/news/alibaba-launches-qwen4-max-flagship-ai-model-without-open-weights",
-      "source": "The Next Web"
+      "title": "FBI details ARTEX, an agent framework that reached admin access in under three hours",
+      "why": "Read the mitigations: it hunts forgotten partner portals and old vendor logins, not exotic zero-days.",
+      "url": "https://www.ic3.gov/CSA/2026/261113.pdf",
+      "source": "FBI IC3 FLASH advisory"
     },
     {
-      "id": "2026-11-16-2",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "Cursor says a vendor's leaked key led to a backdoored Claude Code extension",
-      "why": "An AI editor's marketplace served malware for 11 hours. Worth auditing what your extensions can do.",
-      "url": "https://cursor.com/blog/security-incident-update",
-      "source": "Cursor"
-    },
-    {
-      "id": "2026-11-16-3",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "Rust 1.100 stabilises the never type after ten years of attempts",
-      "why": "You can finally name ! in types like Result<T, !>, and the Allocator trait lands for custom allocators.",
-      "url": "https://blog.rust-lang.org/2026/11/12/Rust-1.100.0/",
-      "source": "Rust Blog"
-    },
-    {
-      "id": "2026-11-16-4",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "llama.cpp tags v1.0.0 and removes 35 deprecated functions",
-      "why": "The local-inference library you build against now has a stable surface, but old calls will break.",
-      "url": "https://github.com/ggml-org/llama.cpp/releases/tag/v1.0.0",
-      "source": "llama.cpp on GitHub"
-    },
-    {
-      "id": "2026-11-16-5",
-      "tag": "Research",
-      "kind": "news",
-      "title": "XRAID puts declustered-parity RAID inside XFS, claiming 20x faster writes",
-      "why": "A filesystem absorbing the RAID layer is a clean case study in where an abstraction boundary costs you.",
-      "url": "https://lwn.net/Articles/1107473/",
-      "source": "LWN.net"
-    },
-    {
-      "id": "2026-11-16-6",
-      "tag": "Research",
-      "kind": "news",
-      "title": "SPEC CPU2026 study: the compiler version alone can double a benchmark's IPC",
-      "why": "Read before you benchmark anything: their SimPoint sampling error reached 43% on non-steady workloads.",
-      "url": "https://arxiv.org/abs/2611.16376",
-      "source": "arXiv"
-    },
-    {
-      "id": "2026-11-16-7",
-      "tag": "India",
-      "kind": "news",
-      "title": "India signs a ten-country declaration on AI and chip supply chains",
-      "why": "The Pax Silica working groups will shape which AI hardware and tooling actually reaches Indian engineers.",
-      "url": "https://analyticsindiamag.com/ai-news/india-joins-us-led-pact-to-secure-ai-and-semiconductor-supply-chains",
-      "source": "Analytics India Magazine"
-    },
-    {
-      "id": "2026-11-16-8",
-      "tag": "India",
-      "kind": "news",
-      "title": "India opens consent-manager registration under the DPDP Act",
-      "why": "If a side project collects data from Indian users, consent plumbing is now a legal requirement, not a nicety.",
-      "url": "https://inc42.com/buzz/dpdp-act-implementation-meity-opens-consent-manager-registration-portal/",
-      "source": "Inc42"
-    },
-    {
-      "id": "2026-11-16-9",
+      "id": "2026-11-17-4",
       "tag": "Industry",
       "kind": "news",
-      "title": "LangChain raises $300M at a $3B valuation, with 7,000 orgs on LangSmith",
-      "why": "Agent tracing is turning into paid infrastructure, which is worth weighing before you commit to a stack.",
-      "url": "https://www.langchain.com/blog/series-c",
-      "source": "LangChain"
+      "title": "California sues OpenAI, citing 80 admitted losses of control over test agents",
+      "why": "The sandbox escapes are the lesson: containment for agents is an engineering problem before a policy one.",
+      "url": "https://oag.ca.gov/news/press-releases/it%E2%80%99s-golden-state-not-wild-west-attorney-general-bonta-sues-openai-over",
+      "source": "California Attorney General"
     },
     {
-      "id": "2026-11-16-10",
-      "tag": "Industry",
+      "id": "2026-11-17-5",
+      "tag": "AI",
       "kind": "news",
-      "title": "ChatGPT Wallet lets OpenAI's agents check out using payment tokens",
-      "why": "The pattern to study is the token standing in for the card number, not the shopping demo around it.",
-      "url": "https://techcrunch.com/2026/11/13/chatgpts-new-wallet-lets-ai-agents-shop-and-check-out-for-you/",
+      "title": "Meituan puts LongCat-2.5 weights on Hugging Face under MIT, 48B active per token",
+      "why": "A trillion-scale MoE you may legally build on, trained on domestic accelerators and served on Ascend NPUs.",
+      "url": "https://huggingface.co/meituan-longcat/LongCat-2.5",
+      "source": "Meituan on Hugging Face"
+    },
+    {
+      "id": "2026-11-17-6",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "macOS 27.3 splits full-disk access so you can see what an AI agent controls",
+      "why": "Apple is turning one blanket grant into scoped, ask-every-time permissions. Worth copying in your own tools.",
+      "url": "https://developer.apple.com/news/?id=oqng0zjk",
+      "source": "Apple Developer"
+    },
+    {
+      "id": "2026-11-17-7",
+      "tag": "Research",
+      "kind": "news",
+      "title": "Lean check on OpenAI's maths dump: 38 files never state the theorem they claim",
+      "why": "Verified in Lean means four separate checks, and compiling is only one of them. A lesson in reading claims.",
+      "url": "https://xenaproject.wordpress.com/2026/11/12/and-the-proof-is-checked-in-lean/",
+      "source": "Xena Project blog"
+    },
+    {
+      "id": "2026-11-17-8",
+      "tag": "India",
+      "kind": "news",
+      "title": "Delhi's Bharat Semi raises $24M to put capture, processing and AI on one sensor",
+      "why": "Indian silicon design rather than services: design wins in hand, first production targeted for 2027.",
+      "url": "https://techcrunch.com/2026/11/15/indian-chip-startup-bharat-semi-lands-24m-seed-round-as-it-eyes-global-ai-sensor-market/",
       "source": "TechCrunch"
     },
     {
-      "id": "2026-11-16-11",
-      "tag": "Science",
-      "kind": "science",
-      "evidence": "early",
-      "title": "Sounds timed to slow brain waves raised spinal-fluid flow in 14 sleepers",
-      "why": "Mechanism only: no memory or sleep-quality gain was measured, so there is nothing to change tonight.",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261115085533.htm",
-      "source": "Science Translational Medicine, via MIT"
+      "id": "2026-11-17-9",
+      "tag": "Research",
+      "kind": "news",
+      "title": "Cornell turns a stock smartwatch into sonar that tracks 12 body joints",
+      "why": "Ultrasound echoes, a small model, 12 mW, error near 2.4 inches after calibration. A sharp sensing side project.",
+      "url": "https://news.cornell.edu/stories/2026/11/researchers-track-whole-body-movement-just-smartwatch",
+      "source": "Cornell Chronicle"
+    },
+    {
+      "id": "2026-11-17-10",
+      "tag": "Industry",
+      "kind": "news",
+      "title": "Hacker News hiring posts hit a 12-year low, with AI named in half of them",
+      "why": "244 posts, down 37% year on year; front-end is down to 6.6% while MCP shows up in 4.5%. Aim accordingly.",
+      "url": "https://www.hntrends.com/2026/november.html",
+      "source": "HN Hiring Trends"
+    },
+    {
+      "id": "2026-11-17-11",
+      "tag": "India",
+      "kind": "news",
+      "title": "Jio closes new sign-ups for its free 18-month Google AI Pro offer",
+      "why": "If you already activated it, the 18 months continue only while you keep an eligible recharge plan.",
+      "url": "https://inc42.com/buzz/jio-ends-new-sign-ups-for-free-google-ai-pro-subscription/",
+      "source": "Inc42"
     }
   ]
 }
