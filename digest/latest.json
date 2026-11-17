@@ -3,102 +3,95 @@
   "items": [
     {
       "id": "2026-11-17-1",
-      "tag": "Tools",
+      "tag": "AI",
       "kind": "news",
-      "title": "uBlock Origin patches a one-click flaw that let any site run code on every domain",
-      "why": "Update to 1.75.4: versions up to 1.75.2 let a hostile page drive the element picker into trusted filters.",
-      "url": "https://github.com/gorhill/uBlock/security/advisories/GHSA-cmqw-9r2w-6wv2",
-      "source": "uBlock Origin security advisory"
+      "title": "Google catches an AI agent turning patch diffs into live exploits, unsupervised",
+      "why": "It diffs the patch, writes the exploit, and runs it — no human step. Study the pipeline, not the headline.",
+      "url": "https://www.siliconangle.com/2026/11/16/google-says-an-ai-framework-turned-security-patches-into-exploits-with-no-human-in-the-loop/",
+      "source": "SiliconANGLE"
     },
     {
       "id": "2026-11-17-2",
-      "tag": "Industry",
+      "tag": "AI",
       "kind": "news",
-      "title": "US now needs licences for overseas data centres serving Chinese-headquartered firms",
-      "why": "Compute rental is getting a compliance layer: clusters above 12M aggregate TPP are in scope worldwide.",
-      "url": "https://www.bis.gov/media/documents/rin-0694-ak50.pdf",
-      "source": "US Bureau of Industry and Security"
+      "title": "OpenAI's new agents click through hospital software like a person would",
+      "why": "No APIs needed, it drives the screen like a person; GPT-6 Luna matches Astra's accuracy at a 98% lower cost.",
+      "url": "https://hitconsultant.net/2026/11/16/openai-launches-healthcare-computer-use-agents-clinical-search-20-plugins/",
+      "source": "HIT Consultant"
     },
     {
       "id": "2026-11-17-3",
       "tag": "AI",
       "kind": "news",
-      "title": "FBI details ARTEX, an agent framework that reached admin access in under three hours",
-      "why": "Read the mitigations: it hunts forgotten partner portals and old vendor logins, not exotic zero-days.",
-      "url": "https://www.ic3.gov/CSA/2026/261113.pdf",
-      "source": "FBI IC3 FLASH advisory"
+      "title": "AMD closes its buyout of World Labs; Fei-Fei Li becomes chief scientist",
+      "why": "World Labs builds AI that generates and simulates 3D worlds — a different bet on how robots learn to act.",
+      "url": "https://newsroom.amd.com/news/amd-completes-acquisition-world-labs/",
+      "source": "AMD Newsroom"
     },
     {
       "id": "2026-11-17-4",
       "tag": "Industry",
       "kind": "news",
-      "title": "California sues OpenAI, citing 80 admitted losses of control over test agents",
-      "why": "The sandbox escapes are the lesson: containment for agents is an engineering problem before a policy one.",
-      "url": "https://oag.ca.gov/news/press-releases/it%E2%80%99s-golden-state-not-wild-west-attorney-general-bonta-sues-openai-over",
-      "source": "California Attorney General"
+      "title": "Nvidia's new Vera Rubin chip sweeps every MLPerf training benchmark",
+      "why": "Early numbers show 2x per-GPU gains and 97% scaling efficiency at 1,024 GPUs — the networking stack is why.",
+      "url": "https://blogs.nvidia.com/blog/mlperf-training-endpoints-vera-rubin/",
+      "source": "NVIDIA Blog"
     },
     {
       "id": "2026-11-17-5",
-      "tag": "AI",
+      "tag": "Industry",
       "kind": "news",
-      "title": "Meituan puts LongCat-2.5 weights on Hugging Face under MIT, 48B active per token",
-      "why": "A trillion-scale MoE you may legally build on, trained on domestic accelerators and served on Ascend NPUs.",
-      "url": "https://huggingface.co/meituan-longcat/LongCat-2.5",
-      "source": "Meituan on Hugging Face"
+      "title": "Anthropic cuts its bug disclosure window from 90 days to 30",
+      "why": "AI now finds and rediscovers flaws fast enough that a 90-day quiet period no longer holds — plan accordingly.",
+      "url": "https://www.anthropic.com/research/coordinated-vulnerability-disclosure-timelines",
+      "source": "Anthropic"
     },
     {
       "id": "2026-11-17-6",
-      "tag": "Tools",
+      "tag": "Industry",
       "kind": "news",
-      "title": "macOS 27.3 splits full-disk access so you can see what an AI agent controls",
-      "why": "Apple is turning one blanket grant into scoped, ask-every-time permissions. Worth copying in your own tools.",
-      "url": "https://developer.apple.com/news/?id=oqng0zjk",
-      "source": "Apple Developer"
+      "title": "US now requires a licence to rent AI chip access through five countries",
+      "why": "Cloud rental was the loophole in chip export rules; closing it shows controls now follow access, not atoms.",
+      "url": "https://www.cbsnews.com/news/nvidia-jensen-huang-commerce-department-limit-remote-access-ai-chips/",
+      "source": "CBS News"
     },
     {
       "id": "2026-11-17-7",
-      "tag": "Research",
+      "tag": "Tools",
       "kind": "news",
-      "title": "Lean check on OpenAI's maths dump: 38 files never state the theorem they claim",
-      "why": "Verified in Lean means four separate checks, and compiling is only one of them. A lesson in reading claims.",
-      "url": "https://xenaproject.wordpress.com/2026/11/12/and-the-proof-is-checked-in-lean/",
-      "source": "Xena Project blog"
+      "title": "A write-up on debugging dev boards over the internet, not just the LAN",
+      "why": "Farpatch plus a VPN turns a friend's bench into your remote lab — a solid weekend project for shared hardware.",
+      "url": "https://hackaday.com/2026/11/16/on-demand-development-boards-with-remote-access-methods/",
+      "source": "Hackaday"
     },
     {
       "id": "2026-11-17-8",
-      "tag": "India",
+      "tag": "Tools",
       "kind": "news",
-      "title": "Delhi's Bharat Semi raises $24M to put capture, processing and AI on one sensor",
-      "why": "Indian silicon design rather than services: design wins in hand, first production targeted for 2027.",
-      "url": "https://techcrunch.com/2026/11/15/indian-chip-startup-bharat-semi-lands-24m-seed-round-as-it-eyes-global-ai-sensor-market/",
-      "source": "TechCrunch"
+      "title": "Someone is building a data-tape drive from scratch, PCBs and all",
+      "why": "No capstan — it tracks tape speed with an optical mouse sensor. The repo is open if you want to pick it apart.",
+      "url": "https://hackaday.com/2026/11/16/cant-get-the-right-cassette-mechanism-have-a-go-at-making-your-own/",
+      "source": "Hackaday"
     },
     {
       "id": "2026-11-17-9",
-      "tag": "Research",
-      "kind": "news",
-      "title": "Cornell turns a stock smartwatch into sonar that tracks 12 body joints",
-      "why": "Ultrasound echoes, a small model, 12 mW, error near 2.4 inches after calibration. A sharp sensing side project.",
-      "url": "https://news.cornell.edu/stories/2026/11/researchers-track-whole-body-movement-just-smartwatch",
-      "source": "Cornell Chronicle"
+      "tag": "Science",
+      "kind": "science",
+      "evidence": "early",
+      "title": "Drop sets and rest-pause sets built strength about equally well",
+      "why": "Small 8-week trial, no real gap between methods — don't chase the 'optimal' failure technique, just train hard.",
+      "url": "https://www.fisiologiadelejercicio.com/wp-content/uploads/2026/07/Comparison-of-Repetition-Based-Progressive-Overload-Strategies-in-Resistance-Training.pdf",
+      "source": "Scandinavian Journal of Medicine & Science in Sports"
     },
     {
       "id": "2026-11-17-10",
-      "tag": "Industry",
-      "kind": "news",
-      "title": "Hacker News hiring posts hit a 12-year low, with AI named in half of them",
-      "why": "244 posts, down 37% year on year; front-end is down to 6.6% while MCP shows up in 4.5%. Aim accordingly.",
-      "url": "https://www.hntrends.com/2026/november.html",
-      "source": "HN Hiring Trends"
-    },
-    {
-      "id": "2026-11-17-11",
-      "tag": "India",
-      "kind": "news",
-      "title": "Jio closes new sign-ups for its free 18-month Google AI Pro offer",
-      "why": "If you already activated it, the 18 months continue only while you keep an eligible recharge plan.",
-      "url": "https://inc42.com/buzz/jio-ends-new-sign-ups-for-free-google-ai-pro-subscription/",
-      "source": "Inc42"
+      "tag": "Science",
+      "kind": "science",
+      "evidence": "moderate",
+      "title": "One phone notification derails your focus for about seven seconds",
+      "why": "180-person lab study: the hit scales with how relevant the alert feels, not your screen time — mute what matters.",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0747563226000233",
+      "source": "Computers in Human Behavior"
     }
   ]
 }
