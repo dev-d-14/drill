@@ -5,93 +5,93 @@
       "id": "2026-11-17-1",
       "tag": "AI",
       "kind": "news",
-      "title": "Google catches an AI agent turning patch diffs into live exploits, unsupervised",
-      "why": "It diffs the patch, writes the exploit, and runs it — no human step. Study the pipeline, not the headline.",
-      "url": "https://www.siliconangle.com/2026/11/16/google-says-an-ai-framework-turned-security-patches-into-exploits-with-no-human-in-the-loop/",
-      "source": "SiliconANGLE"
+      "title": "A 6-person startup's loop beat Gemini 3 Deep Think on ARC-AGI-2",
+      "why": "No bigger model, just generate-critique-refine-verify over Gemini 3 Pro — open source, cheaper too.",
+      "url": "https://tech.yahoo.com/ai/gemini/articles/tiny-ai-startup-just-crushed-165137934.html",
+      "source": "Yahoo Tech"
     },
     {
       "id": "2026-11-17-2",
       "tag": "AI",
       "kind": "news",
-      "title": "OpenAI's new agents click through hospital software like a person would",
-      "why": "No APIs needed, it drives the screen like a person; GPT-6 Luna matches Astra's accuracy at a 98% lower cost.",
-      "url": "https://hitconsultant.net/2026/11/16/openai-launches-healthcare-computer-use-agents-clinical-search-20-plugins/",
-      "source": "HIT Consultant"
+      "title": "Karpathy says he now writes code mostly in English, not syntax",
+      "why": "His shift: describe intent, let agents draft, review hard, cut the bloat they tend to leave behind.",
+      "url": "https://the-decoder.com/former-tesla-ai-chief-andrej-karpathy-now-codes-mostly-in-english-just-three-months-after-calling-ai-agents-useless/",
+      "source": "The Decoder"
     },
     {
       "id": "2026-11-17-3",
-      "tag": "AI",
+      "tag": "Tools",
       "kind": "news",
-      "title": "AMD closes its buyout of World Labs; Fei-Fei Li becomes chief scientist",
-      "why": "World Labs builds AI that generates and simulates 3D worlds — a different bet on how robots learn to act.",
-      "url": "https://newsroom.amd.com/news/amd-completes-acquisition-world-labs/",
-      "source": "AMD Newsroom"
+      "title": "Someone packed a full AI agent into 140MB, running on a Pi Zero",
+      "why": "35 providers, 72 tools, a task queue — open source and light enough for a $15 board.",
+      "url": "https://dev.to/thegdsks/i-built-a-self-hosted-ai-agent-that-runs-on-a-raspberry-pi-161e",
+      "source": "DEV Community"
     },
     {
       "id": "2026-11-17-4",
-      "tag": "Industry",
+      "tag": "Research",
       "kind": "news",
-      "title": "Nvidia's new Vera Rubin chip sweeps every MLPerf training benchmark",
-      "why": "Early numbers show 2x per-GPU gains and 97% scaling efficiency at 1,024 GPUs — the networking stack is why.",
-      "url": "https://blogs.nvidia.com/blog/mlperf-training-endpoints-vera-rubin/",
-      "source": "NVIDIA Blog"
+      "title": "The LHC's new magnets hit 12 tesla, and the trick is a brittle metal",
+      "why": "Niobium-tin beats niobium-titanium but shatters if wound wrong — a real materials tradeoff, not just a bigger number.",
+      "url": "https://hackaday.com/2026/11/16/new-super-magnets-turbocharge-the-large-hadron-collider/",
+      "source": "Hackaday"
     },
     {
       "id": "2026-11-17-5",
-      "tag": "Industry",
+      "tag": "Tools",
       "kind": "news",
-      "title": "Anthropic cuts its bug disclosure window from 90 days to 30",
-      "why": "AI now finds and rediscovers flaws fast enough that a 90-day quiet period no longer holds — plan accordingly.",
-      "url": "https://www.anthropic.com/research/coordinated-vulnerability-disclosure-timelines",
-      "source": "Anthropic"
+      "title": "Rust's decade-long trait solver rewrite is finally landing",
+      "why": "It's the engine behind every generic bound check in the compiler; specialization fixes may follow it.",
+      "url": "https://zeli.app/story/50166502",
+      "source": "Hacker News (via Zeli)"
     },
     {
       "id": "2026-11-17-6",
-      "tag": "Industry",
+      "tag": "Tools",
       "kind": "news",
-      "title": "US now requires a licence to rent AI chip access through five countries",
-      "why": "Cloud rental was the loophole in chip export rules; closing it shows controls now follow access, not atoms.",
-      "url": "https://www.cbsnews.com/news/nvidia-jensen-huang-commerce-department-limit-remote-access-ai-chips/",
-      "source": "CBS News"
+      "title": "Go's new default GC scans memory in neighborhoods, not scattered",
+      "why": "Better cache locality cut one team's GC pauses by a third with zero code changes — worth checking on your own service.",
+      "url": "https://levelup.gitconnected.com/the-green-tea-gc-is-now-default-in-go-1-26-here-is-what-that-means-for-your-backend-services-4f6cdf8fc136",
+      "source": "Level Up Coding"
     },
     {
       "id": "2026-11-17-7",
       "tag": "Tools",
       "kind": "news",
-      "title": "A write-up on debugging dev boards over the internet, not just the LAN",
-      "why": "Farpatch plus a VPN turns a friend's bench into your remote lab — a solid weekend project for shared hardware.",
-      "url": "https://hackaday.com/2026/11/16/on-demand-development-boards-with-remote-access-methods/",
-      "source": "Hackaday"
+      "title": "A one-liner to catch which process is hammering your syscalls",
+      "why": "bpftrace on raw_syscalls finds chatty polling loops in about ten seconds — keep it in your back pocket.",
+      "url": "https://dev.to/lyraalishaikh/stop-guessing-production-latency-practical-bpftrace-one-liners-for-linux-debugging-2g71",
+      "source": "DEV Community"
     },
     {
       "id": "2026-11-17-8",
-      "tag": "Tools",
+      "tag": "Research",
       "kind": "news",
-      "title": "Someone is building a data-tape drive from scratch, PCBs and all",
-      "why": "No capstan — it tracks tape speed with an optical mouse sensor. The repo is open if you want to pick it apart.",
-      "url": "https://hackaday.com/2026/11/16/cant-get-the-right-cassette-mechanism-have-a-go-at-making-your-own/",
-      "source": "Hackaday"
+      "title": "A prefix-sum-plus-hashing trick for counting special subarrays fast",
+      "why": "Turns an O(n^2) subarray scan into O(n) — useful next time a CF problem smells like a hashing trick.",
+      "url": "https://mirror.codeforces.com/blog/entry/144985?locale=ru",
+      "source": "Codeforces blog"
     },
     {
       "id": "2026-11-17-9",
       "tag": "Science",
       "kind": "science",
       "evidence": "early",
-      "title": "Drop sets and rest-pause sets built strength about equally well",
-      "why": "Small 8-week trial, no real gap between methods — don't chase the 'optimal' failure technique, just train hard.",
-      "url": "https://www.fisiologiadelejercicio.com/wp-content/uploads/2026/07/Comparison-of-Repetition-Based-Progressive-Overload-Strategies-in-Resistance-Training.pdf",
-      "source": "Scandinavian Journal of Medicine & Science in Sports"
+      "title": "Dopamine may work like a GPS, not just a reward signal",
+      "why": "A real-time course-correction signal, separate from reward — interesting, but its link to focus is still unproven.",
+      "url": "https://www.pulse.bot/human-potential/news/boston-university-study-finds-dopamine-gps-guides-visual-goal-pursuit-3bc214c1-5fb7-4b9c-9bb8-ed9d0fcd2f34/",
+      "source": "Boston University research (via Pulse)"
     },
     {
       "id": "2026-11-17-10",
       "tag": "Science",
       "kind": "science",
       "evidence": "moderate",
-      "title": "One phone notification derails your focus for about seven seconds",
-      "why": "180-person lab study: the hit scales with how relevant the alert feels, not your screen time — mute what matters.",
-      "url": "https://www.sciencedirect.com/science/article/pii/S0747563226000233",
-      "source": "Computers in Human Behavior"
+      "title": "A blood protein tracked who kept their muscle over four years",
+      "why": "Association only, but it backs what already works: keep lifting and spread protein across meals, not just dinner.",
+      "url": "https://www.mindbodygreen.com/articles/this-blood-marker-was-linked-to-36-lower-sarcopenia-risk",
+      "source": "Journal of Cachexia, Sarcopenia and Muscle (via mindbodygreen)"
     }
   ]
 }
