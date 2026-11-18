@@ -1,97 +1,97 @@
 {
-  "date": "2026-11-17",
+  "date": "2026-11-18",
   "items": [
     {
-      "id": "2026-11-17-1",
+      "id": "2026-11-18-1",
       "tag": "AI",
       "kind": "news",
-      "title": "A 6-person startup's loop beat Gemini 3 Deep Think on ARC-AGI-2",
-      "why": "No bigger model, just generate-critique-refine-verify over Gemini 3 Pro — open source, cheaper too.",
-      "url": "https://tech.yahoo.com/ai/gemini/articles/tiny-ai-startup-just-crushed-165137934.html",
-      "source": "Yahoo Tech"
+      "title": "NVIDIA open-sourced a shared meaning layer so AI agents stop misreading data",
+      "why": "Grounds text-to-SQL agents in certified definitions and query lineage, so two agents stop disagreeing on \"revenue.\"",
+      "url": "https://github.com/NVIDIA/auto-ontology",
+      "source": "NVIDIA (GitHub)"
     },
     {
-      "id": "2026-11-17-2",
+      "id": "2026-11-18-2",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "A Rust CLI drives your browser through its accessibility tree, not pixels",
+      "why": "Agents click named buttons instead of guessing screenshot coordinates — cheaper, steadier, and a fun systems project.",
+      "url": "https://github.com/vercel-labs/agent-browser",
+      "source": "Vercel Labs (GitHub)"
+    },
+    {
+      "id": "2026-11-18-3",
       "tag": "AI",
       "kind": "news",
-      "title": "Karpathy says he now writes code mostly in English, not syntax",
-      "why": "His shift: describe intent, let agents draft, review hard, cut the bloat they tend to leave behind.",
-      "url": "https://the-decoder.com/former-tesla-ai-chief-andrej-karpathy-now-codes-mostly-in-english-just-three-months-after-calling-ai-agents-useless/",
-      "source": "The Decoder"
+      "title": "To debug a misbehaving AI agent, just ask it why it did that",
+      "why": "Replay the exact prompt in isolation, ask the model to explain its choice, then reword the rule it misread.",
+      "url": "https://engineering.myhoai.com/posts/just-ask-the-model-why/",
+      "source": "Zhixuan Lai's engineering blog"
     },
     {
-      "id": "2026-11-17-3",
+      "id": "2026-11-18-4",
       "tag": "Tools",
       "kind": "news",
-      "title": "Someone packed a full AI agent into 140MB, running on a Pi Zero",
-      "why": "35 providers, 72 tools, a task queue — open source and light enough for a $15 board.",
-      "url": "https://dev.to/thegdsks/i-built-a-self-hosted-ai-agent-that-runs-on-a-raspberry-pi-161e",
-      "source": "DEV Community"
+      "title": "He put a Claude agent on a $15 Pi Zero that can't choose its own code",
+      "why": "It can trigger a git-pull update but never pick what gets deployed — a neat guardrail for self-modifying agents.",
+      "url": "https://collectednotes.com/alejandro/building-jarvis-ai-agent-for-raspberry-pi",
+      "source": "Alejandro Crosa"
     },
     {
-      "id": "2026-11-17-4",
-      "tag": "Research",
-      "kind": "news",
-      "title": "The LHC's new magnets hit 12 tesla, and the trick is a brittle metal",
-      "why": "Niobium-tin beats niobium-titanium but shatters if wound wrong — a real materials tradeoff, not just a bigger number.",
-      "url": "https://hackaday.com/2026/11/16/new-super-magnets-turbocharge-the-large-hadron-collider/",
-      "source": "Hackaday"
-    },
-    {
-      "id": "2026-11-17-5",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "Rust's decade-long trait solver rewrite is finally landing",
-      "why": "It's the engine behind every generic bound check in the compiler; specialization fixes may follow it.",
-      "url": "https://zeli.app/story/50166502",
-      "source": "Hacker News (via Zeli)"
-    },
-    {
-      "id": "2026-11-17-6",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "Go's new default GC scans memory in neighborhoods, not scattered",
-      "why": "Better cache locality cut one team's GC pauses by a third with zero code changes — worth checking on your own service.",
-      "url": "https://levelup.gitconnected.com/the-green-tea-gc-is-now-default-in-go-1-26-here-is-what-that-means-for-your-backend-services-4f6cdf8fc136",
-      "source": "Level Up Coding"
-    },
-    {
-      "id": "2026-11-17-7",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "A one-liner to catch which process is hammering your syscalls",
-      "why": "bpftrace on raw_syscalls finds chatty polling loops in about ten seconds — keep it in your back pocket.",
-      "url": "https://dev.to/lyraalishaikh/stop-guessing-production-latency-practical-bpftrace-one-liners-for-linux-debugging-2g71",
-      "source": "DEV Community"
-    },
-    {
-      "id": "2026-11-17-8",
-      "tag": "Research",
-      "kind": "news",
-      "title": "A prefix-sum-plus-hashing trick for counting special subarrays fast",
-      "why": "Turns an O(n^2) subarray scan into O(n) — useful next time a CF problem smells like a hashing trick.",
-      "url": "https://mirror.codeforces.com/blog/entry/144985?locale=ru",
-      "source": "Codeforces blog"
-    },
-    {
-      "id": "2026-11-17-9",
-      "tag": "Science",
-      "kind": "science",
-      "evidence": "early",
-      "title": "Dopamine may work like a GPS, not just a reward signal",
-      "why": "A real-time course-correction signal, separate from reward — interesting, but its link to focus is still unproven.",
-      "url": "https://www.pulse.bot/human-potential/news/boston-university-study-finds-dopamine-gps-guides-visual-goal-pursuit-3bc214c1-5fb7-4b9c-9bb8-ed9d0fcd2f34/",
-      "source": "Boston University research (via Pulse)"
-    },
-    {
-      "id": "2026-11-17-10",
+      "id": "2026-11-18-5",
       "tag": "Science",
       "kind": "science",
       "evidence": "moderate",
-      "title": "A blood protein tracked who kept their muscle over four years",
-      "why": "Association only, but it backs what already works: keep lifting and spread protein across meals, not just dinner.",
-      "url": "https://www.mindbodygreen.com/articles/this-blood-marker-was-linked-to-36-lower-sarcopenia-risk",
-      "source": "Journal of Cachexia, Sarcopenia and Muscle (via mindbodygreen)"
+      "title": "A 20-minute bike ride or a nap undid most of a sleepless night's memory loss",
+      "why": "McGill, n=54: both routes lifted recognition memory ~22% after 30 hours awake, via different brain pathways.",
+      "url": "https://www.news-medical.net/news/20260824/Short-workouts-or-naps-protect-memory-after-sleep-deprivation.aspx",
+      "source": "PNAS (via News-Medical)"
+    },
+    {
+      "id": "2026-11-18-6",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "nsenter drops you into a container's network namespace with the host's tools",
+      "why": "Skips installing ip/tcpdump inside minimal images — one command borrows the host's toolkit instead.",
+      "url": "https://besthub.dev/articles/master-container-debugging-how-nsenter-lets-you-enter-any-namespace-b8e0cf9419de",
+      "source": "besthub.dev"
+    },
+    {
+      "id": "2026-11-18-7",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "A desktop panel finally makes debugging Postgres LISTEN/NOTIFY pleasant",
+      "why": "Keeps a durable SQLite log of events with backoff reconnects, so a dropped connection stops losing notifications.",
+      "url": "https://dev.to/gillarohith/debugging-postgres-listennotify-is-finally-pleasant-12ip",
+      "source": "Rohith Gilla (DEV Community)"
+    },
+    {
+      "id": "2026-11-18-8",
+      "tag": "Research",
+      "kind": "news",
+      "title": "A deque keeps a DP table fast when each state only needs the best of the last k",
+      "why": "Turns an O(nk) sliding-window DP into O(n) — reach for it when a CF problem smells like a window max.",
+      "url": "https://mirror.codeforces.com/topic/150305/en1",
+      "source": "Codeforces blog"
+    },
+    {
+      "id": "2026-11-18-9",
+      "tag": "Science",
+      "kind": "science",
+      "evidence": "moderate",
+      "title": "Four minutes of daily bodyweight exercise measurably built strength",
+      "why": "97-person RCT, 12 weeks: short daily reps beat doing nothing — a floor worth hitting on exam-crunch days.",
+      "url": "https://www.psu.edu/news/research/story/four-minute-daily-workout-improves-strength-balance-older-adults",
+      "source": "PLOS One (via Penn State)"
+    },
+    {
+      "id": "2026-11-18-10",
+      "tag": "India",
+      "kind": "news",
+      "title": "An open ASR model now understands 65 Indian languages, Garo and Gondi included",
+      "why": "IISc/ARTPARK trained it on 31,000+ hours of speech in three stages — best on 10 of 17 benchmarked languages.",
+      "url": "https://letsdatascience.com/news/iisc-team-releases-sravaani-asr-for-65-indian-languages-a6aa9c5b",
+      "source": "IISc / ARTPARK (via Let's Data Science)"
     }
   ]
 }
