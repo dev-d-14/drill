@@ -1,97 +1,97 @@
 {
-  "date": "2026-11-18",
+  "date": "2026-11-19",
   "items": [
     {
-      "id": "2026-11-18-1",
+      "id": "2026-11-19-1",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "A maker swapped a bowling alley's $120k scoring rig for $1,600 of ESP32s",
+      "why": "An ESP-NOW mesh of cheap microcontrollers replaces proprietary 2008-era hardware - steal the pattern for any arcade or shop build.",
+      "url": "https://news.ycombinator.com/item?id=48968606",
+      "source": "Show HN (OpenLaneLink)"
+    },
+    {
+      "id": "2026-11-19-2",
       "tag": "AI",
       "kind": "news",
-      "title": "NVIDIA open-sourced a shared meaning layer so AI agents stop misreading data",
-      "why": "Grounds text-to-SQL agents in certified definitions and query lineage, so two agents stop disagreeing on \"revenue.\"",
-      "url": "https://github.com/NVIDIA/auto-ontology",
-      "source": "NVIDIA (GitHub)"
+      "title": "An AI edited another model's weights directly - critics say it just fixed a loop",
+      "why": "The 6x math-score jump mostly came from stopping Qwen's infinite-loop failure in two layers, not new reasoning ability, replication shows.",
+      "url": "https://rikiyat.github.io/blog/weight-space-programming/",
+      "source": "Takehi, Teoh, Zhang, Khattab (MIT CSAIL)"
     },
     {
-      "id": "2026-11-18-2",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "A Rust CLI drives your browser through its accessibility tree, not pixels",
-      "why": "Agents click named buttons instead of guessing screenshot coordinates — cheaper, steadier, and a fun systems project.",
-      "url": "https://github.com/vercel-labs/agent-browser",
-      "source": "Vercel Labs (GitHub)"
-    },
-    {
-      "id": "2026-11-18-3",
-      "tag": "AI",
-      "kind": "news",
-      "title": "To debug a misbehaving AI agent, just ask it why it did that",
-      "why": "Replay the exact prompt in isolation, ask the model to explain its choice, then reword the rule it misread.",
-      "url": "https://engineering.myhoai.com/posts/just-ask-the-model-why/",
-      "source": "Zhixuan Lai's engineering blog"
-    },
-    {
-      "id": "2026-11-18-4",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "He put a Claude agent on a $15 Pi Zero that can't choose its own code",
-      "why": "It can trigger a git-pull update but never pick what gets deployed — a neat guardrail for self-modifying agents.",
-      "url": "https://collectednotes.com/alejandro/building-jarvis-ai-agent-for-raspberry-pi",
-      "source": "Alejandro Crosa"
-    },
-    {
-      "id": "2026-11-18-5",
-      "tag": "Science",
-      "kind": "science",
-      "evidence": "moderate",
-      "title": "A 20-minute bike ride or a nap undid most of a sleepless night's memory loss",
-      "why": "McGill, n=54: both routes lifted recognition memory ~22% after 30 hours awake, via different brain pathways.",
-      "url": "https://www.news-medical.net/news/20260824/Short-workouts-or-naps-protect-memory-after-sleep-deprivation.aspx",
-      "source": "PNAS (via News-Medical)"
-    },
-    {
-      "id": "2026-11-18-6",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "nsenter drops you into a container's network namespace with the host's tools",
-      "why": "Skips installing ip/tcpdump inside minimal images — one command borrows the host's toolkit instead.",
-      "url": "https://besthub.dev/articles/master-container-debugging-how-nsenter-lets-you-enter-any-namespace-b8e0cf9419de",
-      "source": "besthub.dev"
-    },
-    {
-      "id": "2026-11-18-7",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "A desktop panel finally makes debugging Postgres LISTEN/NOTIFY pleasant",
-      "why": "Keeps a durable SQLite log of events with backoff reconnects, so a dropped connection stops losing notifications.",
-      "url": "https://dev.to/gillarohith/debugging-postgres-listennotify-is-finally-pleasant-12ip",
-      "source": "Rohith Gilla (DEV Community)"
-    },
-    {
-      "id": "2026-11-18-8",
+      "id": "2026-11-19-3",
       "tag": "Research",
       "kind": "news",
-      "title": "A deque keeps a DP table fast when each state only needs the best of the last k",
-      "why": "Turns an O(nk) sliding-window DP into O(n) — reach for it when a CF problem smells like a window max.",
-      "url": "https://mirror.codeforces.com/topic/150305/en1",
-      "source": "Codeforces blog"
+      "title": "A world-model game AI small enough to run entirely on a $6 microcontroller",
+      "why": "A 26-131k-parameter looped transformer 'dreams' Breakout and Pac-Man frames on a Pi Pico 2W - a clean intro to on-device RL.",
+      "url": "https://github.com/SheepSeb/tinyworldformer",
+      "source": "SheepSeb (GitHub)"
     },
     {
-      "id": "2026-11-18-9",
+      "id": "2026-11-19-4",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "One log line can write 49KB to disk because of how systemd-journald stores it",
+      "why": "A two-line-per-second service can cost ~50 IOPS; forward to syslog or cap journald if your disk writes look mysteriously high.",
+      "url": "https://northeasttimes.com/2026/08/14/a-single-log-line-eats-49kb-of-disk-and-linux-admins-are-furious/",
+      "source": "systemd GitHub issue (via Northeast Times)"
+    },
+    {
+      "id": "2026-11-19-5",
+      "tag": "Science",
+      "kind": "science",
+      "evidence": "early",
+      "title": "A precisely timed sound burst during sleep boosted the brain's waste-clearing waves",
+      "why": "Small n=14 pilot in Science Translational Medicine; no sleep-quality or memory outcome tested yet, so don't expect a gadget soon.",
+      "url": "https://news.mit.edu/2026/pink-noise-burst-may-mean-more-restorative-sleep-0909",
+      "source": "Science Translational Medicine (via MIT News)"
+    },
+    {
+      "id": "2026-11-19-6",
       "tag": "Science",
       "kind": "science",
       "evidence": "moderate",
-      "title": "Four minutes of daily bodyweight exercise measurably built strength",
-      "why": "97-person RCT, 12 weeks: short daily reps beat doing nothing — a floor worth hitting on exam-crunch days.",
-      "url": "https://www.psu.edu/news/research/story/four-minute-daily-workout-improves-strength-balance-older-adults",
-      "source": "PLOS One (via Penn State)"
+      "title": "Ice baths didn't beat heat or just resting for recovering muscle strength",
+      "why": "40-person RCT found cold, heat and passive recovery all restored strength equally after hard exercise - skip the cold-plunge hype.",
+      "url": "https://www.news-medical.net/news/20261021/Cold-water-immersion-lacks-superiority-for-recovering-muscle-strength.aspx",
+      "source": "Journal of Thermal Biology (via News-Medical)"
     },
     {
-      "id": "2026-11-18-10",
-      "tag": "India",
+      "id": "2026-11-19-7",
+      "tag": "AI",
       "kind": "news",
-      "title": "An open ASR model now understands 65 Indian languages, Garo and Gondi included",
-      "why": "IISc/ARTPARK trained it on 31,000+ hours of speech in three stages — best on 10 of 17 benchmarked languages.",
-      "url": "https://letsdatascience.com/news/iisc-team-releases-sravaani-asr-for-65-indian-languages-a6aa9c5b",
-      "source": "IISc / ARTPARK (via Let's Data Science)"
+      "title": "A safer way to let coding agents run code: keep the agent out of the sandbox",
+      "why": "Agent stays outside; only its code runs inside a disposable VM behind an allow-list proxy - worth copying before trying local models.",
+      "url": "https://simonwillison.net/2026/Nov/17/external-sandboxes-for-coding-agents/",
+      "source": "Simon Willison's Weblog"
+    },
+    {
+      "id": "2026-11-19-8",
+      "tag": "Research",
+      "kind": "news",
+      "title": "A monotonic-stack trick turns many O(N^2) DP transitions near-linear",
+      "why": "Keep a Pareto-frontier stack of range-stat/best-dp pairs when cost depends on a range min, GCD or OR - handy for large-N DP problems.",
+      "url": "https://codeforces.com/blog/ngc0202",
+      "source": "Codeforces blog (ngc0202)"
+    },
+    {
+      "id": "2026-11-19-9",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "Five git-log commands worth running before you read any unfamiliar codebase",
+      "why": "Churn, bus-factor, bug-cluster and hotfix-frequency one-liners flag which files are risky before you open a single file.",
+      "url": "https://piechowski.io/post/git-commands-before-reading-code/",
+      "source": "Ally Piechowski's blog"
+    },
+    {
+      "id": "2026-11-19-10",
+      "tag": "AI",
+      "kind": "news",
+      "title": "OpenAI's new agent model stalls itself asking questions it could just answer",
+      "why": "Two hours into a solo task, Astra 'blocked' itself over a filename choice it had full context to make - a real limit on long agent runs.",
+      "url": "https://simonwillison.net/2026/Nov/17/gpt62-astra-and-sol/",
+      "source": "Simon Willison's Weblog"
     }
   ]
 }
