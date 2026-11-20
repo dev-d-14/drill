@@ -89,8 +89,8 @@ final class DigestScreen {
             if (read.optBoolean(id, false)) opened++;
             LinearLayout card = Ui.row(a);
             Ui.pad(card, 14, 12, 8, 12);
-            card.setBackground(science ? new android.graphics.drawable.LayerDrawable(new android.graphics.drawable.Drawable[]{
-                    Ui.fill(Ui.BLACK, 4), Ui.stroke(Ui.JADE, 4, false)}) : Ui.fill(Ui.BLACK, 4));
+            // Same card for every item; science is marked by its label, not a border.
+            card.setBackground(Ui.fill(Ui.BLACK, 4));
             LinearLayout texts = Ui.col(a);
             String tag = (i + 1) + " · " + item.optString("tag", "tech");
             if (science && !item.optString("evidence").isEmpty()) tag += " · " + item.optString("evidence") + " evidence";
