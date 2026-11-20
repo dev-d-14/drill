@@ -4,7 +4,7 @@
 a little before 13:00 India time. The app fetches it from
 `https://raw.githubusercontent.com/dev-d-14/drill/main/digest/latest.json`.
 
-The file holds about ten to twelve items, best first. The phone shows all of them, reordered by the taste it has
+The file holds about eleven to thirteen items, best first. The phone shows all of them, reordered by the taste it has
 learned from the more/less buttons, so the votes never leave the phone. That order is settled when the digest is
 first opened and then held for the day, so voting never shifts the list under your thumb; the taste it teaches
 lands on the next digest.
@@ -45,7 +45,7 @@ lands on the next digest.
 ```
 
 - `date` is the day in India (Asia/Kolkata), as `YYYY-MM-DD`. The app treats the digest as today's only when it matches.
-- `tag` is one of `AI`, `Tools`, `Industry`, `India`, `Research`, `Science`. The phone learns a weight per tag.
+- `tag` is one of `AI`, `Tools`, `Industry`, `India`, `Research`, `Science`, `ISB`. The phone learns a weight per tag. `ISB` is the one daily item meant to build business/economy literacy for Dharmik's ISB interview prep - it's the one slot where corporate strategy, funding, and leadership stories are the point, not the exception.
 - `kind` is `news` or `science`. Science items also carry `evidence`: `strong`, `moderate` or `early`.
 - `drill` is optional and appears on Sundays only. `answer` is the index of the correct option.
 - Titles and `why` lines are always written fresh. Nothing is copied from the source.

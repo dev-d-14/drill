@@ -12,6 +12,15 @@
     },
     {
       "id": "2026-11-20-2",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "A DIY robot head that turns toward whoever's talking, Pi 5 + ESP32",
+      "why": "Open-source MIT repo: a Pi 5 brain plus two ESP32-S3s for reflexes and expression - weekend build mixing Claude, Pi and microcontrollers.",
+      "url": "https://community.home-assistant.io/t/a-knee-high-robot-that-doubles-as-a-voice-satellite-and-comes-to-you-3d-printed-esp32-s3-pi-5-open-source/1030097",
+      "source": "Home Assistant community forum"
+    },
+    {
+      "id": "2026-11-20-3",
       "tag": "AI",
       "kind": "news",
       "title": "Judge any new AI model in ten minutes with one fixed weird prompt",
@@ -20,7 +29,7 @@
       "source": "Simon Willison's Weblog"
     },
     {
-      "id": "2026-11-20-3",
+      "id": "2026-11-20-4",
       "tag": "AI",
       "kind": "news",
       "title": "Caching an AI agent's reasoning can make reruns up to 291x cheaper",
@@ -29,7 +38,7 @@
       "source": "arXiv (Belcak et al.)"
     },
     {
-      "id": "2026-11-20-4",
+      "id": "2026-11-20-5",
       "tag": "Research",
       "kind": "news",
       "title": "Agents that think in raw cache states, not words, out-evolve AlphaEvolve",
@@ -38,7 +47,7 @@
       "source": "arXiv (Jiang & Karniadakis)"
     },
     {
-      "id": "2026-11-20-5",
+      "id": "2026-11-20-6",
       "tag": "AI",
       "kind": "news",
       "title": "GPT-6.2 Astra tops every benchmark, hides more mistakes than before",
@@ -47,7 +56,7 @@
       "source": "DEV Community (citing OpenAI's own system card)"
     },
     {
-      "id": "2026-11-20-6",
+      "id": "2026-11-20-7",
       "tag": "Tools",
       "kind": "news",
       "title": "Brendan Gregg's rule: never trust a benchmark's own printed number",
@@ -56,7 +65,7 @@
       "source": "Hacker News (via Zeli) - Brendan Gregg"
     },
     {
-      "id": "2026-11-20-7",
+      "id": "2026-11-20-8",
       "tag": "Research",
       "kind": "news",
       "title": "One reusable pattern makes lazy segment trees far less bug-prone",
@@ -65,7 +74,7 @@
       "source": "Codeforces blog (grecil)"
     },
     {
-      "id": "2026-11-20-8",
+      "id": "2026-11-20-9",
       "tag": "Science",
       "kind": "science",
       "evidence": "early",
@@ -75,7 +84,7 @@
       "source": "Neuroscience (via ScienceDaily)"
     },
     {
-      "id": "2026-11-20-9",
+      "id": "2026-11-20-10",
       "tag": "Science",
       "kind": "science",
       "evidence": "moderate",
@@ -85,13 +94,13 @@
       "source": "British Journal of Sports Medicine (via ScienceDaily)"
     },
     {
-      "id": "2026-11-20-10",
-      "tag": "Industry",
+      "id": "2026-11-20-11",
+      "tag": "ISB",
       "kind": "news",
-      "title": "Google's new Gemini price tiers are named Carbon, Neon and Hydrogen",
-      "why": "Neon currently costs more than Carbon's promo price, so the tier names don't even match the actual price order right now.",
-      "url": "https://simonwillison.net/2026/Nov/18/llm-gemini/",
-      "source": "Simon Willison's Weblog"
+      "title": "Tata Sons' chairman is stepping down, and its $120bn bet is in question",
+      "why": "Noel Tata's board wants to slow capital-heavy bets like Agratas and Air India for faster, clearer payback - a real succession case.",
+      "url": "https://www.outlookbusiness.com/corporate/after-chandra-exit-what-happens-to-tatas-120-bn-investment-plan",
+      "source": "Outlook Business (via Bloomberg)"
     }
   ]
 }
