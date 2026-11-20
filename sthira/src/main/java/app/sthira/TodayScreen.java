@@ -233,7 +233,7 @@ final class TodayScreen {
     }
 
     private static View pastSummary(MainActivity a, LocalDate d) {
-        LinearLayout card = Ui.card(a, Ui.BLACK, null);
+        LinearLayout card = Ui.card(a, Ui.BLACK, v -> DayScreen.open(a, d, MainActivity.TODAY));
         LinearLayout texts = Ui.col(a);
         texts.addView(Ui.display(a, "WHAT YOU LOGGED", 24, Ui.CREAM));
         String trained = Store.trained(a, d);
@@ -241,12 +241,14 @@ final class TodayScreen {
                 Store.meditated(a, d) ? "Meditated, " + Store.dayOrEmpty(a, d).optInt("med") + " min" : "No meditation logged",
                 trained.isEmpty() ? "No training logged" : "Training: " + trained,
                 Store.journaled(a, d) ? "Journaled on paper" : "No journal logged",
-                Store.shutDown(a, d) ? "Shutdown done" : "No shutdown logged"};
+                Store.shutDown(a, d) ? "Shutdown done" : "No shutdown logged",
+                Store.vitamin(a, d) ? "Multivitamin taken" : "No multivitamin logged"};
         for (String s : lines) {
             TextView t = Ui.text(a, s, 13, Ui.MUTED, Ui.regular);
             texts.addView(t, Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 0, 4, 0, 0));
         }
         card.addView(texts, Ui.lp(0, Ui.WRAP, 1));
+        card.addView(Ui.label(a, "edit", Ui.OCHRE));
         return card;
     }
 }

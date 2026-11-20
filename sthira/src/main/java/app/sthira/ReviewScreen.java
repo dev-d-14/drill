@@ -31,7 +31,11 @@ final class ReviewScreen {
             LocalDate d = monday.plusDays(i);
             if (d.isAfter(today)) break;
             JSONObject log = Store.dayOrEmpty(a, d), before = Store.dayOrEmpty(a, d.minusDays(1));
-            if (!log.optString("woke").isEmpty() && !before.optString("lights").isEmpty()) {
+            JSONObject tracked = DayScreen.nightEnding(a, d);
+            if (tracked != null && tracked.optLong("tst") > 0) {
+                sleepSum += tracked.optLong("tst");
+                sleepNights++;
+            } else if (!log.optString("woke").isEmpty() && !before.optString("lights").isEmpty()) {
                 sleepSum += Math.floorMod(Store.minutes(log.optString("woke")) - Store.minutes(before.optString("lights")), 1440);
                 sleepNights++;
             }
@@ -41,7 +45,7 @@ final class ReviewScreen {
         }
         String sleep = sleepNights == 0 ? "–" : String.format(Locale.ROOT, "%dH %02d", sleepSum / sleepNights / 60, sleepSum / sleepNights % 60);
         LinearLayout r1 = Ui.row(a), r2 = Ui.row(a);
-        r1.addView(tile(a, sleep, "Sleep, average · goal 7h"), Ui.gap(Ui.lp(0, Ui.WRAP, 1), 0, 0, 4, 0));
+        r1.addView(tile(a, sleep, "Sleep, average · goal " + Sleep.goalMinutes(a) / 60 + "h"), Ui.gap(Ui.lp(0, Ui.WRAP, 1), 0, 0, 4, 0));
         r1.addView(tile(a, workouts + " / " + Store.trainingDaysPerWeek(a), "Workouts"), Ui.gap(Ui.lp(0, Ui.WRAP, 1), 4, 0, 0, 0));
         r2.addView(tile(a, sits + " / 7", "Meditation days"), Ui.gap(Ui.lp(0, Ui.WRAP, 1), 0, 0, 4, 0));
         r2.addView(tile(a, journals + " / 7", "Journal days"), Ui.gap(Ui.lp(0, Ui.WRAP, 1), 4, 0, 0, 0));
@@ -85,6 +89,12 @@ final class ReviewScreen {
                     twiceWhat = r == 0 ? "Training" : r == 1 ? "Meditation" : r == 2 ? "Journaling" : "The multivitamin";
                 }
                 FrameLayout cell = new FrameLayout(a);
+                if (!d.isAfter(today)) {
+                    final LocalDate day = d;
+                    cell.setBackground(Ui.press(Ui.fill(0x00000000, 0), 0));
+                    cell.setContentDescription("Edit " + day);
+                    cell.setOnClickListener(v -> DayScreen.open(a, day, MainActivity.REVIEW));
+                }
                 View mark = new View(a);
                 FrameLayout.LayoutParams p;
                 if (state == 1) {
@@ -109,6 +119,7 @@ final class ReviewScreen {
         body.addView(grid, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 12, 0, 0));
         String verdict = twice ? twiceWhat + " was missed twice in a row. The next one matters most."
                 : "Filled is done, ring is missed, dash is a rest day. No miss came twice in a row.";
+        verdict += " Tap any day to edit what was logged.";
         body.addView(Ui.text(a, verdict, 13, Ui.CREAM, Ui.regular), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 8, 0, 0));
 
         // Anything unused for three weeks gets offered for removal.

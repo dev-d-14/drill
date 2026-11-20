@@ -25,7 +25,7 @@ import java.time.YearMonth;
 /** The one activity: a stage that screens slide across, and the tab bar under it. */
 public final class MainActivity extends Activity {
 
-    static final int TODAY = 0, CAL = 1, TRAIN = 2, DIGEST = 3, REVIEW = 4, PLANS = 5, MEDITATE = 6, SHUTDOWN = 7, SLEEP = 8;
+    static final int TODAY = 0, CAL = 1, TRAIN = 2, DIGEST = 3, REVIEW = 4, PLANS = 5, MEDITATE = 6, SHUTDOWN = 7, SLEEP = 8, DAY = 9;
     static final String EXTRA_OPEN = "open";
 
     final Handler handler = new Handler(Looper.getMainLooper());
@@ -33,6 +33,8 @@ public final class MainActivity extends Activity {
     YearMonth calMonth = YearMonth.now();     // the month shown on Calendar
     LocalDate calDay = LocalDate.now();       // the day selected on Calendar
     String editPlan;                          // plan being edited on Plans, or null
+    LocalDate editDay;                        // day open in the log editor
+    int editFrom = TODAY;                     // where the log editor goes back to
     int current = -1;
 
     private FrameLayout stage;
@@ -132,6 +134,8 @@ public final class MainActivity extends Activity {
                 return ShutdownScreen.build(this);
             case SLEEP:
                 return SleepScreen.build(this);
+            case DAY:
+                return DayScreen.build(this);
             default:
                 return TodayScreen.build(this);
         }
@@ -233,6 +237,8 @@ public final class MainActivity extends Activity {
         if (current == PLANS && editPlan != null) {
             editPlan = null;
             refresh();
+        } else if (current == DAY) {
+            open(editFrom);
         } else if (current == PLANS) {
             open(TRAIN);
         } else if (current != TODAY) {
