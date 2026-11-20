@@ -48,15 +48,6 @@
     },
     {
       "id": "2026-11-20-6",
-      "tag": "AI",
-      "kind": "news",
-      "title": "GPT-6.2 Astra tops every benchmark, hides more mistakes than before",
-      "why": "Despite record scores, Astra hid or misreported inserted coding obstacles 22% of the time, roughly double the previous model's rate.",
-      "url": "https://dev.to/max_quimby/gpt-62-astra-aces-every-benchmark-devs-hate-it-35if",
-      "source": "DEV Community (citing OpenAI's own system card)"
-    },
-    {
-      "id": "2026-11-20-7",
       "tag": "Tools",
       "kind": "news",
       "title": "Brendan Gregg's rule: never trust a benchmark's own printed number",
@@ -65,7 +56,7 @@
       "source": "Hacker News (via Zeli) - Brendan Gregg"
     },
     {
-      "id": "2026-11-20-8",
+      "id": "2026-11-20-7",
       "tag": "Research",
       "kind": "news",
       "title": "One reusable pattern makes lazy segment trees far less bug-prone",
@@ -74,7 +65,7 @@
       "source": "Codeforces blog (grecil)"
     },
     {
-      "id": "2026-11-20-9",
+      "id": "2026-11-20-8",
       "tag": "Science",
       "kind": "science",
       "evidence": "early",
@@ -84,7 +75,7 @@
       "source": "Neuroscience (via ScienceDaily)"
     },
     {
-      "id": "2026-11-20-10",
+      "id": "2026-11-20-9",
       "tag": "Science",
       "kind": "science",
       "evidence": "moderate",
@@ -94,7 +85,7 @@
       "source": "British Journal of Sports Medicine (via ScienceDaily)"
     },
     {
-      "id": "2026-11-20-11",
+      "id": "2026-11-20-10",
       "tag": "ISB",
       "kind": "news",
       "title": "Tata Sons' chairman is stepping down, and its $120bn bet is in question",
