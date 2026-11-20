@@ -55,7 +55,7 @@ final class DigestScreen {
                     : problem != null ? "Couldn't fetch the digest (" + problem + ")."
                     : "No digest yet. The first list arrives around " + Store.digestTime(a) + ".";
             body.addView(Ui.text(a, msg, 14, Ui.CREAM, Ui.regular));
-            body.addView(Ui.ghost(a, "Try again", Ui.CREAM, false, v -> {
+            body.addView(Ui.button(a, "Try again", Ui.CELL, Ui.CREAM, v -> {
                 lastFetch = 0;
                 a.refresh();
             }), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 12, 0, 0));
@@ -164,9 +164,9 @@ final class DigestScreen {
         return pair;
     }
 
-    /** Filled while the vote is on, outlined while it is off. */
+    /** Cream while the vote is on, a darker panel while it is off. No outlines in the digest. */
     private static void paint(View button, boolean on) {
-        button.setBackground(on ? Ui.press(Ui.fill(Ui.OCHRE, 4), 4) : Ui.press(Ui.stroke(Ui.CREAM, 4, false), 4));
+        button.setBackground(on ? Ui.press(Ui.fill(Ui.OCHRE, 4), 4) : Ui.press(Ui.fill(Ui.CELL, 4), 4));
         View icon = button instanceof ViewGroup ? ((ViewGroup) button).getChildAt(0) : null;
         if (icon instanceof Ui.Icon) ((Ui.Icon) icon).setColor(on ? Ui.BLACK : Ui.CREAM);
     }

@@ -111,6 +111,21 @@ public final class AgendaWidget extends AppWidgetProvider {
         lines.add(new StampRenderer.Line("Multivitamin", vit ? StampRenderer.DONE : StampRenderer.PENDING, 0));
         total++;
         if (vit) finished++;
+        // Tonight's alarm, after shutdown. Not a habit, so it doesn't count toward "done".
+        JSONObject night = Sleep.active(c);
+        String alarm;
+        if (night != null) {
+            alarm = night.optLong("target") > 0 ? "Sleeping · alarm " + Store.hhmm(Sleep.minuteOf(night.optLong("target")))
+                    : "Sleeping · no alarm";
+        } else if (Sleep.MODE_TRACK.equals(Sleep.mode(c))) {
+            alarm = "Sleep · no alarm";
+        } else {
+            int t = Store.minutes(Sleep.alarmTime(c));
+            alarm = Sleep.MODE_SMART.equals(Sleep.mode(c))
+                    ? "Alarm " + Sleep.alarmTime(c) + " · from " + Store.hhmm(t - Sleep.window(c))
+                    : "Alarm " + Sleep.alarmTime(c);
+        }
+        lines.add(new StampRenderer.Line(alarm, StampRenderer.EVENT, minutes[3] + 1));
         lines.sort((x, y) -> Integer.compare(x.minute, y.minute));
         m.lines = lines;
         m.footLeft = finished + " / " + total + " DONE";
