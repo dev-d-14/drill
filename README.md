@@ -17,6 +17,9 @@ A second app in this repo (`sthira/`), for the day rather than for study: calend
 - **Digest:** five items a day from `digest/latest.json`, ranked on the phone by the more/less buttons.
 - **Meditate, Shutdown, Review:** a one-tap timer with a bell (or guided Wim Hof breathing: set rounds, breaths, pace and recovery; tap during the hold when you need air), a night check-in, and a week that adds itself up.
 - **Sleep:** tap Start at bedtime; the microphone listens for movement and breathing (no audio is stored) and a smart alarm wakes you in light sleep inside a 10–45 minute window, never later than the set time. Morning report with estimated stages, score and history; nights go to Health Connect.
+- **Calendar extras:** type "gym tomorrow 7pm" to add an event (with a preview first); countdown chips for exams and deadlines in the next two weeks; the next Codeforces contests (tap to add one); an ISB interview question each day with a 2-minute answer timer.
+- **Backup:** Review → Backup to Google Drive saves one file in Drive through Android's file picker and overwrites it weekly; Restore brings it back.
+- **Quick Settings tiles:** Sleep, Meditate and Wim Hof.
 - **Widget:** a large home-screen stamp showing today, in the same design as the Ashtavakra widget.
 
 Plain Java with no libraries, styled after the Ashtavakra app: deep maroon, cream ink, a halftone sun.

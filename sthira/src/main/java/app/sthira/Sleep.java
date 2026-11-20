@@ -483,6 +483,16 @@ final class Sleep {
         Store.put(night, "move", Math.round(movementIndex * 100) / 100.0);
         Store.put(night, "short", tib < 180);
         Store.put(night, "stages", new String(st));
+        // Phone pickups after falling asleep: separate runs of epochs where the phone was unlocked.
+        org.json.JSONArray pickups = new org.json.JSONArray();
+        if (onset >= 0) {
+            boolean in = false;
+            for (int i = onset; i < n; i++) {
+                if (ep[i].phone && !in) pickups.put(start + i * 30_000L);
+                in = ep[i].phone;
+            }
+        }
+        Store.put(night, "pickups", pickups);
         score(c, night, tst, sleepEp == 0 ? 0 : deep * 100.0 / sleepEp, movementIndex, awakenings, waso, start);
         return night;
     }

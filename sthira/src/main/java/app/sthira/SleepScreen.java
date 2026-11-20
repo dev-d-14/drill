@@ -283,6 +283,17 @@ final class SleepScreen {
                     + (early > 0 ? ", " + early + " min early" : "") + ", because " + Sleep.reasonText(reason) + ".";
         }
         if (alarm != null) box.addView(Ui.text(a, alarm, 13, Ui.CREAM, Ui.regular), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 10, 0, 0));
+        JSONArray pickups = n.optJSONArray("pickups");
+        if (pickups != null && pickups.length() > 0) {
+            StringBuilder times = new StringBuilder();
+            for (int i = 0; i < Math.min(4, pickups.length()); i++) {
+                times.append(i == 0 ? "" : ", ").append(Store.hhmm(Sleep.minuteOf(pickups.optLong(i))));
+            }
+            if (pickups.length() > 4) times.append(", …");
+            String line = "Picked up your phone " + (pickups.length() == 1 ? "once" : pickups.length() + " times")
+                    + " after falling asleep (" + times + ").";
+            box.addView(Ui.text(a, line, 13, Ui.CREAM, Ui.regular), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 6, 0, 0));
+        }
 
         // numbers
         LinearLayout grid = Ui.col(a);

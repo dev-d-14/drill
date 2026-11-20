@@ -84,6 +84,44 @@
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
+        <service
+            android:name=".Tiles$SleepTile"
+            android:exported="true"
+            android:icon="@drawable/ic_tile_sleep"
+            android:label="Sleep"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".Tiles$MeditateTile"
+            android:exported="true"
+            android:icon="@drawable/ic_tile_meditate"
+            android:label="Meditate"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".Tiles$WimHofTile"
+            android:exported="true"
+            android:icon="@drawable/ic_tile_breath"
+            android:label="Wim Hof"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".Backup$Job"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
         <receiver
             android:name=".SleepAlarm"
             android:exported="false" />

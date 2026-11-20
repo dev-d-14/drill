@@ -142,15 +142,31 @@ final class TodayScreen {
         int[] minutes = {Store.minutes(Store.digestTime(a)), Store.minutes(Store.homeTime(a)),
                 Store.minutes(Store.trainTime(a)), Store.minutes(Store.shutTime(a))};
         boolean[] pending = {!hideDigest && !digestDone, !medDone, trainDue && !trainDone, !shutDone};
+
+        // Never miss twice: a habit missed yesterday and not done yet today goes to the front.
+        LocalDate y = today.minusDays(1);
+        boolean counts = !y.isBefore(LocalDate.parse(Store.root(a).optString("installed", today.toString())));
+        String yTrain = Store.trained(a, y);
+        boolean[] missedY = {false,
+                counts && !Store.meditated(a, y),
+                counts && Store.isTrainingDay(a, y) && !"done".equals(yTrain) && !"rest".equals(yTrain),
+                counts && !Store.shutDown(a, y)};
+        boolean vitMissedY = counts && !Store.vitamin(a, y);
+        final String again = "Missed yesterday. Don't miss twice.";
         int next = -1;
         for (int i = 0; i < 4; i++) {
-            if (pending[i] && (next < 0 || minutes[i] < minutes[next])) next = i;
+            if (pending[i] && missedY[i] && (next < 0 || minutes[i] < minutes[next])) next = i;
+        }
+        if (next < 0) {
+            for (int i = 0; i < 4; i++) {
+                if (pending[i] && (next < 0 || minutes[i] < minutes[next])) next = i;
+            }
         }
 
         boolean vit = Store.vitamin(a, today);
         String vitAt = log.optString("vitAt");
         String vitSub = vit ? (vitAt.isEmpty() ? "Taken today" : "Taken at " + vitAt) + " · tap to undo"
-                : "Morning or evening. Tap when you take it.";
+                : vitMissedY ? again : "Morning or evening. Tap when you take it.";
         items.add(new Item(0, habit(a, "MULTIVITAMIN", vitSub, vit ? DONE : PENDING, "TOOK IT", v -> {
             Store.setVitamin(a, !vit);
             a.refresh();
@@ -161,7 +177,7 @@ final class TodayScreen {
         }
         String medAt = log.optString("medAt");
         String medSub = medDone ? (medAt.isEmpty() ? "Done" : "Done at " + medAt) + " · " + log.optInt("med") + " min"
-                : Store.medMinutes(a) + " minutes, when you get home";
+                : missedY[1] ? again : Store.medMinutes(a) + " minutes, when you get home";
         items.add(new Item(minutes[1], habit(a, "MEDITATE", medSub, medDone ? DONE : next == 1 ? NEXT : PENDING,
                 "START", v -> a.open(MainActivity.MEDITATE))));
         if (trainDue) {
@@ -169,14 +185,14 @@ final class TodayScreen {
             String name = Store.sessionDone(a) ? Store.session(a).optString("name") : w == null ? "" : w.optString("name");
             int count = w == null || w.optJSONArray("ex") == null ? 0 : w.optJSONArray("ex").length();
             String sub = "done".equals(trained) ? "Logged" : "rest".equals(trained) ? "Marked as a rest day"
-                    : "missed".equals(trained) ? "Marked as missed" : count + " exercises, about 30 minutes";
+                    : "missed".equals(trained) ? "Marked as missed" : missedY[2] ? again : count + " exercises, about 30 minutes";
             items.add(new Item(minutes[2], habit(a, "TRAIN · " + name.toUpperCase(Locale.ROOT), sub,
                     "missed".equals(trained) ? MISSED : trainDone ? DONE : next == 2 ? NEXT : PENDING, "OPEN",
                     v -> a.open(MainActivity.TRAIN))));
         }
         boolean lateEnough = LocalTime.now().toSecondOfDay() / 60 >= minutes[3] - 120;
         items.add(new Item(minutes[3], habit(a, "SHUTDOWN", shutDone ? "Done. Phone on the charger."
-                        : "A few taps, then the charger",
+                        : missedY[3] ? again : "A few taps, then the charger",
                 shutDone ? DONE : next == 3 ? NEXT : PENDING, lateEnough ? "OPEN" : "LATER",
                 v -> a.open(MainActivity.SHUTDOWN))));
 

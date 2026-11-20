@@ -33,7 +33,7 @@ import java.util.Locale;
  * itself can all write steps there). When it has nothing, the phone's own step counter is sampled every
  * 15 minutes in the background and the count is kept here, so the card still works without any fit app.
  */
-final class Steps {
+public final class Steps {
 
     static final int GOAL = 10_000;
     static final String HC_READ_STEPS = "android.permission.health.READ_STEPS";

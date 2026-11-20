@@ -26,7 +26,8 @@ import java.time.YearMonth;
 public final class MainActivity extends Activity {
 
     static final int TODAY = 0, CAL = 1, TRAIN = 2, DIGEST = 3, REVIEW = 4, PLANS = 5, MEDITATE = 6, SHUTDOWN = 7, SLEEP = 8, DAY = 9;
-    static final String EXTRA_OPEN = "open";
+    static final String EXTRA_OPEN = "open", EXTRA_ACTION = "action";
+    static final String ACTION_SLEEP = "sleep", ACTION_MEDITATE = "meditate", ACTION_WIMHOF = "wimhof";
 
     final Handler handler = new Handler(Looper.getMainLooper());
     LocalDate day = LocalDate.now();          // the day shown on Today
@@ -69,6 +70,8 @@ public final class MainActivity extends Activity {
         Sleep.checkStale(this);
         open(first);
         Reminders.scheduleAll(this);
+        Backup.schedule(this);
+        handleAction(getIntent());
         if (Build.VERSION.SDK_INT >= 33
                 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
                 && !Store.root(this).optBoolean("askedNotify", false)) {
@@ -79,9 +82,32 @@ public final class MainActivity extends Activity {
     }
 
     @Override
+    protected void onActivityResult(int code, int result, Intent data) {
+        super.onActivityResult(code, result, data);
+        if (result == RESULT_OK && (code == Backup.REQ_CREATE || code == Backup.REQ_OPEN)) {
+            Backup.onResult(this, code, data);
+        }
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (intent != null && intent.hasExtra(EXTRA_OPEN)) open(intent.getIntExtra(EXTRA_OPEN, TODAY));
+        handleAction(intent);
+    }
+
+    /** Quick Settings tiles and shortcuts: start sleep tracking, or open a meditation mode. */
+    private void handleAction(Intent intent) {
+        String action = intent == null ? null : intent.getStringExtra(EXTRA_ACTION);
+        if (action == null) return;
+        intent.removeExtra(EXTRA_ACTION);
+        if (ACTION_SLEEP.equals(action)) {
+            open(SLEEP);
+            if (Sleep.active(this) == null) Sleep.start(this);
+        } else if (ACTION_MEDITATE.equals(action) || ACTION_WIMHOF.equals(action)) {
+            Store.setSetting(this, "medMode", ACTION_WIMHOF.equals(action) ? "whm" : "timer");
+            open(MEDITATE);
+        }
     }
 
     @Override

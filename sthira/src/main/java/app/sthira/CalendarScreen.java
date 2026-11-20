@@ -43,6 +43,10 @@ final class CalendarScreen {
         if (!Cal.allowed(a)) {
             body.addView(Ui.button(a, "Connect your calendar", Ui.CREAM, Ui.BLACK, v -> a.askCalendar()),
                     Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 0, 0, 10));
+        } else {
+            body.addView(CalExtras.quickAdd(a), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 0, 0, 10));
+            View due = CalExtras.countdowns(a);
+            if (due != null) body.addView(due, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 0, 0, 10));
         }
 
         // Which days of this month have events.
@@ -134,6 +138,8 @@ final class CalendarScreen {
         } else if (events.isEmpty()) {
             body.addView(Ui.text(a, "No events.", 14, Ui.CREAM, Ui.regular), Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 0, 8, 0, 0));
         }
+
+        body.addView(CalExtras.extras(a), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 14, 0, 0));
 
         body.addView(new View(a), Ui.lp(Ui.MATCH, 0, 1));
         LinearLayout actions = Ui.row(a);

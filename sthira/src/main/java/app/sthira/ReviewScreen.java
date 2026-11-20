@@ -169,6 +169,8 @@ final class ReviewScreen {
         body.addView(Ui.text(a, "Reminders fire at the digest, home, multivitamin and shutdown times. The multivitamin one only comes if you haven't taken it.", 12, Ui.CREAM, Ui.regular),
                 Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 8, 0, 0));
 
+        body.addView(Backup.section(a), Ui.lp(Ui.MATCH, Ui.WRAP));
+
         String label = sunday ? "sunday · built from your week" : "this week so far";
         return Ui.page(a, Ui.header(a, label, "REVIEW", null), body);
     }

@@ -65,6 +65,36 @@ final class Store {
         AgendaWidget.updateAll(c.getApplicationContext());
     }
 
+    /** The whole state as text, for a backup. */
+    static synchronized String snapshot(Context c) {
+        return root(c).toString();
+    }
+
+    /**
+     * Replaces everything with a backup. The current state is kept first as state.before-restore.json.
+     * Returns false (and changes nothing) if the text isn't a Sthira state.
+     */
+    static synchronized boolean replace(Context c, String json) {
+        JSONObject next;
+        try {
+            next = new JSONObject(json);
+        } catch (Exception e) {
+            return false;
+        }
+        if (next.optJSONArray("plans") == null && next.optJSONObject("days") == null && !next.has("installed")) return false;
+        root(c);
+        try (FileOutputStream out = new FileOutputStream(new File(file.getParentFile(), "state.before-restore.json"))) {
+            out.write(root.toString().getBytes(StandardCharsets.UTF_8));
+        } catch (Exception ignored) {
+        }
+        JSONObject keep = root.optJSONObject("backup");
+        root = next;
+        if (keep != null) put(root, "backup", keep);   // the link to the Drive file belongs to this phone
+        root.remove("sleepNow");
+        save(c);
+        return true;
+    }
+
     // ---- small JSON helpers ----
 
     static void put(JSONObject o, String k, Object v) {

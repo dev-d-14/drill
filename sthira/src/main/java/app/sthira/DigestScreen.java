@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -113,7 +114,10 @@ final class DigestScreen {
                 }
             });
             card.addView(texts, Ui.lp(0, Ui.WRAP, 1));
-            card.addView(votePair(a, item, votes.optInt(id, 0)), Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 10, 0, 0, 0));
+            LinearLayout controls = Ui.col(a);
+            controls.addView(votePair(a, item, votes.optInt(id, 0)));
+            controls.addView(saveButton(a, item), Ui.gap(Ui.lp(Ui.MATCH, Ui.dp(34)), 0, 8, 0, 0));
+            card.addView(controls, Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 10, 0, 0, 0));
             body.addView(card, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, i == 0 ? 0 : 8, 0, 0));
         }
 
@@ -127,7 +131,102 @@ final class DigestScreen {
                 : "That's the whole digest. No feed.", 14, Ui.CREAM, Ui.regular), Ui.lp(0, Ui.WRAP, 1));
         foot.addView(Ui.display(a, opened + " / " + items.size(), 28, Ui.CREAM));
         body.addView(foot, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 16, 0, 0));
+        View saved = savedSection(a);
+        if (saved != null) body.addView(saved, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 14, 0, 0));
         return Ui.page(a, Ui.header(a, label, "DIGEST", null), body);
+    }
+
+    // ---- save for later ----
+
+    private static boolean showSaved;
+
+    private static int savedIndex(Context c, String id) {
+        JSONArray saved = Store.arr(Store.root(c), "saved");
+        for (int i = 0; i < saved.length(); i++) {
+            JSONObject s = saved.optJSONObject(i);
+            if (s != null && id.equals(s.optString("id"))) return i;
+        }
+        return -1;
+    }
+
+    /** A filled SAVE / SAVED panel under the vote buttons. Repaints itself in place. */
+    private static View saveButton(MainActivity a, JSONObject item) {
+        String id = item.optString("id");
+        TextView b = Ui.text(a, "", 11, Ui.CREAM, Ui.bold);
+        b.setGravity(Gravity.CENTER);
+        b.setLetterSpacing(0.1f);
+        Runnable paint = () -> {
+            boolean on = savedIndex(a, id) >= 0;
+            b.setText(on ? "SAVED" : "SAVE");
+            b.setTextColor(on ? Ui.BLACK : Ui.CREAM);
+            b.setBackground(Ui.press(Ui.fill(on ? Ui.OCHRE : Ui.CELL, 4), 4));
+            b.setContentDescription(on ? "Saved for later, tap to remove" : "Save for later");
+        };
+        paint.run();
+        b.setOnClickListener(v -> {
+            JSONArray saved = Store.arr(Store.root(a), "saved");
+            int at = savedIndex(a, id);
+            if (at >= 0) {
+                saved.remove(at);
+            } else {
+                JSONObject s = new JSONObject();
+                for (String k : new String[]{"id", "title", "why", "source", "url", "tag"}) Store.put(s, k, item.optString(k));
+                Store.put(s, "on", LocalDate.now().toString());
+                saved.put(s);
+            }
+            Store.save(a);
+            paint.run();
+        });
+        return b;
+    }
+
+    /** "Saved (n)" at the bottom, closed until tapped. */
+    private static View savedSection(MainActivity a) {
+        JSONArray saved = Store.root(a).optJSONArray("saved");
+        if (saved == null || saved.length() == 0) return null;
+        LinearLayout box = Ui.col(a);
+        LinearLayout head = Ui.row(a);
+        head.setMinimumHeight(Ui.dp(44));
+        head.addView(Ui.label(a, "saved for later (" + saved.length() + ")", Ui.CREAM), Ui.lp(0, Ui.WRAP, 1));
+        head.addView(Ui.text(a, showSaved ? "Hide" : "Show", 13, Ui.OCHRE, Ui.medium));
+        head.setOnClickListener(v -> {
+            showSaved = !showSaved;
+            a.refresh();
+        });
+        box.addView(head, Ui.lp(Ui.MATCH, Ui.WRAP));
+        if (!showSaved) return box;
+        for (int i = saved.length() - 1; i >= 0; i--) {
+            JSONObject s = saved.optJSONObject(i);
+            if (s == null) continue;
+            LinearLayout row = Ui.row(a);
+            row.setBackground(Ui.press(Ui.fill(Ui.BLACK, 4), 4));
+            Ui.pad(row, 14, 10, 10, 10);
+            LinearLayout t = Ui.col(a);
+            t.addView(Ui.text(a, s.optString("title"), 14, Ui.CREAM, Ui.bold));
+            String src = s.optString("source");
+            t.addView(Ui.text(a, (src.isEmpty() ? "" : src + " · ") + "saved " + s.optString("on"), 12, Ui.MUTED, Ui.regular),
+                    Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 0, 3, 0, 0));
+            row.addView(t, Ui.lp(0, Ui.WRAP, 1));
+            row.setOnClickListener(v -> {
+                try {
+                    a.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(s.optString("url"))));
+                } catch (Exception e) {
+                    Toast.makeText(a, "Couldn't open the link.", Toast.LENGTH_SHORT).show();
+                }
+            });
+            final String id = s.optString("id");
+            TextView remove = Ui.text(a, "Remove", 12, Ui.MUTED, Ui.medium);
+            remove.setPadding(Ui.dp(10), Ui.dp(10), Ui.dp(4), Ui.dp(10));
+            remove.setOnClickListener(v -> {
+                int at = savedIndex(a, id);
+                if (at >= 0) Store.root(a).optJSONArray("saved").remove(at);
+                Store.save(a);
+                a.refresh();
+            });
+            row.addView(remove);
+            box.addView(row, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 6, 0, 0));
+        }
+        return box;
     }
 
     /**
