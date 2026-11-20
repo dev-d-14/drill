@@ -25,7 +25,7 @@ import java.time.YearMonth;
 /** The one activity: a stage that screens slide across, and the tab bar under it. */
 public final class MainActivity extends Activity {
 
-    static final int TODAY = 0, CAL = 1, TRAIN = 2, DIGEST = 3, REVIEW = 4, PLANS = 5, MEDITATE = 6, SHUTDOWN = 7;
+    static final int TODAY = 0, CAL = 1, TRAIN = 2, DIGEST = 3, REVIEW = 4, PLANS = 5, MEDITATE = 6, SHUTDOWN = 7, SLEEP = 8;
     static final String EXTRA_OPEN = "open";
 
     final Handler handler = new Handler(Looper.getMainLooper());
@@ -64,6 +64,7 @@ public final class MainActivity extends Activity {
         }
 
         int first = getIntent() == null ? TODAY : getIntent().getIntExtra(EXTRA_OPEN, TODAY);
+        Sleep.checkStale(this);
         open(first);
         Reminders.scheduleAll(this);
         if (Build.VERSION.SDK_INT >= 33
@@ -94,6 +95,13 @@ public final class MainActivity extends Activity {
     @Override
     public void onRequestPermissionsResult(int code, String[] permissions, int[] results) {
         super.onRequestPermissionsResult(code, permissions, results);
+        if (code == Steps.REQ_HEALTH) {
+            Steps.askSensor(this);
+        } else if (code == Steps.REQ_SENSOR) {
+            Steps.start(this);
+        } else if (code == Sleep.REQ_MIC) {
+            Sleep.afterPermissions(this);
+        }
         refresh();
         AgendaWidget.updateAll(this);
     }
@@ -122,6 +130,8 @@ public final class MainActivity extends Activity {
                 return MeditateScreen.build(this);
             case SHUTDOWN:
                 return ShutdownScreen.build(this);
+            case SLEEP:
+                return SleepScreen.build(this);
             default:
                 return TodayScreen.build(this);
         }

@@ -41,6 +41,10 @@ public final class Reminders extends BroadcastReceiver {
         } else {
             scheduleAll(c);
             AgendaWidget.updateAll(c);
+            if (Intent.ACTION_BOOT_COMPLETED.equals(action) || Intent.ACTION_MY_PACKAGE_REPLACED.equals(action)) {
+                Sleep.onBoot(c);
+                Steps.start(c);
+            }
         }
     }
 

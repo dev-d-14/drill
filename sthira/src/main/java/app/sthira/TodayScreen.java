@@ -179,6 +179,30 @@ final class TodayScreen {
                         : "A few taps, then the charger",
                 shutDone ? DONE : next == 3 ? NEXT : PENDING, lateEnough ? "OPEN" : "LATER",
                 v -> a.open(MainActivity.SHUTDOWN))));
+
+        // Sleep: last night's result in the morning, the alarm and Start in the evening.
+        JSONObject night = Sleep.lastNight(a);
+        if (night != null && today.toString().equals(night.optString("date")) && night.optLong("tib") >= 60) {
+            String woke = night.has("firedAt") ? " · woke " + Store.hhmm(Sleep.minuteOf(night.optLong("firedAt"))) : "";
+            items.add(new Item(1, habit(a, "SLEPT " + Sleep.hm(night.optLong("tst")).toUpperCase(Locale.ROOT),
+                    "Score " + night.optInt("score") + woke + " · tap for the night", DONE, "",
+                    v -> a.open(MainActivity.SLEEP))));
+        }
+        JSONObject now = Sleep.active(a);
+        String sleepSub;
+        if (now != null) {
+            sleepSub = now.optLong("target") > 0 ? "Tracking · alarm " + Store.hhmm(Sleep.minuteOf(now.optLong("target")))
+                    : "Tracking, no alarm";
+        } else if (Sleep.MODE_TRACK.equals(Sleep.mode(a))) {
+            sleepSub = "Track the night, no alarm";
+        } else {
+            int m = Store.minutes(Sleep.alarmTime(a));
+            sleepSub = Sleep.MODE_SMART.equals(Sleep.mode(a))
+                    ? "Alarm " + Sleep.alarmTime(a) + " · wakes you from " + Store.hhmm(m - Sleep.window(a))
+                    : "Alarm " + Sleep.alarmTime(a);
+        }
+        items.add(new Item(minutes[3] + 1, habit(a, now != null ? "SLEEPING" : "SLEEP", sleepSub, PENDING,
+                now != null ? "OPEN" : lateEnough ? "START" : "SET", v -> a.open(MainActivity.SLEEP))));
     }
 
     private static View habit(MainActivity a, String title, String sub, int state, String action, View.OnClickListener l) {

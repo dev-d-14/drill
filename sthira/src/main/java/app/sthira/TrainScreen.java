@@ -32,6 +32,7 @@ final class TrainScreen {
         String title = done ? "DONE" : workout == null ? "TRAIN" : workout.optString("name").toUpperCase(Locale.ROOT);
         View plans = Ui.ghost(a, "Plans", Ui.CREAM, false, v -> a.open(MainActivity.PLANS));
         LinearLayout body = Ui.col(a);
+        body.addView(Steps.card(a), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 0, 0, 12));
 
         if (workout == null) {
             body.addView(Ui.text(a, "This plan has no workouts yet. Add one in Plans.", 14, Ui.CREAM, Ui.regular));

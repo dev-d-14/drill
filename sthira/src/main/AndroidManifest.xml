@@ -11,6 +11,21 @@
         android:name="android.permission.SCHEDULE_EXACT_ALARM"
         android:maxSdkVersion="32" />
 
+    <!-- Sleep tracking: microphone all night, the wake-up alarm, and keeping the CPU awake -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <!-- Steps: the phone's step counter, and Health Connect -->
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.health.READ_STEPS" />
+    <uses-permission android:name="android.permission.health.WRITE_SLEEP" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -53,5 +68,50 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".SleepService"
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
+
+        <service
+            android:name=".RingService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
+
+        <service
+            android:name=".Steps$Job"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver
+            android:name=".SleepAlarm"
+            android:exported="false" />
+
+        <activity
+            android:name=".AlarmActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:showWhenLocked="true"
+            android:taskAffinity="app.sthira.alarm"
+            android:turnScreenOn="true" />
+
+        <!-- Health Connect shows this when you ask why Sthira wants steps and sleep -->
+        <activity
+            android:name=".PrivacyActivity"
+            android:exported="true" />
+
+        <activity-alias
+            android:name="ViewPermissionUsageActivity"
+            android:exported="true"
+            android:permission="android.permission.START_VIEW_PERMISSION_USAGE"
+            android:targetActivity=".PrivacyActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW_PERMISSION_USAGE" />
+                <category android:name="android.intent.category.HEALTH_PERMISSIONS" />
+            </intent-filter>
+        </activity-alias>
     </application>
 </manifest>

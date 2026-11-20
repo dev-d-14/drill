@@ -21,9 +21,12 @@ final class MeditateScreen {
     }
 
     static View build(MainActivity a) {
+        View breathing = WimHof.buildRunning(a);
+        if (breathing != null) return breathing;
         final JSONObject root = Store.root(a);
         final long endAt = root.optLong("medEnd", 0);
         final boolean running = endAt > 0;
+        if (!running && "whm".equals(Store.setting(a, "medMode", "timer"))) return buildWimHof(a);
         final int minutes = running ? root.optInt("medLen", 10) : Store.medMinutes(a);
 
         LinearLayout page = Ui.col(a);
@@ -38,6 +41,7 @@ final class MeditateScreen {
         top.addView(label, Ui.lp(0, Ui.WRAP, 1));
         top.addView(new View(a), Ui.lp(Ui.dp(46), Ui.dp(46)));
         page.addView(top, Ui.lp(Ui.MATCH, Ui.WRAP));
+        if (!running) page.addView(modes(a, false), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 10, 0, 0));
 
         LinearLayout middle = Ui.col(a);
         middle.setGravity(Gravity.CENTER);
@@ -104,6 +108,69 @@ final class MeditateScreen {
             begin.setLetterSpacing(0.06f);
             page.addView(begin, Ui.lp(Ui.MATCH, Ui.dp(60)));
         }
+        return page;
+    }
+
+    /** TIMER | WIM HOF switch at the top of the idle screen. */
+    private static View modes(MainActivity a, boolean whm) {
+        LinearLayout r = Ui.row(a);
+        r.setGravity(Gravity.CENTER);
+        String[] names = {"TIMER", "WIM HOF"};
+        for (int i = 0; i < 2; i++) {
+            boolean on = (i == 1) == whm;
+            final String mode = i == 1 ? "whm" : "timer";
+            TextView t = Ui.text(a, names[i], 13, on ? Ui.BLACK : Ui.MUTED, Ui.bold);
+            t.setLetterSpacing(0.08f);
+            t.setGravity(Gravity.CENTER);
+            t.setBackground(Ui.press(on ? Ui.fill(Ui.JADE, 4) : Ui.stroke(Ui.MUTED, 4, false), 4));
+            t.setOnClickListener(v -> {
+                Store.setSetting(a, "medMode", mode);
+                a.refresh();
+            });
+            r.addView(t, Ui.gap(Ui.lp(Ui.dp(116), Ui.dp(40)), 4, 0, 4, 0));
+        }
+        return r;
+    }
+
+    private static View buildWimHof(MainActivity a) {
+        a.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        LinearLayout page = Ui.col(a);
+        page.setBackground(new Ui.Ground());
+        Ui.pad(page, 20, 16, 20, 28);
+
+        LinearLayout top = Ui.row(a);
+        top.addView(Ui.iconButton(a, Ui.I_LEFT, Ui.CREAM, true, "Back to Today", v -> a.open(MainActivity.TODAY)),
+                Ui.lp(Ui.dp(46), Ui.dp(46)));
+        TextView label = Ui.label(a, "meditate", Ui.JADE);
+        label.setGravity(Gravity.CENTER);
+        top.addView(label, Ui.lp(0, Ui.WRAP, 1));
+        top.addView(new View(a), Ui.lp(Ui.dp(46), Ui.dp(46)));
+        page.addView(top, Ui.lp(Ui.MATCH, Ui.WRAP));
+        page.addView(modes(a, true), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 10, 0, 0));
+
+        android.widget.ScrollView scroll = new android.widget.ScrollView(a);
+        scroll.setId(Ui.SCROLL_ID);
+        scroll.setVerticalScrollBarEnabled(false);
+        scroll.setFillViewport(true);
+        LinearLayout middle = Ui.col(a);
+        middle.setGravity(Gravity.CENTER_VERTICAL);
+        Ui.pad(middle, 0, 18, 0, 12);
+        TextView big = Ui.display(a, WimHof.rounds(a) + " × " + WimHof.breaths(a), 64, Ui.CREAM);
+        big.setGravity(Gravity.CENTER);
+        middle.addView(big, Ui.lp(Ui.MATCH, Ui.WRAP));
+        TextView sub = Ui.text(a, "rounds × breaths · " + WimHof.PACES[WimHof.pace(a)].toLowerCase(java.util.Locale.ROOT)
+                + " pace · tap during the hold when you need air", 13, Ui.MUTED, Ui.regular);
+        sub.setGravity(Gravity.CENTER);
+        middle.addView(sub, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 6, 0, 16));
+        WimHof.buildIdle(a, middle);
+        scroll.addView(middle, new FrameLayout.LayoutParams(Ui.MATCH, Ui.WRAP));
+        page.addView(scroll, Ui.lp(Ui.MATCH, 0, 1));
+
+        TextView begin = Ui.button(a, "BEGIN", Ui.JADE, Ui.BLACK, v -> WimHof.begin(a));
+        begin.setTypeface(Ui.bebas);
+        begin.setTextSize(28);
+        begin.setLetterSpacing(0.06f);
+        page.addView(begin, Ui.gap(Ui.lp(Ui.MATCH, Ui.dp(60)), 0, 8, 0, 0));
         return page;
     }
 
