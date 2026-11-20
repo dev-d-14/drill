@@ -23,46 +23,46 @@
       "id": "2026-11-20-3",
       "tag": "AI",
       "kind": "news",
-      "title": "Judge any new AI model in ten minutes with one fixed weird prompt",
-      "why": "Run one odd fixed prompt at every reasoning level and compare cost, tokens and time - fast signal on any new release.",
-      "url": "https://simonwillison.net/2026/Nov/18/llm-gemini/",
-      "source": "Simon Willison's Weblog"
+      "title": "An AI edited 0.016% of another model's weights and fixed its math score",
+      "why": "GPT-6 Astra hand-edited a sliver of Qwen3.5-0.8B's weights directly, no training - MATH-500 accuracy jumped from 7.9% to 48.1%.",
+      "url": "https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/",
+      "source": "Simon Willison, on Takehi, Teoh, Zhang & Khattab"
     },
     {
       "id": "2026-11-20-4",
-      "tag": "AI",
+      "tag": "Tools",
       "kind": "news",
-      "title": "Caching an AI agent's reasoning can make reruns up to 291x cheaper",
-      "why": "Researchers turn already-solved reasoning traces into cheap CPU-only lookups, skipping a full model call on repeat tasks entirely.",
-      "url": "https://arxiv.org/abs/2611.09891",
-      "source": "arXiv (Belcak et al.)"
+      "title": "Postgres 19 can shrink a bloated table without locking it for reads",
+      "why": "The new REPACK CONCURRENTLY rebuilds a table's file under a light lock instead of VACUUM FULL's full lock, reclaiming space live.",
+      "url": "https://www.postgresql.org/docs/19/sql-repack.html",
+      "source": "PostgreSQL 19 documentation"
     },
     {
       "id": "2026-11-20-5",
-      "tag": "Research",
+      "tag": "Tools",
       "kind": "news",
-      "title": "Agents that think in raw cache states, not words, out-evolve AlphaEvolve",
-      "why": "Agents swapping KV-cache states instead of text let a small Qwen3-8B swarm match Google's AlphaEvolve in minutes, not an hour.",
-      "url": "https://arxiv.org/abs/2611.08483",
-      "source": "arXiv (Jiang & Karniadakis)"
+      "title": "A newly disclosed Java bug, nicknamed Java4Shell, hits Jira and Jenkins",
+      "why": "OpenJDK's AVX-512 Base64 decoder heap-overflows on bad input, CVSS 9.2 - no patched build existed when the bug went public.",
+      "url": "https://semgrep.dev/blog/2026/java4shell-openjdk-base64-vulnerability/",
+      "source": "Semgrep Security Research"
     },
     {
       "id": "2026-11-20-6",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "Brendan Gregg's rule: never trust a benchmark's own printed number",
-      "why": "Watch vmstat, perf or eBPF while a benchmark actually runs - casual passive runs often measure the wrong bottleneck entirely.",
-      "url": "https://zeli.app/story/50389093",
-      "source": "Hacker News (via Zeli) - Brendan Gregg"
-    },
-    {
-      "id": "2026-11-20-7",
       "tag": "Research",
       "kind": "news",
       "title": "One reusable pattern makes lazy segment trees far less bug-prone",
       "why": "Define six small building blocks once, and any new range-update problem plugs into the same traversal code with no rewriting.",
       "url": "https://mirror.codeforces.com/blog/_vinner",
       "source": "Codeforces blog (grecil)"
+    },
+    {
+      "id": "2026-11-20-7",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "Brendan Gregg's rule: never trust a benchmark's own printed number",
+      "why": "Watch vmstat, perf or eBPF while a benchmark actually runs - casual passive runs often measure the wrong bottleneck entirely.",
+      "url": "https://zeli.app/story/50389093",
+      "source": "Hacker News (via Zeli) - Brendan Gregg"
     },
     {
       "id": "2026-11-20-8",
@@ -88,10 +88,10 @@
       "id": "2026-11-20-10",
       "tag": "ISB",
       "kind": "news",
-      "title": "Tata Sons' chairman is stepping down, and its $120bn bet is in question",
-      "why": "Noel Tata's board wants to slow capital-heavy bets like Agratas and Air India for faster, clearer payback - a real succession case.",
-      "url": "https://www.outlookbusiness.com/corporate/after-chandra-exit-what-happens-to-tatas-120-bn-investment-plan",
-      "source": "Outlook Business (via Bloomberg)"
+      "title": "Before a big interview, tell yourself you're excited, not calm",
+      "why": "Harvard study: people told to say 'I'm excited' scored 8% higher on a hard math test, and hit 80% vs 53% on a timed task.",
+      "url": "https://www.apa.org/news/press/releases/2013/12/performance-anxiety.aspx",
+      "source": "APA, on Alison Wood Brooks (Harvard Business School)"
     }
   ]
 }

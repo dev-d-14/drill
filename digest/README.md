@@ -45,7 +45,7 @@ lands on the next digest.
 ```
 
 - `date` is the day in India (Asia/Kolkata), as `YYYY-MM-DD`. The app treats the digest as today's only when it matches.
-- `tag` is one of `AI`, `Tools`, `Industry`, `India`, `Research`, `Science`, `ISB`. The phone learns a weight per tag. `ISB` is the one daily item meant to build business/economy literacy for Dharmik's ISB interview prep - it's the one slot where corporate strategy, funding, and leadership stories are the point, not the exception.
+- `tag` is one of `AI`, `Tools`, `Industry`, `India`, `Research`, `Science`, `ISB`. The phone learns a weight per tag. `ISB` is the one daily item meant to sharpen Dharmik for his ISB MBA interview - a real mental/performance technique, a framework for case or behavioral questions, or (when nothing sharper turns up) a substantial business/economy story, always something he could actually use in the room, not just business-news trivia.
 - `kind` is `news` or `science`. Science items also carry `evidence`: `strong`, `moderate` or `early`.
 - `drill` is optional and appears on Sundays only. `answer` is the index of the correct option.
 - Titles and `why` lines are always written fresh. Nothing is copied from the source.
