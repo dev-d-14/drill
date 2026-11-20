@@ -24,6 +24,7 @@ final class ShutdownScreen {
                 Store.isTrainingDay(a, today) ? "" : "rest")};
         final String[] med = {Store.meditated(a, today) ? "yes" : log.optBoolean("shut") ? "no" : ""};
         final String[] journal = {log.optString("journal", "")};
+        final String[] vit = {Store.vitamin(a, today) ? "yes" : ""};
         final int[] woke = {Store.minutes(log.optString("woke", Store.setting(a, "lastWoke", "06:00")))};
         final int[] lights = {Store.minutes(log.optString("lights", Store.hhmm(Store.minutes(Store.shutTime(a)) + 30)))};
 
@@ -50,6 +51,8 @@ final class ShutdownScreen {
                 Store.meditated(a, today) ? "filled in by the timer, " + log.optString("medAt") : null));
         form.addView(question(a, "Journaled on paper?", new String[]{"Yes", "Doing it now", "No"},
                 new String[]{"yes", "now", "no"}, journal, null));
+        form.addView(question(a, "Multivitamin?", new String[]{"Took it", "Skipped"}, new String[]{"yes", "no"}, vit,
+                Store.vitamin(a, today) && !log.optString("vitAt").isEmpty() ? "taken at " + log.optString("vitAt") : null));
         form.addView(stepper(a, "Woke up at", woke));
         form.addView(stepper(a, "Lights out at", lights));
         page.addView(form, Ui.lp(Ui.MATCH, 0, 1));
@@ -60,6 +63,8 @@ final class ShutdownScreen {
             if ("yes".equals(med[0]) && d.optInt("med", 0) == 0) Store.put(d, "med", Store.medMinutes(a));
             if ("no".equals(med[0])) Store.put(d, "med", 0);
             if (!journal[0].isEmpty()) Store.put(d, "journal", "no".equals(journal[0]) ? "no" : "yes");
+            if ("yes".equals(vit[0]) && !d.optBoolean("vit", false)) Store.put(d, "vit", true);
+            if ("no".equals(vit[0])) Store.put(d, "vit", false);
             Store.put(d, "woke", Store.hhmm(woke[0]));
             Store.put(d, "lights", Store.hhmm(lights[0]));
             Store.put(d, "shut", true);

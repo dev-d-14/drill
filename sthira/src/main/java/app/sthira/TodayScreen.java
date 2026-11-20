@@ -147,6 +147,14 @@ final class TodayScreen {
             if (pending[i] && (next < 0 || minutes[i] < minutes[next])) next = i;
         }
 
+        boolean vit = Store.vitamin(a, today);
+        String vitAt = log.optString("vitAt");
+        String vitSub = vit ? (vitAt.isEmpty() ? "Taken today" : "Taken at " + vitAt) + " · tap to undo"
+                : "Morning or evening. Tap when you take it.";
+        items.add(new Item(0, habit(a, "MULTIVITAMIN", vitSub, vit ? DONE : PENDING, "TOOK IT", v -> {
+            Store.setVitamin(a, !vit);
+            a.refresh();
+        })));
         if (!hideDigest) {
             items.add(new Item(minutes[0], habit(a, "DIGEST", digestDone ? "Read today" : "Today's list, a few minutes",
                     digestDone ? DONE : next == 0 ? NEXT : PENDING, "READ", v -> a.open(MainActivity.DIGEST))));

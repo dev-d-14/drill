@@ -119,6 +119,10 @@ final class Store {
         return setting(c, "train", "19:15");
     }
 
+    static String vitTime(Context c) {
+        return setting(c, "vit", "21:00");
+    }
+
     static String shutTime(Context c) {
         return setting(c, "shut", "22:30");
     }
@@ -168,8 +172,25 @@ final class Store {
         save(c);
     }
 
+    static boolean vitamin(Context c, LocalDate d) {
+        return dayOrEmpty(c, d).optBoolean("vit", false);
+    }
+
+    /** Marks today's multivitamin taken (or not) and clears its reminder. */
+    static void setVitamin(Context c, boolean taken) {
+        JSONObject d = day(c, LocalDate.now());
+        put(d, "vit", taken);
+        java.time.LocalTime t = java.time.LocalTime.now();
+        if (taken) put(d, "vitAt", hhmm(t.getHour() * 60 + t.getMinute()));
+        else d.remove("vitAt");
+        save(c);
+        android.app.NotificationManager nm =
+                (android.app.NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (nm != null && taken) nm.cancel(Reminders.VITAMIN);
+    }
+
     static boolean allDone(Context c, LocalDate d) {
-        return shutDown(c, d) && meditated(c, d) && journaled(c, d) && !"missed".equals(trained(c, d));
+        return shutDown(c, d) && meditated(c, d) && journaled(c, d) && vitamin(c, d) && !"missed".equals(trained(c, d));
     }
 
     // ---- workout plans ----

@@ -19,8 +19,8 @@ import java.time.ZoneId;
 /** The three daily nudges (digest, sit, shutdown) and the backup bell for the meditation timer. */
 public final class Reminders extends BroadcastReceiver {
 
-    static final String REMIND = "app.sthira.REMIND", MED_END = "app.sthira.MED_END";
-    static final int DIGEST = 1, MEDITATE = 2, SHUTDOWN = 3, MED_DONE = 4;
+    static final String REMIND = "app.sthira.REMIND", MED_END = "app.sthira.MED_END", VIT_TAKEN = "app.sthira.VIT_TAKEN";
+    static final int DIGEST = 1, MEDITATE = 2, SHUTDOWN = 3, MED_DONE = 4, VITAMIN = 5;
 
     @Override
     public void onReceive(Context c, Intent intent) {
@@ -28,6 +28,8 @@ public final class Reminders extends BroadcastReceiver {
         if (REMIND.equals(action)) {
             remind(c, intent.getIntExtra("kind", 0));
             scheduleAll(c);
+        } else if (VIT_TAKEN.equals(action)) {
+            Store.setVitamin(c, true);
         } else if (MED_END.equals(action)) {
             JSONObject root = Store.root(c);
             long end = root.optLong("medEnd", 0);
@@ -50,6 +52,10 @@ public final class Reminders extends BroadcastReceiver {
         } else if (kind == MEDITATE) {
             if (Store.meditated(c, today)) return;
             post(c, MEDITATE, "remind", "Time to sit", Store.medMinutes(c) + " minutes. One tap to start.", MainActivity.MEDITATE);
+        } else if (kind == VITAMIN) {
+            // One nudge in the evening if it hasn't been taken. If it's still not taken after that, let it go.
+            if (Store.vitamin(c, today)) return;
+            post(c, VITAMIN, "remind", "Multivitamin", "Not taken today. Take it with dinner.", MainActivity.TODAY);
         } else if (kind == SHUTDOWN) {
             if (Store.shutDown(c, today)) return;
             post(c, SHUTDOWN, "remind", "Shutdown", "A few taps, then the phone goes on the charger.", MainActivity.SHUTDOWN);
@@ -64,15 +70,23 @@ public final class Reminders extends BroadcastReceiver {
             nm.createNotificationChannel(new NotificationChannel("timer", "Meditation timer", NotificationManager.IMPORTANCE_HIGH));
             Intent open = new Intent(c, MainActivity.class).putExtra(MainActivity.EXTRA_OPEN, screen)
                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            Notification n = new Notification.Builder(c, channel)
+            Notification.Builder builder = new Notification.Builder(c, channel)
                     .setSmallIcon(R.drawable.ic_stat)
                     .setContentTitle(title)
                     .setContentText(text)
                     .setColor(Ui.MAROON)
                     .setAutoCancel(true)
                     .setContentIntent(PendingIntent.getActivity(c, id, open,
-                            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE))
-                    .build();
+                            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
+            if (id == VITAMIN) {
+                Intent took = new Intent(c, Reminders.class).setAction(VIT_TAKEN);
+                builder.addAction(new Notification.Action.Builder(null, "Took it",
+                        PendingIntent.getBroadcast(c, 100 + VITAMIN, took,
+                                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE)).build());
+                // Gone by midnight-ish; there's no second nudge.
+                builder.setTimeoutAfter(3 * 60 * 60_000L);
+            }
+            Notification n = builder.build();
             nm.notify(id, n);
         } catch (Exception ignored) {
         }
@@ -102,10 +116,10 @@ public final class Reminders extends BroadcastReceiver {
 
     /** Arms each daily reminder for the next time its clock time comes round. */
     static void scheduleAll(Context c) {
-        String[] times = {Store.digestTime(c), Store.homeTime(c), Store.shutTime(c)};
-        int[] kinds = {DIGEST, MEDITATE, SHUTDOWN};
+        String[] times = {Store.digestTime(c), Store.homeTime(c), Store.shutTime(c), Store.vitTime(c)};
+        int[] kinds = {DIGEST, MEDITATE, SHUTDOWN, VITAMIN};
         LocalDateTime now = LocalDateTime.now();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < times.length; i++) {
             int m = Store.minutes(times[i]);
             LocalDateTime at = LocalDate.now().atTime(m / 60, m % 60);
             if (!at.isAfter(now.plusSeconds(5))) at = at.plusDays(1);

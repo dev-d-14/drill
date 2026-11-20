@@ -62,8 +62,8 @@ final class ReviewScreen {
         grid.addView(names);
         boolean twice = false;
         String twiceWhat = "";
-        String[] rows = {"Train", "Sit", "Journal"};
-        for (int r = 0; r < 3; r++) {
+        String[] rows = {"Train", "Sit", "Journal", "Vitamin"};
+        for (int r = 0; r < rows.length; r++) {
             LinearLayout row = Ui.row(a);
             row.addView(Ui.text(a, rows[r], 12, Ui.CREAM, Ui.bold), Ui.lp(Ui.dp(64), Ui.WRAP));
             int run = 0;
@@ -76,13 +76,13 @@ final class ReviewScreen {
                     state = "done".equals(t) ? 1 : "missed".equals(t) ? 2 : "rest".equals(t) ? 3
                             : Store.isTrainingDay(a, d) && d.isBefore(today) ? 2 : d.equals(today) && Store.isTrainingDay(a, d) ? 0 : 3;
                 } else {
-                    boolean did = r == 1 ? Store.meditated(a, d) : Store.journaled(a, d);
+                    boolean did = r == 1 ? Store.meditated(a, d) : r == 2 ? Store.journaled(a, d) : Store.vitamin(a, d);
                     state = did ? 1 : d.equals(today) ? 0 : 2;
                 }
                 run = state == 2 ? run + 1 : state == 3 ? run : 0;
                 if (run >= 2 && !twice) {
                     twice = true;
-                    twiceWhat = r == 0 ? "Training" : r == 1 ? "Meditation" : "Journaling";
+                    twiceWhat = r == 0 ? "Training" : r == 1 ? "Meditation" : r == 2 ? "Journaling" : "The multivitamin";
                 }
                 FrameLayout cell = new FrameLayout(a);
                 View mark = new View(a);
@@ -151,10 +151,11 @@ final class ReviewScreen {
         body.addView(timeSetting(a, "Digest arrives", "digest", Store.digestTime(a)));
         body.addView(timeSetting(a, "Home, time to sit", "home", Store.homeTime(a)));
         body.addView(timeSetting(a, "Training", "train", Store.trainTime(a)));
+        body.addView(timeSetting(a, "Multivitamin reminder", "vit", Store.vitTime(a)));
         body.addView(timeSetting(a, "Shutdown", "shut", Store.shutTime(a)));
         body.addView(numberSetting(a, "Meditation length, minutes", "medMin", Store.medMinutes(a), 1, 60));
         body.addView(numberSetting(a, "Rest between sets, seconds", "rest", Store.restSeconds(a), 15, 240));
-        body.addView(Ui.text(a, "Reminders fire at the digest, home and shutdown times.", 12, Ui.CREAM, Ui.regular),
+        body.addView(Ui.text(a, "Reminders fire at the digest, home, multivitamin and shutdown times. The multivitamin one only comes if you haven't taken it.", 12, Ui.CREAM, Ui.regular),
                 Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 8, 0, 0));
 
         String label = sunday ? "sunday · built from your week" : "this week so far";

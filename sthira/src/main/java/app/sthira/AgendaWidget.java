@@ -107,6 +107,10 @@ public final class AgendaWidget extends AppWidgetProvider {
             lines.add(new StampRenderer.Line(i == 2 && missed ? names[i] + " · missed" : names[i],
                     drawnDone ? StampRenderer.DONE : i == next ? StampRenderer.NEXT : StampRenderer.PENDING, minutes[i]));
         }
+        boolean vit = Store.vitamin(c, today);
+        lines.add(new StampRenderer.Line("Multivitamin", vit ? StampRenderer.DONE : StampRenderer.PENDING, 0));
+        total++;
+        if (vit) finished++;
         lines.sort((x, y) -> Integer.compare(x.minute, y.minute));
         m.lines = lines;
         m.footLeft = finished + " / " + total + " DONE";

@@ -47,10 +47,13 @@ final class MeditateScreen {
         LinearLayout inner = Ui.col(a);
         inner.setGravity(Gravity.CENTER);
         final TextView time = Ui.display(a, minutes + ":00", 80, Ui.CREAM);
-        inner.addView(time);
+        time.setFontFeatureSettings("tnum");
+        time.setGravity(Gravity.CENTER);
+        inner.addView(time, Ui.lp(Ui.MATCH, Ui.WRAP));
         final TextView sub = Ui.text(a, "one bell at the end", 13, Ui.MUTED, Ui.regular);
-        inner.addView(sub);
-        FrameLayout.LayoutParams center = new FrameLayout.LayoutParams(Ui.WRAP, Ui.WRAP);
+        sub.setGravity(Gravity.CENTER);
+        inner.addView(sub, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 6, 0, 0));
+        FrameLayout.LayoutParams center = new FrameLayout.LayoutParams(Ui.MATCH, Ui.WRAP);
         center.gravity = Gravity.CENTER;
         ringBox.addView(inner, center);
         middle.addView(ringBox, Ui.lp(Ui.dp(264), Ui.dp(264)));
