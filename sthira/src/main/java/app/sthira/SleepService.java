@@ -302,6 +302,18 @@ public final class SleepService extends Service {
             dsp.frame(buf, got, now);
             if (++checks >= 100) {      // every 5 seconds
                 checks = 0;
+                if (silenced(rec)) {
+                    // Silenced mid-night (privacy toggle, or the system took it): switch to motion now rather than
+                    // writing zeros that would read as deep sleep. The microphone is retried every 5 minutes.
+                    try {
+                        rec.stop();
+                    } catch (Exception ignored) {
+                    }
+                    rec.release();
+                    rec = null;
+                    motion = true;
+                    continue;
+                }
                 smartCheck(now);
             }
         }
