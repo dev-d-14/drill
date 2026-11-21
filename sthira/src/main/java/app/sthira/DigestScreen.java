@@ -347,6 +347,40 @@ final class DigestScreen {
         return null;
     }
 
+    /**
+     * For the reminder: fetches the list now (blocking, call off the main thread) and says whether a list dated
+     * today is available, so the notification never points at yesterday's.
+     */
+    static boolean todayReady(android.content.Context c) {
+        String today = java.time.LocalDate.now().toString();
+        File cache = new File(c.getFilesDir(), "digest.json");
+        try {
+            HttpURLConnection con = (HttpURLConnection) new URL(SOURCE + "?t=" + System.currentTimeMillis() / 600_000L).openConnection();
+            con.setConnectTimeout(4000);   // a broadcast gets about 10 seconds in all
+            con.setReadTimeout(4000);
+            if (con.getResponseCode() == 200) {
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                try (InputStream in = con.getInputStream()) {
+                    byte[] buf = new byte[8192];
+                    for (int n; (n = in.read(buf)) > 0; ) out.write(buf, 0, n);
+                }
+                JSONObject fetched = new JSONObject(new String(out.toByteArray(), StandardCharsets.UTF_8));
+                Files.write(cache.toPath(), out.toByteArray());
+                data = fetched;
+                return today.equals(fetched.optString("date"));
+            }
+        } catch (Exception ignored) {
+        }
+        try {
+            if (cache.exists()) {
+                JSONObject cached = new JSONObject(new String(Files.readAllBytes(cache.toPath()), StandardCharsets.UTF_8));
+                return today.equals(cached.optString("date"));
+            }
+        } catch (Exception ignored) {
+        }
+        return false;
+    }
+
     private static void load(MainActivity a) {
         final File cache = new File(a.getFilesDir(), "digest.json");
         if (!triedCache) {

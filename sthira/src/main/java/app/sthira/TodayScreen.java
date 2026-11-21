@@ -66,6 +66,18 @@ final class TodayScreen {
         for (Cal.Ev e : Cal.on(a, d)) items.add(new Item(e.startMinute(), eventCard(a, e)));
 
         if (isToday) addHabits(a, items);
+        // Everything lives in one file on the phone; after a few days of use, ask once a day until a backup exists.
+        if (isToday && Backup.target(a) == null) {
+            long used = 0;
+            try {
+                used = java.time.temporal.ChronoUnit.DAYS.between(LocalDate.parse(Store.root(a).optString("installed")), today);
+            } catch (Exception ignored) {
+            }
+            if (used >= 3) {
+                items.add(new Item(-1, habit(a, "BACK UP YOUR DATA", used + " days of logs live only on this phone. One tap, then weekly.",
+                        PENDING, "SET UP", v -> Backup.choose(a))));
+            }
+        }
         else if (d.isBefore(today)) items.add(new Item(1500, pastSummary(a, d)));
         else if (Store.isTrainingDay(a, d)) {
             LinearLayout planned = Ui.card(a, Ui.BLACK, null);
@@ -212,10 +224,10 @@ final class TodayScreen {
         } else if (Sleep.MODE_TRACK.equals(Sleep.mode(a))) {
             sleepSub = "Track the night, no alarm";
         } else {
-            int m = Store.minutes(Sleep.alarmTime(a));
-            sleepSub = Sleep.MODE_SMART.equals(Sleep.mode(a))
-                    ? "Alarm " + Sleep.alarmTime(a) + " · wakes you from " + Store.hhmm(m - Sleep.window(a))
-                    : "Alarm " + Sleep.alarmTime(a);
+            // Say plainly whether an alarm is actually armed right now.
+            sleepSub = Sleep.alarmArmed(a)
+                    ? "Alarm set for " + Sleep.alarmTime(a) + " · Start to track and wake smart"
+                    : "Alarm " + Sleep.alarmTime(a) + " · sets itself at " + Store.shutTime(a);
         }
         items.add(new Item(minutes[3] + 1, habit(a, now != null ? "SLEEPING" : "SLEEP", sleepSub, PENDING,
                 now != null ? "OPEN" : lateEnough ? "START" : "SET", v -> a.open(MainActivity.SLEEP))));

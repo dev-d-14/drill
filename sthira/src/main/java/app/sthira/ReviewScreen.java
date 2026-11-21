@@ -66,6 +66,7 @@ final class ReviewScreen {
         grid.addView(names);
         boolean twice = false;
         String twiceWhat = "";
+        int worstRun = 0;
         String[] rows = {"Train", "Sit", "Journal", "Vitamin"};
         for (int r = 0; r < rows.length; r++) {
             LinearLayout row = Ui.row(a);
@@ -84,8 +85,9 @@ final class ReviewScreen {
                     state = did ? 1 : d.equals(today) ? 0 : 2;
                 }
                 run = state == 2 ? run + 1 : state == 3 ? run : 0;
-                if (run >= 2 && !twice) {
+                if (run >= 2 && run > worstRun) {
                     twice = true;
+                    worstRun = run;
                     twiceWhat = r == 0 ? "Training" : r == 1 ? "Meditation" : r == 2 ? "Journaling" : "The multivitamin";
                 }
                 FrameLayout cell = new FrameLayout(a);
@@ -117,7 +119,8 @@ final class ReviewScreen {
             grid.addView(row, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 6, 0, 0));
         }
         body.addView(grid, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 12, 0, 0));
-        String verdict = twice ? twiceWhat + " was missed twice in a row. The next one matters most."
+        String times = worstRun == 2 ? "twice" : worstRun == 3 ? "three times" : worstRun + " times";
+        String verdict = twice ? twiceWhat + " was missed " + times + " in a row. The next one matters most."
                 : "Filled is done, ring is missed, dash is a rest day. No miss came twice in a row.";
         verdict += " Tap any day to edit what was logged.";
         body.addView(Ui.text(a, verdict, 13, Ui.CREAM, Ui.regular), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 8, 0, 0));
@@ -166,7 +169,7 @@ final class ReviewScreen {
         body.addView(timeSetting(a, "Shutdown", "shut", Store.shutTime(a)));
         body.addView(numberSetting(a, "Meditation length, minutes", "medMin", Store.medMinutes(a), 1, 60));
         body.addView(numberSetting(a, "Rest between sets, seconds", "rest", Store.restSeconds(a), 15, 240));
-        body.addView(Ui.text(a, "Reminders fire at the digest, home, multivitamin and shutdown times. The multivitamin one only comes if you haven't taken it.", 12, Ui.CREAM, Ui.regular),
+        body.addView(Ui.text(a, "Reminders fire at the digest, home, training, multivitamin and shutdown times. Each one only comes if that thing isn't done yet; training only on plan days. At shutdown time the wake-up alarm also sets itself.", 12, Ui.CREAM, Ui.regular),
                 Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 8, 0, 0));
 
         body.addView(Backup.section(a), Ui.lp(Ui.MATCH, Ui.WRAP));

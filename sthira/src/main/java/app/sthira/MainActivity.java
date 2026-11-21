@@ -67,6 +67,21 @@ public final class MainActivity extends Activity {
         }
 
         int first = getIntent() == null ? TODAY : getIntent().getIntExtra(EXTRA_OPEN, TODAY);
+        if (state != null) {
+            // Recreated (font size, dark mode, or the system reclaimed the app): come back to the same place.
+            first = state.getInt("current", first);
+            try {
+                day = LocalDate.parse(state.getString("day", day.toString()));
+                calDay = LocalDate.parse(state.getString("calDay", calDay.toString()));
+                calMonth = YearMonth.parse(state.getString("calMonth", calMonth.toString()));
+                String ed = state.getString("editDay");
+                editDay = ed == null ? null : LocalDate.parse(ed);
+            } catch (Exception ignored) {
+            }
+            editPlan = state.getString("editPlan");
+            editFrom = state.getInt("editFrom", TODAY);
+            if (first == DAY && editDay == null) first = TODAY;
+        }
         Sleep.checkStale(this);
         open(first);
         Reminders.scheduleAll(this);
@@ -79,6 +94,18 @@ public final class MainActivity extends Activity {
             Store.save(this);
             requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 2);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle out) {
+        super.onSaveInstanceState(out);
+        out.putInt("current", current < 0 ? TODAY : current);
+        out.putString("day", day.toString());
+        out.putString("calDay", calDay.toString());
+        out.putString("calMonth", calMonth.toString());
+        if (editDay != null) out.putString("editDay", editDay.toString());
+        if (editPlan != null) out.putString("editPlan", editPlan);
+        out.putInt("editFrom", editFrom);
     }
 
     @Override
@@ -117,6 +144,8 @@ public final class MainActivity extends Activity {
             lastSeen = LocalDate.now();
             day = lastSeen;
         }
+        int hour = java.time.LocalTime.now().getHour();
+        if (hour >= 4 && hour < 12) Store.markOnce(this, "firstOpen");
         if (current >= 0) refresh();
     }
 

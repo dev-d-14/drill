@@ -60,9 +60,10 @@
                 android:resource="@xml/agenda_widget_info" />
         </receiver>
 
+        <!-- Not exported: only the system (boot, app update) and Sthira itself can send to it. -->
         <receiver
             android:name=".Reminders"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />

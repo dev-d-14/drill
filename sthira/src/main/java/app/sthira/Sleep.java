@@ -76,6 +76,23 @@ final class Sleep {
         return at.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
+    /** True when the alarm clock is already armed for a time still to come. */
+    static boolean alarmArmed(Context c) {
+        JSONObject a = Store.root(c).optJSONObject("sleepAlarm");
+        return a != null && a.optLong("next") > System.currentTimeMillis();
+    }
+
+    /**
+     * The safety net: arms the plain alarm for the next set time even if Start is never tapped.
+     * Called at shutdown time and when the check-in is saved. Track-only mode means no alarm, so it does nothing.
+     * Starting the tracker later re-arms the same alarm (same PendingIntent), so nothing doubles up.
+     */
+    static void armBackup(Context c) {
+        if (MODE_TRACK.equals(mode(c)) || active(c) != null || alarmArmed(c)) return;
+        long t = nextTarget(c);
+        SleepAlarm.arm(c, t, t);
+    }
+
     // ---- the active night ----
 
     static JSONObject active(Context c) {
@@ -227,6 +244,34 @@ final class Sleep {
         return pm == null || pm.isIgnoringBatteryOptimizations(c.getPackageName());
     }
 
+    /** OnePlus, OPPO and realme (ColorOS) kill background apps on their own, on top of Android's rules. */
+    static boolean colorOs() {
+        String m = Build.MANUFACTURER == null ? "" : Build.MANUFACTURER.toLowerCase(java.util.Locale.ROOT);
+        return m.contains("oneplus") || m.contains("oppo") || m.contains("realme");
+    }
+
+    /**
+     * Show the ColorOS checklist until it has been opened once, and again after any night that was cut short
+     * since then (the kill came back, so the settings didn't stick or were never finished).
+     */
+    static boolean colorOsNeedsSetup(Context c) {
+        if (!colorOs()) return false;
+        long seen = Store.root(c).optLong("colorOsSeen", 0);
+        if (seen == 0) return true;
+        JSONObject last = lastNight(c);
+        return last != null && last.optBoolean("interrupted") && last.optLong("start") > seen;
+    }
+
+    static void openAppInfo(Context c) {
+        Store.put(Store.root(c), "colorOsSeen", System.currentTimeMillis());
+        Store.save(c);
+        try {
+            c.startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:" + c.getPackageName())).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        } catch (Exception ignored) {
+        }
+    }
+
     static void askBattery(Context c) {
         try {
             c.startActivity(new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
@@ -332,7 +377,8 @@ final class Sleep {
         while (all.length() > 180) all.remove(0);
         Store.root(c).remove("sleepNow");
         Store.save(c);
-        if (Build.VERSION.SDK_INT >= 34 && slots > 20) {
+        // Fragments (tracking killed early, or stopped by mistake) stay in the app but never go to Health Connect.
+        if (Build.VERSION.SDK_INT >= 34 && slots > 20 && !night.optBoolean("short")) {
             HealthSteps.writeSleep(c, id, start, endMs, night.optString("stages"), showRem(c));
         }
         // epoch files older than 90 days go

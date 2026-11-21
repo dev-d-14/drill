@@ -2,7 +2,6 @@ package app.sthira;
 
 import android.media.AudioManager;
 import android.media.ToneGenerator;
-import android.os.SystemClock;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -18,8 +17,24 @@ import java.util.Locale;
 /** Today's workout: tap a box to log a set, rest timer pinned at the bottom. */
 final class TrainScreen {
 
-    private static long restEnd;       // SystemClock.elapsedRealtime() when the rest ends, 0 when idle
+    // The rest end is kept in the store as wall-clock time, so it survives the app being killed, and an alarm
+    // (Reminders.REST) rings it when the screen is off or the app isn't in front.
     private static boolean restBeeped = true;
+
+    private static long restEnd(MainActivity a) {
+        return Store.root(a).optLong("restEnd", 0);
+    }
+
+    private static void setRest(MainActivity a, long end) {
+        if (end > 0) {
+            Store.put(Store.root(a), "restEnd", end);
+            Reminders.scheduleRest(a, end);
+        } else {
+            Store.root(a).remove("restEnd");
+            Reminders.cancelRest(a);
+        }
+        Store.save(a);
+    }
 
     private TrainScreen() {
     }
@@ -29,7 +44,9 @@ final class TrainScreen {
         JSONObject workout = Store.nextWorkout(a);
         boolean done = Store.sessionDone(a);
         String label = plan == null ? "no plan" : plan.optString("name") + " · week " + Store.weeksOnPlan(a);
-        String title = done ? "DONE" : workout == null ? "TRAIN" : workout.optString("name").toUpperCase(Locale.ROOT);
+        boolean restDay = !done && workout != null && !Store.isTrainingDay(a, LocalDate.now());
+        String title = done ? "DONE" : workout == null ? "TRAIN" : restDay ? "REST DAY"
+                : workout.optString("name").toUpperCase(Locale.ROOT);
         View plans = Ui.ghost(a, "Plans", Ui.CREAM, false, v -> a.open(MainActivity.PLANS));
         LinearLayout body = Ui.col(a);
         body.addView(Steps.card(a), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 0, 0, 12));
@@ -49,7 +66,8 @@ final class TrainScreen {
         }
 
         if (!Store.isTrainingDay(a, LocalDate.now())) {
-            body.addView(Ui.text(a, "Rest day on this plan. You can still train if you want to.", 13, Ui.CREAM, Ui.regular),
+            body.addView(Ui.text(a, "Nothing planned today. If you want to train anyway, " + workout.optString("name")
+                            + " is next in the rotation:", 13, Ui.CREAM, Ui.regular),
                     Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 0, 0, 8));
         }
         body.addView(Ui.text(a, "Tap a box to log the reps. Stop one or two short of failure.", 13, Ui.CREAM, Ui.regular),
@@ -90,8 +108,8 @@ final class TrainScreen {
                         Store.setRep(a, index, set, value);
                         paint(box, value);
                         if (value > 0) {
-                            restEnd = SystemClock.elapsedRealtime() + Store.restSeconds(a) * 1000L;
                             restBeeped = false;
+                            setRest(a, System.currentTimeMillis() + Store.restSeconds(a) * 1000L);
                         }
                     });
                 });
@@ -111,7 +129,7 @@ final class TrainScreen {
                 Toast.makeText(a, "Log at least one set first.", Toast.LENGTH_SHORT).show();
                 return;
             }
-            restEnd = 0;
+            setRest(a, 0);
             Store.finishSession(a);
             a.refresh();
         }), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 14, 0, 0));
@@ -149,16 +167,20 @@ final class TrainScreen {
             public void run() {
                 if (restText.isAttachedToWindow()) seen = true;
                 else if (seen || ++waits > 20) return;
-                long left = restEnd - SystemClock.elapsedRealtime();
-                if (restEnd == 0) {
+                long end = restEnd(a), left = end - System.currentTimeMillis();
+                if (end == 0) {
                     restText.setText("READY");
                 } else if (left > 0) {
+                    restBeeped = false;
                     long s = (left + 999) / 1000;
                     restText.setText(String.format(Locale.ROOT, "%d:%02d", s / 60, s % 60));
                 } else {
                     restText.setText("GO");
-                    if (!restBeeped) {
+                    if (left < -5000) restBeeped = true;   // ended a while ago: the notification already rang
+                    // Beep here only when the screen is actually in front; otherwise the alarm's notification rings.
+                    if (!restBeeped && a.hasWindowFocus()) {
                         restBeeped = true;
+                        Reminders.cancelRest(a);
                         try {
                             ToneGenerator tone = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 80);
                             tone.startTone(ToneGenerator.TONE_PROP_BEEP2, 300);

@@ -202,6 +202,28 @@ final class Store {
         save(c);
     }
 
+    /** Remembers a clock time on today's log the first time it happens (alarm stopped, first look at the app). */
+    static void markOnce(Context c, String key) {
+        JSONObject d = day(c, LocalDate.now());
+        if (d.has(key)) return;
+        java.time.LocalTime t = java.time.LocalTime.now();
+        put(d, key, hhmm(t.getHour() * 60 + t.getMinute()));
+        save(c);
+    }
+
+    /**
+     * Best guess at when the day started, for the check-in: the alarm being stopped, then the first time the app
+     * was opened in the morning (04:00–12:00). Returns null when there's nothing better than last time's answer.
+     */
+    static String wokeGuess(Context c, LocalDate d) {
+        JSONObject log = dayOrEmpty(c, d);
+        String off = log.optString("alarmOff", "");
+        if (!off.isEmpty() && minutes(off) >= 240 && minutes(off) <= 720) return off;
+        String first = log.optString("firstOpen", "");
+        if (!first.isEmpty() && minutes(first) <= 720) return first;
+        return null;
+    }
+
     static boolean vitamin(Context c, LocalDate d) {
         return dayOrEmpty(c, d).optBoolean("vit", false);
     }
@@ -371,11 +393,15 @@ final class Store {
         return days.optJSONObject(Math.floorMod(root(c).optInt("next", 0), days.length()));
     }
 
-    /** Today's session: created on first use and reset when the date changes. */
+    /**
+     * Today's session: created on first use and replaced when the date changes. A session from an earlier day
+     * that has sets logged but was never finished is saved into the history first, never dropped.
+     */
     static JSONObject session(Context c) {
         String today = LocalDate.now().toString();
         JSONObject s = root(c).optJSONObject("session");
         if (s == null || !today.equals(s.optString("date"))) {
+            if (s != null && !s.optBoolean("done", false) && hasReps(s)) commit(c, s);
             s = new JSONObject();
             put(s, "date", today);
             put(s, "reps", new JSONObject());
@@ -403,9 +429,30 @@ final class Store {
         save(c);
     }
 
-    /** Writes the session into each exercise's history and moves the rotation on. */
+    static boolean hasReps(JSONObject s) {
+        JSONObject reps = s.optJSONObject("reps");
+        if (reps == null) return false;
+        java.util.Iterator<String> it = reps.keys();
+        while (it.hasNext()) {
+            JSONArray r = reps.optJSONArray(it.next());
+            for (int i = 0; r != null && i < r.length(); i++) if (r.optInt(i, 0) > 0) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Finish tapped. Takes the session as it stands, even if it started before midnight, so a late workout is
+     * logged on the day it began rather than dropped.
+     */
     static void finishSession(Context c) {
-        JSONObject s = session(c);
+        JSONObject s = root(c).optJSONObject("session");
+        if (s == null) s = session(c);
+        if (s.optBoolean("done", false)) return;
+        commit(c, s);
+    }
+
+    /** Writes a session into each exercise's history, marks its day trained and moves the rotation on. */
+    private static void commit(Context c, JSONObject s) {
         JSONObject w = nextWorkout(c);
         if (w != null) {
             JSONArray ex = w.optJSONArray("ex");
@@ -420,7 +467,13 @@ final class Store {
         }
         put(s, "done", true);
         put(root(c), "next", root(c).optInt("next", 0) + 1);
-        put(day(c, LocalDate.now()), "train", "done");
+        LocalDate on;
+        try {
+            on = LocalDate.parse(s.optString("date"));
+        } catch (Exception e) {
+            on = LocalDate.now();
+        }
+        put(day(c, on), "train", "done");
         save(c);
     }
 

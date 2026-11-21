@@ -31,6 +31,9 @@ jobs:
             exit 1
           }
 
+      - name: Sthira unit tests
+        run: ./gradlew :sthira:testDebugUnitTest --no-daemon
+
       - name: Keep the APKs as a workflow artifact
         uses: actions/upload-artifact@v4
         with:

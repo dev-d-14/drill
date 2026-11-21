@@ -55,6 +55,9 @@ final class CalExtras {
 
     // ---- quick add ----
 
+    /** What's typed in quick add, kept across screen rebuilds (coming back to the app redraws the screen). */
+    private static String draft = "";
+
     static View quickAdd(MainActivity a) {
         LinearLayout box = Ui.col(a);
         LinearLayout row = Ui.row(a);
@@ -88,6 +91,7 @@ final class CalExtras {
 
             @Override
             public void afterTextChanged(Editable e) {
+                draft = e.toString();
                 String t = e.toString().trim();
                 if (t.isEmpty()) {
                     preview.setVisibility(View.GONE);
@@ -97,11 +101,16 @@ final class CalExtras {
                 preview.setVisibility(View.VISIBLE);
             }
         });
+        if (!draft.isEmpty()) {
+            field.setText(draft);
+            field.setSelection(draft.length());
+        }
         Runnable save = () -> {
             String t = field.getText().toString().trim();
             if (t.isEmpty()) return;
             QuickAdd.Parsed p = QuickAdd.parse(t, LocalDate.now(), LocalTime.now());
             if (insert(a, p.title, p.date, p.start, p.minutes, 10)) {
+                draft = "";
                 Toast.makeText(a, "Added: " + describe(p), Toast.LENGTH_SHORT).show();
                 InputMethodManager imm = (InputMethodManager) a.getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm != null) imm.hideSoftInputFromWindow(field.getWindowToken(), 0);
@@ -338,7 +347,7 @@ final class CalExtras {
         return new File(c.getFilesDir(), "codeforces.json");
     }
 
-    /** Up to three contests that haven't started, from the daily cache. */
+    /** Up to three contests that haven't started and are open to a Div. 2 rating, from the cache. */
     static List<JSONObject> upcoming(Context c) {
         List<JSONObject> out = new ArrayList<>();
         try {
@@ -348,7 +357,11 @@ final class CalExtras {
             long now = System.currentTimeMillis() / 1000;
             for (int i = 0; i < all.length(); i++) {
                 JSONObject o = all.optJSONObject(i);
-                if (o != null && o.optLong("startTimeSeconds") > now) out.add(o);
+                if (o == null || o.optLong("startTimeSeconds") <= now) continue;
+                // Div. 1-only rounds need 1900+; skip them so the "next" one is one you can enter.
+                String name = o.optString("name");
+                if (name.contains("Div. 1") && !name.contains("Div. 2")) continue;
+                out.add(o);
             }
             out.sort((x, y) -> Long.compare(x.optLong("startTimeSeconds"), y.optLong("startTimeSeconds")));
             while (out.size() > 3) out.remove(out.size() - 1);

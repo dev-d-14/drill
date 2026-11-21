@@ -219,6 +219,7 @@ public final class RingService extends Service {
 
     static void stopAlarm(Context c) {
         quiet(c);
+        if (java.time.LocalTime.now().getHour() >= 4) Store.markOnce(c, "alarmOff");
         SleepAlarm.cancel(c);
         if (Sleep.active(c) != null) Sleep.stopNow(c, false);
     }

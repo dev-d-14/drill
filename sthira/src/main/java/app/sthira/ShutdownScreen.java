@@ -33,13 +33,15 @@ final class ShutdownScreen {
         final boolean medKnown = Store.meditated(a, today);
         final boolean vitKnown = Store.vitamin(a, today);
         final JSONObject night = Sleep.lastNight(a);
-        final boolean wokeKnown = night != null && today.toString().equals(night.optString("date"));
+        final boolean wokeKnown = night != null && !night.optBoolean("short") && today.toString().equals(night.optString("date"));
 
         final String[] train = {log.optString("train", "")};
         final String[] med = {""};
         final String[] journal = {log.optString("journal", "")};
         final String[] vit = {""};
-        final int[] woke = {Store.minutes(log.optString("woke", Store.setting(a, "lastWoke", "06:00")))};
+        final String guess = Store.wokeGuess(a, today);
+        final int[] woke = {Store.minutes(log.optString("woke",
+                guess != null ? guess : Store.setting(a, "lastWoke", "06:00")))};
 
         LinearLayout page = Ui.col(a);
         page.setBackground(new Ui.Ground());
@@ -77,7 +79,11 @@ final class ShutdownScreen {
         if (!vitKnown) {
             form.addView(question(a, "Multivitamin?", new String[]{"Took it", "Skipped"}, new String[]{"yes", "no"}, vit, null));
         }
-        if (!wokeKnown) form.addView(stepper(a, "Woke up at", woke));
+        if (!wokeKnown) {
+            String from = !log.optString("woke").isEmpty() ? "" : guess == null ? " (last time's answer, check it)"
+                    : guess.equals(log.optString("alarmOff")) ? " (when the alarm was stopped)" : " (first look at the phone)";
+            form.addView(stepper(a, "Woke up at" + from, woke));
+        }
         ScrollView scroll = new ScrollView(a);
         scroll.setVerticalScrollBarEnabled(false);
         scroll.addView(form, new FrameLayout.LayoutParams(Ui.MATCH, Ui.WRAP));
@@ -100,6 +106,7 @@ final class ShutdownScreen {
             Store.put(d, "lights", Store.hhmm(t.getHour() * 60 + t.getMinute()));
             Store.put(d, "shut", true);
             Store.save(a);
+            Sleep.armBackup(a);
             NotificationManager nm = (NotificationManager) a.getSystemService(Context.NOTIFICATION_SERVICE);
             if (nm != null) nm.cancel(Reminders.SHUTDOWN);
         };

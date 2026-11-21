@@ -117,12 +117,12 @@ final class DayScreen {
         else Store.put(day, key, value);
     }
 
-    /** The tracked night that ended on this date, if any. */
+    /** The tracked night that ended on this date, if any. Fragments under three hours don't count as a night. */
     static JSONObject nightEnding(MainActivity a, LocalDate d) {
         org.json.JSONArray all = Sleep.nights(a);
         for (int i = all.length() - 1; i >= 0; i--) {
             JSONObject n = all.optJSONObject(i);
-            if (n != null && d.toString().equals(n.optString("date"))) return n;
+            if (n != null && !n.optBoolean("short") && d.toString().equals(n.optString("date"))) return n;
         }
         return null;
     }

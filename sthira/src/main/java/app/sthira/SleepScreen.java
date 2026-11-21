@@ -63,7 +63,13 @@ final class SleepScreen {
             time.setOnClickListener(v -> {
                 int m = Store.minutes(Sleep.alarmTime(a));
                 new TimePickerDialog(a, (tp, h, min) -> {
+                    boolean wasArmed = Sleep.alarmArmed(a) && Sleep.active(a) == null;
                     Store.setSetting(a, "sleepAlarm", Store.hhmm(h * 60 + min));
+                    if (wasArmed) {
+                        // the backup alarm was armed for the old time: move it
+                        long t = Sleep.nextTarget(a);
+                        SleepAlarm.arm(a, t, t);
+                    }
                     a.refresh();
                 }, m / 60, m % 60, true).show();
             });
@@ -94,7 +100,10 @@ final class SleepScreen {
             c.setContentDescription(i == 0 ? "Exact alarm" : i == 5 ? "No alarm" : names[i] + " minute wake window");
             c.setOnClickListener(v -> {
                 if (idx == 0) Store.setSetting(a, "sleepMode", Sleep.MODE_EXACT);
-                else if (idx == 5) Store.setSetting(a, "sleepMode", Sleep.MODE_TRACK);
+                else if (idx == 5) {
+                    Store.setSetting(a, "sleepMode", Sleep.MODE_TRACK);
+                    if (Sleep.active(a) == null && Sleep.alarmArmed(a)) SleepAlarm.cancel(a);
+                }
                 else {
                     Store.setSetting(a, "sleepMode", Sleep.MODE_SMART);
                     Store.setSetting(a, "sleepWindow", Integer.parseInt(names[idx]));
@@ -106,9 +115,23 @@ final class SleepScreen {
         card.addView(chips, Ui.lp(Ui.MATCH, Ui.WRAP));
         TextView chipHelp = Ui.text(a, "Smart window in minutes · exact time · no alarm", 11, Ui.MUTED, Ui.regular);
         card.addView(chipHelp, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 6, 0, 0));
+        if (!noAlarm && Sleep.active(a) == null && Sleep.alarmArmed(a)) {
+            card.addView(Ui.ghost(a, "Skip tonight's alarm", Ui.CREAM, false, v -> {
+                SleepAlarm.cancel(a);
+                a.refresh();
+            }), Ui.gap(Ui.lp(Ui.MATCH, Ui.dp(46)), 0, 10, 0, 0));
+        }
         box.addView(card, Ui.lp(Ui.MATCH, Ui.WRAP));
 
         // things that would stop the alarm or the tracking from working
+        if (Sleep.colorOsNeedsSetup(a)) {
+            JSONObject last = Sleep.lastNight(a);
+            boolean cut = last != null && last.optBoolean("interrupted");
+            box.addView(fix(a, cut ? "Tracking was cut short. Stop OnePlus killing it" : "Stop OnePlus killing tracking at night",
+                    "In App info: Battery → Allow background activity, and turn on Auto launch. "
+                            + "Then in Recents, lock Sthira (long-press its card) so Clear all skips it.",
+                    v -> Sleep.openAppInfo(a)), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 8, 0, 0));
+        }
         if (!noAlarm && !Sleep.fullScreenAllowed(a)) {
             box.addView(fix(a, "Let the alarm show over the lock screen", "Full-screen alarm is off for Sthira.",
                     v -> Sleep.askFullScreen(a)), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 8, 0, 0));
