@@ -119,7 +119,8 @@ final class ReviewScreen {
             grid.addView(row, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 6, 0, 0));
         }
         body.addView(grid, Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 12, 0, 0));
-        String times = worstRun == 2 ? "twice" : worstRun == 3 ? "three times" : worstRun + " times";
+        String[] words = {"", "", "twice", "three times", "four times", "five times", "six times", "seven times"};
+        String times = words[Math.min(worstRun, 7)];
         String verdict = twice ? twiceWhat + " was missed " + times + " in a row. The next one matters most."
                 : "Filled is done, ring is missed, dash is a rest day. No miss came twice in a row.";
         verdict += " Tap any day to edit what was logged.";

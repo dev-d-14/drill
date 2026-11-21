@@ -74,7 +74,7 @@ final class TodayScreen {
             } catch (Exception ignored) {
             }
             if (used >= 3) {
-                items.add(new Item(-1, habit(a, "BACK UP YOUR DATA", used + " days of logs live only on this phone. One tap, then weekly.",
+                items.add(new Item(-1, habit(a, "BACK UP YOUR DATA", "Your logs are only on this phone. Weekly to Drive.",
                         PENDING, "SET UP", v -> Backup.choose(a))));
             }
         }
