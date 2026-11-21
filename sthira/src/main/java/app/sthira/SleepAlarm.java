@@ -19,7 +19,8 @@ import org.json.JSONObject;
 public final class SleepAlarm extends BroadcastReceiver {
 
     static final String RING = "app.sthira.SLEEP_RING", SNOOZE = "app.sthira.SLEEP_SNOOZE",
-            STOP = "app.sthira.SLEEP_STOP", STOP_TRACKING = "app.sthira.SLEEP_STOP_TRACKING";
+            STOP = "app.sthira.SLEEP_STOP", STOP_TRACKING = "app.sthira.SLEEP_STOP_TRACKING",
+            WATCH = "app.sthira.SLEEP_WATCH";
     static final int REGULAR_SNOOZE_MIN = 9, MAX_LATE_SNOOZES = 3;
 
     @Override
@@ -48,6 +49,8 @@ public final class SleepAlarm extends BroadcastReceiver {
             RingService.snooze(c);
         } else if (STOP.equals(action)) {
             RingService.stopAlarm(c);
+        } else if (WATCH.equals(action)) {
+            Sleep.onWatch(c);
         } else if (STOP_TRACKING.equals(action)) {
             Sleep.stopNow(c, true);
         }

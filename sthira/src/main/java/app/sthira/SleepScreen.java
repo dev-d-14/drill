@@ -383,6 +383,10 @@ final class SleepScreen {
         StringBuilder notes = new StringBuilder("Stages are estimates from sound, not a medical measurement.");
         if (n.optBoolean("short")) notes.append(" Short night, so the stages are rough.");
         if (n.optBoolean("interrupted")) notes.append(" Tracking stopped early; this covers what was recorded.");
+        if (n.optInt("gapMin") >= 5) notes.append(" ").append(n.optInt("gapMin"))
+                .append(" min weren't recorded (the phone stopped Sthira); those count as light sleep, not deep.");
+        if (n.optInt("motionMin") >= 5) notes.append(" ").append(n.optInt("motionMin"))
+                .append(" min came from the motion sensor after a restart, so keep the phone on the mattress.");
         if (!n.optBoolean("charging")) notes.append(" Battery left: " + n.optInt("batteryEnd") + "%.");
         box.addView(Ui.text(a, notes.toString(), 11, Ui.MUTED, Ui.regular), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 12, 0, 0));
         return box;

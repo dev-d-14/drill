@@ -146,6 +146,8 @@ public final class MainActivity extends Activity {
         }
         int hour = java.time.LocalTime.now().getHour();
         if (hour >= 4 && hour < 12) Store.markOnce(this, "firstOpen");
+        // Back in the app during a night: restart a killed tracker, or give the microphone back to one on motion.
+        if (Sleep.active(this) != null) Sleep.checkStale(this);
         if (current >= 0) refresh();
     }
 

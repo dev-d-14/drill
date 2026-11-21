@@ -39,13 +39,14 @@ final class SleepDsp {
         double maxPeak, meanAbove, snoreSec;
         double breathRate = -1, breathReg = -1, breathConf = 0;
         boolean noData, phone;
+        boolean motion;      // measured by the accelerometer because the microphone wasn't available
         double activity;     // A(t) from the research spec
         char online = 'L';
 
         String csv() {
-            return String.format(java.util.Locale.ROOT, "%d,%.1f,%d,%d,%d,%d,%.1f,%.1f,%.1f,%.1f,%.2f,%.2f,%d,%d,%.2f,%c",
+            return String.format(java.util.Locale.ROOT, "%d,%.1f,%d,%d,%d,%d,%.1f,%.1f,%.1f,%.1f,%.2f,%.2f,%d,%d,%.2f,%c,%c",
                     startMs, activeSec, events, micro, medium, major, maxPeak, meanAbove, snoreSec,
-                    breathRate, breathReg, breathConf, noData ? 1 : 0, phone ? 1 : 0, activity, online);
+                    breathRate, breathReg, breathConf, noData ? 1 : 0, phone ? 1 : 0, activity, online, motion ? 'm' : 'a');
         }
 
         static Epoch parse(String line) {
@@ -68,6 +69,7 @@ final class SleepDsp {
                 e.phone = "1".equals(p[13]);
                 e.activity = Double.parseDouble(p[14]);
                 e.online = p[15].charAt(0);
+                e.motion = p.length > 16 && "m".equals(p[16]);   // older files have no source column
                 return e;
             } catch (Exception ex) {
                 return null;

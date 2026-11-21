@@ -11,7 +11,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ServiceInfo;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.AudioFormat;
+import android.media.AudioRecordingConfiguration;
 import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
@@ -19,20 +24,23 @@ import android.media.audiofx.AutomaticGainControl;
 import android.media.audiofx.NoiseSuppressor;
 import android.os.Build;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.os.Looper;
 import android.os.PowerManager;
 
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.util.Iterator;
 
 /**
- * Listens through the night. Started only by a tap on "Start sleep" (Android does not let a
- * microphone service start from the background). Nothing but the per-epoch numbers is written:
- * no audio is ever stored.
+ * Listens through the night. Nothing but the per-epoch numbers is written: no audio is ever stored.
+ *
+ * Staying alive: the service is sticky and a watchdog alarm (Sleep.onWatch) restarts it if the phone kills it.
+ * Android doesn't let a restarted background service use the microphone, so after a restart it carries on with
+ * the accelerometer ("motion" epochs) and takes the microphone back the next time the app is opened.
  */
 public final class SleepService extends Service {
 
@@ -52,6 +60,8 @@ public final class SleepService extends Service {
     private int lastEpochIndex = -1;
     private long lastDeepMs;
     private volatile double lastReg = -1;
+    private volatile boolean micOk;      // started with the microphone foreground type, so recording is allowed
+    private volatile boolean motion;     // currently measuring with the accelerometer
 
     private final BroadcastReceiver unlock = new BroadcastReceiver() {
         @Override
@@ -71,25 +81,63 @@ public final class SleepService extends Service {
         return s == null || s.dsp == null ? 0 : s.dsp.level;
     }
 
+    boolean motionOnly() {
+        return running && !micOk;
+    }
+
+    /**
+     * Goes foreground with the best type allowed right now: microphone (+ health) when the app is in front,
+     * health alone (accelerometer) when started from the background by the watchdog, a sticky restart or boot.
+     * Returns false if no foreground type could be used at all.
+     */
+    private boolean goForeground(JSONObject s) {
+        if (Build.VERSION.SDK_INT >= 34) {
+            int mic = ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE, health = ServiceInfo.FOREGROUND_SERVICE_TYPE_HEALTH;
+            int[] types = {mic | health, mic, health};
+            for (int t : types) {
+                try {
+                    boolean withMic = (t & mic) != 0;
+                    startForeground(Sleep.NOTE_TRACK, notification(s, !withMic), t);
+                    micOk = withMic;
+                    return true;
+                } catch (Exception ignored) {
+                }
+            }
+            return false;
+        }
+        try {
+            if (Build.VERSION.SDK_INT >= 30) startForeground(Sleep.NOTE_TRACK, notification(s, false), ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE);
+            else startForeground(Sleep.NOTE_TRACK, notification(s, false));
+            micOk = true;   // older Android: allowed, but a background start may be silenced; capture checks that
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         JSONObject s = Sleep.active(this);
-        Notification n = notification(s);
-        try {
-            if (Build.VERSION.SDK_INT >= 30) {
-                startForeground(Sleep.NOTE_TRACK, n, ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE);
-            } else {
-                startForeground(Sleep.NOTE_TRACK, n);
-            }
-        } catch (Exception e) {
+        if (running) {
+            // Already tracking. If it's on the motion sensor, try to take the microphone back (works when the app
+            // is in front); the capture loop notices micOk and switches.
+            if (s != null && !micOk && goForeground(s) && micOk) motion = false;
+            return START_STICKY;
+        }
+        if (s == null || !Sleep.stillNight(s)) {
+            goForeground(s);   // must go foreground once after startForegroundService, even just to stop
+            if (s != null) Sleep.finishNight(this, System.currentTimeMillis(), true);
+            stopForeground(Service.STOP_FOREGROUND_REMOVE);
             stopSelf();
             return START_NOT_STICKY;
         }
-        if (s == null || running) {
-            if (s == null) stopSelf();
+        if (!goForeground(s)) {
+            stopSelf();
             return START_NOT_STICKY;
         }
         instance = this;
+        fired = s.has("firedAt");
+        motion = !micOk;
         id = s.optLong("id");
         start = s.optLong("start");
         target = s.optLong("target");
@@ -115,14 +163,17 @@ public final class SleepService extends Service {
         thread = new Thread(this::capture, "sleep-capture");
         thread.setPriority(Thread.NORM_PRIORITY - 1);
         thread.start();
-        return START_NOT_STICKY;
+        Sleep.scheduleWatch(this, Sleep.WATCH_MINUTES * 60_000L);
+        // Sticky: if the phone kills the process, Android starts the service again (on the motion sensor).
+        return START_STICKY;
     }
 
-    private Notification notification(JSONObject s) {
+    private Notification notification(JSONObject s, boolean motionMode) {
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         nm.createNotificationChannel(new NotificationChannel("sleep", "Sleep tracking", NotificationManager.IMPORTANCE_LOW));
-        String text = "Listening. No audio is saved.";
-        if (s != null && s.optLong("target") > 0) {
+        String text = motionMode ? "Tracking by motion after a restart. Open Sthira to switch the microphone back on."
+                : "Listening. No audio is saved.";
+        if (!motionMode && s != null && s.optLong("target") > 0) {
             int t = Sleep.minuteOf(s.optLong("target")), w = s.optInt("window");
             text = w > 0 ? "Alarm " + Store.hhmm(t) + " · wakes you from " + Store.hhmm(t - w) + " when you're in light sleep"
                     : "Alarm " + Store.hhmm(t);
@@ -185,10 +236,24 @@ public final class SleepService extends Service {
         AudioRecord rec = null;
         int checks = 0;
         while (running) {
+            if (motion || !micOk) {
+                if (rec != null) {
+                    try {
+                        rec.stop();
+                    } catch (Exception ignored) {
+                    }
+                    rec.release();
+                    rec = null;
+                }
+                motion = true;
+                runMotion();       // returns when stopped, when the microphone is back, or every 5 min to retry it
+                if (micOk) motion = false;
+                continue;
+            }
             if (rec == null) {
                 rec = open();
                 if (rec == null) {
-                    if (!pause(60_000)) break;
+                    motion = true;     // no microphone right now: keep tracking by motion meanwhile
                     continue;
                 }
                 try {
@@ -196,7 +261,19 @@ public final class SleepService extends Service {
                 } catch (Exception e) {
                     rec.release();
                     rec = null;
-                    if (!pause(60_000)) break;
+                    motion = true;
+                    continue;
+                }
+                if (silenced(rec)) {
+                    // Android hands a background-started recorder silence; zeros would read as deep sleep.
+                    try {
+                        rec.stop();
+                    } catch (Exception ignored) {
+                    }
+                    rec.release();
+                    rec = null;
+                    micOk = false;
+                    motion = true;
                     continue;
                 }
             }
@@ -218,7 +295,7 @@ public final class SleepService extends Service {
                 }
                 rec.release();
                 rec = null;
-                if (!pause(60_000)) break;
+                motion = true;
                 continue;
             }
             long now = System.currentTimeMillis();
@@ -234,6 +311,112 @@ public final class SleepService extends Service {
             } catch (Exception ignored) {
             }
             rec.release();
+        }
+    }
+
+    private static boolean silenced(AudioRecord rec) {
+        if (Build.VERSION.SDK_INT < 29) return false;
+        try {
+            AudioRecordingConfiguration conf = rec.getActiveRecordingConfiguration();
+            return conf != null && conf.isClientSilenced();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    // ---- motion fallback ----
+
+    /**
+     * Tracks with the accelerometer (works with the phone on the mattress) until the service stops, the microphone
+     * comes back, or, while the microphone type is held, five minutes pass so the microphone can be retried.
+     */
+    private void runMotion() {
+        SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+        Sensor acc = sm == null ? null : sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        if (acc == null) {
+            pause(60_000);
+            return;
+        }
+        HandlerThread ht = new HandlerThread("sleep-motion");
+        ht.start();
+        Motion m = new Motion();
+        SensorEventListener l = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent ev) {
+                // sensor time → wall clock, so batched readings land in the right epoch
+                long wall = System.currentTimeMillis() - (SystemClock.elapsedRealtimeNanos() - ev.timestamp) / 1_000_000L;
+                m.add(ev.values, wall);
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            }
+        };
+        sm.registerListener(l, acc, 100_000, 10_000_000, new Handler(ht.getLooper()));
+        long until = micOk ? System.currentTimeMillis() + 5 * 60_000L : Long.MAX_VALUE;
+        while (running && motion && System.currentTimeMillis() < until) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
+        sm.unregisterListener(l);
+        ht.quitSafely();
+    }
+
+    /** Turns 10 Hz accelerometer readings into 30-second epochs on the same grid as the microphone's. */
+    private final class Motion {
+        private double gravity = -1, secMax, sum, peak;
+        private long sec = -1;
+        private int index = -1, activeSec, micro, medium, major;
+
+        void add(float[] v, long t) {
+            double mag = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+            if (gravity < 0) gravity = mag;
+            gravity += 0.05 * (mag - gravity);
+            double dev = Math.abs(mag - gravity);
+            long s = t / 1000;
+            if (s != sec) {
+                closeSecond();
+                sec = s;
+                secMax = 0;
+            }
+            secMax = Math.max(secMax, dev);
+            int i = (int) ((t - start) / 30_000L);
+            if (i != index) {
+                closeEpoch();
+                index = i;
+            }
+        }
+
+        private void closeSecond() {
+            if (sec < 0) return;
+            if (secMax >= 0.1) activeSec++;
+            if (secMax >= 1.5) major++;
+            else if (secMax >= 0.4) medium++;
+            else if (secMax >= 0.1) micro++;
+            sum += secMax;
+            peak = Math.max(peak, secMax);
+        }
+
+        private void closeEpoch() {
+            if (index >= 0) {
+                SleepDsp.Epoch e = new SleepDsp.Epoch();
+                e.startMs = start + index * 30_000L;
+                e.motion = true;
+                e.activeSec = activeSec;
+                e.micro = micro;
+                e.medium = medium;
+                e.major = major;
+                e.events = micro + medium + major;
+                e.maxPeak = peak * 10;
+                e.activity = sum * 10;
+                e.online = activeSec >= 10 ? 'W' : 'L';
+                onEpoch(e);
+            }
+            activeSec = micro = medium = major = 0;
+            sum = peak = 0;
         }
     }
 
@@ -354,12 +537,9 @@ public final class SleepService extends Service {
         if (!finished) {
             finished = true;
             stopCapture();
-            // Killed in the night: keep what was recorded. The alarm clock is armed separately.
-            if (Sleep.active(this) != null) {
-                File f = Sleep.epochFile(this, id);
-                long end = f.exists() ? f.lastModified() : System.currentTimeMillis();
-                Sleep.finishNight(this, Math.max(end, start), true);
-            }
+            // Stopped by the system in the night: the night stays open and the watchdog restarts tracking in a minute.
+            // The alarm clock is armed separately and doesn't depend on this service.
+            if (Sleep.active(this) != null) Sleep.scheduleWatch(this, 60_000L);
         }
         if (instance == this) instance = null;
         super.onDestroy();

@@ -166,6 +166,7 @@ final class Sleep {
         Store.put(Store.root(a), "sleepNow", s);
         Store.save(a);
         if (target > 0) SleepAlarm.arm(a, target, target);
+        scheduleWatch(a, WATCH_MINUTES * 60_000L);
         Intent svc = new Intent(a, SleepService.class);
         try {
             if (Build.VERSION.SDK_INT >= 26) a.startForegroundService(svc);
@@ -187,13 +188,90 @@ final class Sleep {
         }
     }
 
-    /** On app open: a night whose service died without finishing gets wrapped up with what was recorded. */
+    /**
+     * On app open: if tonight's tracker isn't running (the phone killed it), start it again while the night is
+     * still on; the gap is marked as no data. Only a night that's long over gets wrapped up with what was recorded.
+     * Coming back to the app also hands the microphone back to a tracker that fell back to the motion sensor.
+     */
     static void checkStale(Context c) {
         JSONObject s = active(c);
-        if (s == null || SleepService.instance != null) return;
+        if (s == null) return;
+        if (stillNight(s)) {
+            SleepService svc = SleepService.instance;
+            if (svc == null || svc.motionOnly()) restartTracking(c);
+            return;
+        }
+        if (SleepService.instance != null) return;
         File f = epochFile(c, s.optLong("id"));
         long last = f.exists() ? f.lastModified() : s.optLong("start");
-        if (System.currentTimeMillis() - last > 10 * 60_000L) finishNight(c, Math.max(last, s.optLong("start")), true);
+        finishNight(c, Math.max(last, s.optLong("start")), true);
+    }
+
+    /** Whether a night is still worth tracking: before the alarm (plus an hour of snoozing), at most 14 hours in all. */
+    static boolean stillNight(JSONObject s) {
+        long now = System.currentTimeMillis(), target = s.optLong("target");
+        if (now - s.optLong("start") > 14 * 3_600_000L) return false;
+        return target <= 0 || now < target + 3_600_000L;
+    }
+
+    /** Starts (or nudges) the tracking service. From the background it comes back on the motion sensor. */
+    static boolean restartTracking(Context c) {
+        try {
+            Intent svc = new Intent(c, SleepService.class);
+            if (Build.VERSION.SDK_INT >= 26) c.startForegroundService(svc);
+            else c.startService(svc);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    static final int WATCH_MINUTES = 10;
+
+    private static PendingIntent watchIntent(Context c) {
+        Intent i = new Intent(c, SleepAlarm.class).setAction(SleepAlarm.WATCH);
+        return PendingIntent.getBroadcast(c, 307, i, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    }
+
+    /**
+     * The watchdog: an exact alarm every few minutes through the night. If the phone killed the tracker, the alarm
+     * brings the app back and the tracker restarts (exact alarms are allowed to start a foreground service).
+     */
+    static void scheduleWatch(Context c, long inMs) {
+        AlarmManager am = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        if (am == null) return;
+        long at = System.currentTimeMillis() + inMs;
+        try {
+            if (Build.VERSION.SDK_INT < 31 || am.canScheduleExactAlarms()) am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, watchIntent(c));
+            else am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, watchIntent(c));
+        } catch (Exception ignored) {
+        }
+    }
+
+    static void cancelWatch(Context c) {
+        AlarmManager am = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        if (am != null) am.cancel(watchIntent(c));
+    }
+
+    /** The watchdog fired. */
+    static void onWatch(Context c) {
+        JSONObject s = active(c);
+        if (s == null) return;
+        if (!stillNight(s)) {
+            if (SleepService.instance != null) SleepService.instance.finishNight(System.currentTimeMillis());
+            else {
+                File f = epochFile(c, s.optLong("id"));
+                long last = f.exists() ? f.lastModified() : s.optLong("start");
+                finishNight(c, Math.max(last, s.optLong("start")), true);
+            }
+            return;
+        }
+        if (SleepService.instance == null) {
+            Store.put(s, "restarts", s.optInt("restarts") + 1);
+            Store.save(c);
+            restartTracking(c);
+        }
+        scheduleWatch(c, WATCH_MINUTES * 60_000L);
     }
 
     /** After a reboot: the alarm is re-armed; the microphone can't restart on its own. */
@@ -204,6 +282,11 @@ final class Sleep {
             SleepAlarm.arm(c, a.optLong("next"), a.optLong("target"));
         }
         if (s != null && SleepService.instance == null) {
+            if (stillNight(s) && restartTracking(c)) {
+                // After a reboot the microphone can't come back on its own; the motion sensor carries on.
+                scheduleWatch(c, WATCH_MINUTES * 60_000L);
+                return;
+            }
             File f = epochFile(c, s.optLong("id"));
             long last = f.exists() ? f.lastModified() : s.optLong("start");
             finishNight(c, Math.max(last, s.optLong("start")), true);
@@ -343,6 +426,7 @@ final class Sleep {
     static synchronized JSONObject finishNight(Context c, long endMs, boolean interrupted) {
         JSONObject s = active(c);
         if (s == null) return null;
+        cancelWatch(c);
         long id = s.optLong("id"), start = s.optLong("start");
         List<SleepDsp.Epoch> raw = readEpochs(c, id);
         // Put every epoch on its 30-second slot from the start, filling gaps as "no data".
@@ -365,6 +449,7 @@ final class Sleep {
         Store.put(night, "target", s.optLong("target"));
         Store.put(night, "window", s.optInt("window"));
         Store.put(night, "interrupted", interrupted);
+        Store.put(night, "restarts", s.optInt("restarts"));
         Store.put(night, "charging", s.optBoolean("charging"));
         if (s.has("firedAt")) {
             Store.put(night, "firedAt", s.optLong("firedAt"));
@@ -389,6 +474,16 @@ final class Sleep {
         return night;
     }
 
+    private static double percentile90(SleepDsp.Epoch[] ep, double[] act, boolean motion) {
+        int k = 0;
+        double[] v = new double[ep.length];
+        for (int i = 0; i < ep.length; i++) if (!ep[i].noData && ep[i].motion == motion) v[k++] = act[i];
+        if (k == 0) return 1;
+        v = Arrays.copyOf(v, k);
+        Arrays.sort(v);
+        return Math.max(1.0, v[(int) Math.floor((k - 1) * 0.9)]);
+    }
+
     /**
      * Offline staging with look-ahead. Movement drives it: a lot is awake, some is light sleep,
      * a long stretch of near-stillness is deep sleep. REM is only a guess and is marked as one.
@@ -397,11 +492,11 @@ final class Sleep {
         int n = ep.length;
         double[] act = new double[n];
         for (int i = 0; i < n; i++) act[i] = ep[i].noData ? 0 : ep[i].activity;
-        double[] sorted = act.clone();
-        Arrays.sort(sorted);
-        double scale = n == 0 ? 1 : Math.max(1.0, sorted[(int) Math.floor((n - 1) * 0.9)]);
+        // Microphone and motion-sensor epochs measure different things, so each is scaled against its own
+        // 90th percentile. Gaps (no data) are left out of both.
+        double micScale = percentile90(ep, act, false), motionScale = percentile90(ep, act, true);
         double[] a = new double[n], d = new double[n];
-        for (int i = 0; i < n; i++) a[i] = act[i] / scale;
+        for (int i = 0; i < n; i++) a[i] = ep[i].noData ? 0 : act[i] / (ep[i].motion ? motionScale : micScale);
         double[] w = {0.15, 0.15, 0.20, 0.25, 1.00, 0.25, 0.15};
         for (int i = 0; i < n; i++) {
             double v = 0;
@@ -443,14 +538,14 @@ final class Sleep {
                 double hours = (i - onset) / 120.0;
                 double thr = 0.15 * (hours < 3 ? 1.3 : hours > 5 ? 0.8 : 1.0);
                 int j = i;
-                while (j <= wake && st[j] == 'L' && d[j] < thr
+                while (j <= wake && st[j] == 'L' && d[j] < thr && !ep[j].noData
                         && (ep[j].breathConf < 0.3 || ep[j].breathReg < 0 || ep[j].breathReg >= 0.8)) j++;
                 if (j - i >= 6) for (int k = i; k < j; k++) st[k] = 'D';
                 i = Math.max(j, i + 1);
             }
             // REM (estimate): still body, small twitches or uneven breathing, after a cycle boundary
             for (int i = onset + 140; i <= wake; i++) {
-                if (st[i] != 'L') continue;
+                if (st[i] != 'L' || ep[i].noData) continue;
                 SleepDsp.Epoch e = ep[i];
                 boolean signs = e.micro >= 2 || (e.breathConf >= 0.3 && e.breathReg >= 0 && e.breathReg < 0.6);
                 if (d[i] >= 0.4 || e.major > 0 || !signs) continue;
@@ -528,6 +623,14 @@ final class Sleep {
         Store.put(night, "snore", Math.round(snore / 60));
         Store.put(night, "move", Math.round(movementIndex * 100) / 100.0);
         Store.put(night, "short", tib < 180);
+        // How much of the night had no recording at all, and how much came from the motion sensor.
+        int gaps = 0, motionEp = 0;
+        for (SleepDsp.Epoch e : ep) {
+            if (e.noData) gaps++;
+            else if (e.motion) motionEp++;
+        }
+        Store.put(night, "gapMin", gaps / 2);
+        Store.put(night, "motionMin", motionEp / 2);
         Store.put(night, "stages", new String(st));
         // Phone pickups after falling asleep: separate runs of epochs where the phone was unlocked.
         org.json.JSONArray pickups = new org.json.JSONArray();
