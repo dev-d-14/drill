@@ -1,97 +1,107 @@
 {
-  "date": "2026-11-21",
+  "date": "2026-11-22",
   "items": [
     {
-      "id": "2026-11-21-1",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "He found a hidden beeping smoke alarm by making Claude triangulate it",
-      "why": "Recorded the beep on phones around the house, fed the timestamps to Claude Code, and let it work out the source - no app, just math.",
-      "url": "https://simonwillison.net/2026/Nov/9/mysterious-beeps/",
-      "source": "Simon Willison"
-    },
-    {
-      "id": "2026-11-21-2",
+      "id": "2026-11-22-1",
       "tag": "AI",
       "kind": "news",
-      "title": "Willison's new pattern: let the coding agent run, sandbox what it touches",
-      "why": "Agent stays on your machine, code runs in a WASM/QEMU/container jail with secrets outside - demos ship for Claude Code, Codex and Pi.",
-      "url": "https://simonwillison.net/2026/Nov/17/external-sandboxes-for-coding-agents/",
-      "source": "Simon Willison"
+      "title": "A cache that stores how an AI reasoned, not just what it said",
+      "why": "Lets a tiny model replay a big model's solved reasoning as code, cutting repeat costs 16-291x once it's learned a problem type.",
+      "url": "https://arxiv.org/abs/2611.09891",
+      "source": "arXiv preprint (NVIDIA Research)"
     },
     {
-      "id": "2026-11-21-3",
+      "id": "2026-11-22-2",
       "tag": "Research",
       "kind": "news",
-      "title": "An ESP32-C5's built-in radio can now sniff out WiFi jamming itself",
-      "why": "Uses the chip's own SDR to spot 2.4 and 5GHz interference and point at the jammer - work that used to need a spectrum analyzer.",
-      "url": "https://hackaday.com/2026/11/16/esp32-wifi-jam-detector-finds-the-raspberry/",
+      "title": "A classic coding-interview proof turns out to be wrong but still true",
+      "why": "The 'small-to-large merging' trick everyone cites had a shaky proof; a GitHub fix replaces it with one that actually holds up.",
+      "url": "https://github.com/cp-algorithms/cp-algorithms/pull/1706",
+      "source": "cp-algorithms (GitHub)"
+    },
+    {
+      "id": "2026-11-22-3",
+      "tag": "Research",
+      "kind": "news",
+      "title": "A German toilet-queue game crashes real microcontrollers for fun",
+      "why": "Every knock on a virtual festival-toilet door overloads a real ESP8266 until it crashes - a playful lesson in resource-exhaustion attacks.",
+      "url": "https://hackaday.com/2026/11/19/crashing-microcontrollers-competitively/",
       "source": "Hackaday"
     },
     {
-      "id": "2026-11-21-4",
+      "id": "2026-11-22-4",
       "tag": "Tools",
       "kind": "news",
-      "title": "A Linux KVM bug let a guest VM read 127GB of its host's own memory",
-      "why": "A use-after-free on AMD hosts broke the wall between guest and host - virtualization isolation is leakier than it looks.",
-      "url": "https://www.digitalocean.com/blog/cve-2026-99312-kvm-patch",
-      "source": "DigitalOcean Engineering (CVE-2026-99312)"
+      "title": "Open-source boards turn any HDMI feed into a Pi camera input",
+      "why": "WarpKVM's RK628 boards convert HDMI into CSI at 4K30, so a Pi or CM4 can treat any HDMI source like a plug-in camera.",
+      "url": "https://hackaday.com/2026/11/21/hdmi-to-csi-for-anyone/",
+      "source": "Hackaday"
     },
     {
-      "id": "2026-11-21-5",
-      "tag": "Science",
-      "kind": "science",
-      "evidence": "moderate",
-      "title": "A pink-noise burst timed to your slow-wave sleep may boost brain cleanup",
-      "why": "MIT/BU measured more cerebrospinal fluid flow when sound synced to slow waves - a drug-free lever on the brain's overnight waste clearance.",
-      "url": "https://news.mit.edu/2026/pink-noise-burst-may-mean-more-restorative-sleep-0909",
-      "source": "MIT News"
-    },
-    {
-      "id": "2026-11-21-6",
-      "tag": "Research",
-      "kind": "news",
-      "title": "Binary search directly on an iterative segment tree, no recursion needed",
-      "why": "Skips the usual recursive wrapper so range query plus binary search stays O(log n) and harder to get wrong under contest pressure.",
-      "url": "https://codeforces.com/blog/entry/142618",
-      "source": "Codeforces blog"
-    },
-    {
-      "id": "2026-11-21-7",
+      "id": "2026-11-22-5",
       "tag": "Tools",
       "kind": "news",
-      "title": "Stop guessing at latency - bpftrace one-liners that show the real culprit",
-      "why": "A handful of bpftrace commands trace syscalls and scheduler delays live, pointing straight at what's stalling a slow service.",
-      "url": "https://dev.to/lyraalishaikh/stop-guessing-production-latency-practical-bpftrace-one-liners-for-linux-debugging-2g71",
-      "source": "DEV Community"
+      "title": "A Windows zero-day turns a logging feature into SYSTEM access",
+      "why": "SignDrop abuses CLFS recovery-file creation via symlink redirection to hand a standard user a SYSTEM-owned file - no patch yet.",
+      "url": "https://thehackernews.com/2026/11/new-signdrop-zero-day-exploit-turns.html",
+      "source": "The Hacker News"
     },
     {
-      "id": "2026-11-21-8",
+      "id": "2026-11-22-6",
+      "tag": "ISB",
+      "kind": "news",
+      "title": "Relabel interview nerves as excitement, not calm, before you walk in",
+      "why": "A well-replicated trick: say 'I'm excited' instead of 'calm down' - it measurably improves performance under pressure.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24364682/",
+      "source": "Journal of Experimental Psychology: General (Alison Wood Brooks, Harvard)"
+    },
+    {
+      "id": "2026-11-22-7",
       "tag": "Science",
       "kind": "science",
       "evidence": "early",
-      "title": "A week of resistance training already shrank fat cells in mice",
-      "why": "Early mouse work: fat cells released stored fat within 7 days of lifting, before any weight changed - encouraging, not shown in people yet.",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261006234509.htm",
-      "source": "ScienceDaily"
+      "title": "Deep-sleep brain waves that travel less may flag early memory risk",
+      "why": "Berkeley: tau buildup weakens coordinated slow waves in deep sleep, tracking with worse next-day recall - protect your sleep depth.",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261101010556.htm",
+      "source": "UC Berkeley / Nature Neuroscience (via ScienceDaily)"
     },
     {
-      "id": "2026-11-21-9",
-      "tag": "ISB",
+      "id": "2026-11-22-8",
+      "tag": "Science",
+      "kind": "science",
+      "evidence": "moderate",
+      "title": "In a 10,000-student study, how often you exercise beat how hard",
+      "why": "Norwegian cohort of 10,460: how often you exercised predicted anxiety/depression risk better than how hard or how long.",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261119194601.htm",
+      "source": "PLOS ONE (via ScienceDaily)"
+    },
+    {
+      "id": "2026-11-22-9",
+      "tag": "Tools",
       "kind": "news",
-      "title": "Tata Sons' succession fight is colliding with an RBI-mandated IPO",
-      "why": "Chandrasekaran and the Tata Trusts are at odds over control before a forced listing - a clean case study in succession vs governance.",
-      "url": "https://www.bloomberg.com/news/articles/2026-11-19/tata-sons-largest-shareholder-meets-to-discuss-listing-amid-rift",
-      "source": "Bloomberg"
+      "title": "Your mmap succeeded but SIGBUS'd anyway? Check these four things",
+      "why": "A HugeTLB mmap only reserves space; faults need backing. Check smaps' ht flag, file size, hugepage pool, and your cgroup's hugetlb limits.",
+      "url": "https://oneuptime.com/blog/post/2026-11-20-fix-hugetlb-mmap-sigbus-page-fault-backing/view",
+      "source": "OneUptime Engineering Blog"
     },
     {
-      "id": "2026-11-21-10",
+      "id": "2026-11-22-10",
       "tag": "India",
       "kind": "news",
-      "title": "India wants a homegrown GPU in two years, built on its own RISC-V cores",
-      "why": "Betting on indigenous SHAKTI and VEGA chip designs over licensing ARM or x86 - an architecture bet, not just another funding headline.",
-      "url": "https://www.tomshardware.com/tech-industry/semiconductors/india-targets-creating-homegrown-gpus-within-2-years-and-plans-to-commercialize-indigenous-shakti-and-vega-risc-v-processors-sees-ai-boom-as-a-potential-repeat-of-the-y2k-opportunity-for-its-it-industry",
-      "source": "Tom's Hardware"
+      "title": "IIT Mandi turns material defects into brain-like memory chips",
+      "why": "Cracks and sulphur gaps in a WS2 flake let one device switch two ways, mimicking both synapse and neuron behaviour for brain-like chips.",
+      "url": "https://www.tribuneindia.com/news/himachal/iit-mandi-turns-material-defects-into-electronic-breakthroughs",
+      "source": "The Tribune"
     }
-  ]
+  ],
+  "drill": {
+    "q": "Which claim in item 8 is the weakest?",
+    "options": [
+      "\"a 10,000-student study\" - actually 10,460 Norwegian university students",
+      "\"how often you exercise beat how hard\" - frequency winning over intensity",
+      "\"predicted anxiety/depression risk a year later\" - a before-and-after prospective measurement"
+    ],
+    "answer": 1,
+    "why": "The underlying research gives no effect sizes, so 'beat' overstates what was really just a more consistent association for frequency, not a quantified head-to-head result - and the observational design still can't prove intensity matters less."
+  }
 }
