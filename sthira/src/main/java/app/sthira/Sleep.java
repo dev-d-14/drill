@@ -194,6 +194,7 @@ final class Sleep {
      * Coming back to the app also hands the microphone back to a tracker that fell back to the motion sensor.
      */
     static void checkStale(Context c) {
+        restageIfNeeded(c);
         JSONObject s = active(c);
         if (s == null) return;
         if (stillNight(s)) {
@@ -428,21 +429,8 @@ final class Sleep {
         if (s == null) return null;
         cancelWatch(c);
         long id = s.optLong("id"), start = s.optLong("start");
-        List<SleepDsp.Epoch> raw = readEpochs(c, id);
-        // Put every epoch on its 30-second slot from the start, filling gaps as "no data".
         int slots = (int) Math.max(0, (endMs - start) / 30_000L);
-        SleepDsp.Epoch[] ep = new SleepDsp.Epoch[slots];
-        for (SleepDsp.Epoch e : raw) {
-            int i = (int) ((e.startMs - start) / 30_000L);
-            if (i >= 0 && i < slots) ep[i] = e;
-        }
-        for (int i = 0; i < slots; i++) {
-            if (ep[i] == null) {
-                ep[i] = new SleepDsp.Epoch();
-                ep[i].startMs = start + i * 30_000L;
-                ep[i].noData = true;
-            }
-        }
+        SleepDsp.Epoch[] ep = grid(c, id, start, endMs);
         JSONObject night = analyse(c, ep, start, endMs);
         Store.put(night, "id", id);
         Store.put(night, "mode", s.optString("mode"));
@@ -474,120 +462,29 @@ final class Sleep {
         return night;
     }
 
-    private static double percentile90(SleepDsp.Epoch[] ep, double[] act, boolean motion) {
-        int k = 0;
-        double[] v = new double[ep.length];
-        for (int i = 0; i < ep.length; i++) if (!ep[i].noData && ep[i].motion == motion) v[k++] = act[i];
-        if (k == 0) return 1;
-        v = Arrays.copyOf(v, k);
-        Arrays.sort(v);
-        return Math.max(1.0, v[(int) Math.floor((k - 1) * 0.9)]);
+    /** Stages, numbers and score for one night. Staging lives in SleepStager (testable off the phone). */
+    static JSONObject analyse(Context c, SleepDsp.Epoch[] ep, long start, long end) {
+        return analyse(c, ep, start, end, nights(c));
     }
 
-    /**
-     * Offline staging with look-ahead. Movement drives it: a lot is awake, some is light sleep,
-     * a long stretch of near-stillness is deep sleep. REM is only a guess and is marked as one.
-     */
-    static JSONObject analyse(Context c, SleepDsp.Epoch[] ep, long start, long end) {
+    /** As above, scored against the given earlier nights (the last 14 of them are used). */
+    static JSONObject analyse(Context c, SleepDsp.Epoch[] ep, long start, long end, JSONArray past) {
         int n = ep.length;
-        double[] act = new double[n];
-        for (int i = 0; i < n; i++) act[i] = ep[i].noData ? 0 : ep[i].activity;
-        // Microphone and motion-sensor epochs measure different things, so each is scaled against its own
-        // 90th percentile. Gaps (no data) are left out of both.
-        double micScale = percentile90(ep, act, false), motionScale = percentile90(ep, act, true);
-        double[] a = new double[n], d = new double[n];
-        for (int i = 0; i < n; i++) a[i] = ep[i].noData ? 0 : act[i] / (ep[i].motion ? motionScale : micScale);
-        double[] w = {0.15, 0.15, 0.20, 0.25, 1.00, 0.25, 0.15};
-        for (int i = 0; i < n; i++) {
-            double v = 0;
-            for (int k = -4; k <= 2; k++) if (i + k >= 0 && i + k < n) v += w[k + 4] * a[i + k];
-            d[i] = v;
-        }
+        SleepStager.Result r = SleepStager.stage(ep);
+        char[] st = r.stages;
+        int onset = r.onset, wake = r.wake;
+        double[] act = r.activity;
 
-        char[] st = new char[n];
-        for (int i = 0; i < n; i++) {
-            SleepDsp.Epoch e = ep[i];
-            st[i] = (e.phone || e.activeSec >= 10 || d[i] >= 1.2) ? 'W' : 'L';
-        }
-        // sleep onset: the first 10 minutes in a row without waking
-        int onset = -1, run = 0;
-        for (int i = 0; i < n; i++) {
-            boolean calm = st[i] != 'W' && d[i] < 0.6;
-            run = calm ? run + 1 : 0;
-            if (run >= 20) {
-                onset = i - 19;
-                break;
-            }
-        }
-        int wake = -1;
-        if (onset >= 0) {
-            for (int i = n - 1; i >= onset; i--) {
-                if (st[i] != 'W') {
-                    wake = i;
-                    break;
-                }
-            }
-        }
-        if (onset < 0) {
-            Arrays.fill(st, 'W');
-        } else {
-            for (int i = 0; i < onset; i++) st[i] = 'W';
-            for (int i = wake + 1; i < n; i++) st[i] = 'W';
-            // deep: six or more quiet epochs, a stricter bar early in the night, looser late
-            for (int i = onset + 30; i <= wake; ) {
-                double hours = (i - onset) / 120.0;
-                double thr = 0.15 * (hours < 3 ? 1.3 : hours > 5 ? 0.8 : 1.0);
-                int j = i;
-                while (j <= wake && st[j] == 'L' && d[j] < thr && !ep[j].noData
-                        && (ep[j].breathConf < 0.3 || ep[j].breathReg < 0 || ep[j].breathReg >= 0.8)) j++;
-                if (j - i >= 6) for (int k = i; k < j; k++) st[k] = 'D';
-                i = Math.max(j, i + 1);
-            }
-            // REM (estimate): still body, small twitches or uneven breathing, after a cycle boundary
-            for (int i = onset + 140; i <= wake; i++) {
-                if (st[i] != 'L' || ep[i].noData) continue;
-                SleepDsp.Epoch e = ep[i];
-                boolean signs = e.micro >= 2 || (e.breathConf >= 0.3 && e.breathReg >= 0 && e.breathReg < 0.6);
-                if (d[i] >= 0.4 || e.major > 0 || !signs) continue;
-                boolean boundary = false;
-                for (int k = Math.max(onset, i - 40); k < i; k++) {
-                    if (st[k] == 'D' || ep[k].major > 0) {
-                        boundary = true;
-                        break;
-                    }
-                }
-                if (boundary) st[i] = 'R';
-            }
-            // stretch REM a little so it forms bouts, then smooth everything
-            for (int i = onset; i <= wake; i++) {
-                if (st[i] == 'R') {
-                    for (int k = i + 1; k <= Math.min(wake, i + 6) && st[k] == 'L'; k++) st[k] = 'r';
-                }
-            }
-            for (int i = 0; i < n; i++) if (st[i] == 'r') st[i] = 'R';
-            smooth(st, onset, wake);
-        }
-
-        // numbers
-        int sleepEp = 0, deep = 0, light = 0, rem = 0, wakeIn = 0, awakenings = 0;
+        int sleepEp = 0, deep = 0, light = 0, rem = 0, wakeIn = 0;
         double snore = 0, move = 0;
         int moveN = 0;
         if (onset >= 0) {
-            boolean inWake = false;
-            int wakeRun = 0;
             for (int i = onset; i <= wake; i++) {
                 char ch = st[i];
                 if (ch == 'W') {
                     wakeIn++;
-                    wakeRun++;
-                    if (!inWake && wakeRun >= 4) {
-                        awakenings++;
-                        inWake = true;
-                    }
                 } else {
                     sleepEp++;
-                    wakeRun = 0;
-                    inWake = false;
                     if (ch == 'D') deep++;
                     else if (ch == 'R') rem++;
                     else light++;
@@ -614,7 +511,7 @@ final class Sleep {
         Store.put(night, "tst", Math.round(tst));
         Store.put(night, "latency", Math.round(latency));
         Store.put(night, "waso", Math.round(waso));
-        Store.put(night, "awakenings", awakenings);
+        Store.put(night, "awakenings", r.awakenings);
         Store.put(night, "eff", tib <= 0 ? 0 : Math.round(100 * tst / tib));
         Store.put(night, "deep", deep / 2);
         Store.put(night, "light", light / 2);
@@ -623,6 +520,8 @@ final class Sleep {
         Store.put(night, "snore", Math.round(snore / 60));
         Store.put(night, "move", Math.round(movementIndex * 100) / 100.0);
         Store.put(night, "short", tib < 180);
+        Store.put(night, "cycles", r.cycleStarts.size());
+        Store.put(night, "model", SleepStager.MODEL);
         // How much of the night had no recording at all, and how much came from the motion sensor.
         int gaps = 0, motionEp = 0;
         for (SleepDsp.Epoch e : ep) {
@@ -633,53 +532,76 @@ final class Sleep {
         Store.put(night, "motionMin", motionEp / 2);
         Store.put(night, "stages", new String(st));
         // Phone pickups after falling asleep: separate runs of epochs where the phone was unlocked.
-        org.json.JSONArray pickups = new org.json.JSONArray();
-        if (onset >= 0) {
-            boolean in = false;
-            for (int i = onset; i < n; i++) {
-                if (ep[i].phone && !in) pickups.put(start + i * 30_000L);
-                in = ep[i].phone;
-            }
-        }
+        JSONArray pickups = new JSONArray();
+        for (int i : r.pickups) pickups.put(start + i * 30_000L);
         Store.put(night, "pickups", pickups);
-        score(c, night, tst, sleepEp == 0 ? 0 : deep * 100.0 / sleepEp, movementIndex, awakenings, waso, start);
+        score(c, night, past, tst, sleepEp == 0 ? 0 : deep * 100.0 / sleepEp, movementIndex, r.awakenings, waso, start);
         return night;
     }
 
-    /** Bouts shorter than their minimum join whichever neighbour has more time in total. */
-    private static void smooth(char[] st, int from, int to) {
-        for (int pass = 0; pass < 3; pass++) {
-            int i = from;
-            while (i <= to) {
-                int j = i;
-                while (j <= to && st[j] == st[i]) j++;
-                int len = j - i;
-                int min = st[i] == 'D' ? 6 : st[i] == 'R' ? 10 : st[i] == 'W' ? 2 : 1;
-                if (len < min) {
-                    char before = i > from ? st[i - 1] : 0, after = j <= to ? st[j] : 0;
-                    char pick = before == 0 ? after : after == 0 ? before
-                            : total(st, from, to, before) >= total(st, from, to, after) ? before : after;
-                    if (pick == 0 || pick == 'W') pick = 'L';
-                    for (int k = i; k < j; k++) st[k] = pick;
-                }
-                i = j;
+    /** Builds the night's epoch grid from its file: one per 30-second slot, gaps marked as no data. */
+    static SleepDsp.Epoch[] grid(Context c, long id, long start, long endMs) {
+        List<SleepDsp.Epoch> raw = readEpochs(c, id);
+        int slots = (int) Math.max(0, (endMs - start) / 30_000L);
+        SleepDsp.Epoch[] ep = new SleepDsp.Epoch[slots];
+        for (SleepDsp.Epoch e : raw) {
+            int i = (int) ((e.startMs - start) / 30_000L);
+            if (i >= 0 && i < slots) ep[i] = e;
+        }
+        for (int i = 0; i < slots; i++) {
+            if (ep[i] == null) {
+                ep[i] = new SleepDsp.Epoch();
+                ep[i].startMs = start + i * 30_000L;
+                ep[i].noData = true;
             }
         }
+        return ep;
     }
 
-    private static int total(char[] st, int from, int to, char ch) {
-        int n = 0;
-        for (int i = from; i <= to; i++) if (st[i] == ch) n++;
-        return n;
+    /**
+     * Once after an update to the staging model: every saved night whose recording is still on the phone (90 days)
+     * is staged again, oldest first, so history and scores all come from the same model. Nights are re-sent to
+     * Health Connect with a higher record version so the old stages there are replaced.
+     */
+    static synchronized void restageIfNeeded(Context c) {
+        JSONObject root = Store.root(c);
+        if (root.optInt("sleepModel", 1) >= SleepStager.MODEL) return;
+        JSONArray all = nights(c);
+        JSONArray done = new JSONArray();
+        String[] keep = {"id", "mode", "target", "window", "interrupted", "restarts", "charging",
+                "firedAt", "firedReason", "firedStage", "batteryEnd"};
+        for (int k = 0; k < all.length(); k++) {
+            JSONObject old = all.optJSONObject(k);
+            if (old == null) continue;
+            long id = old.optLong("id"), start = old.optLong("start"), end = old.optLong("end");
+            File f = epochFile(c, id);
+            if (id <= 0 || end <= start || !f.exists()) {
+                done.put(old);
+                continue;
+            }
+            try {
+                JSONObject night = analyse(c, grid(c, id, start, end), start, end, done);
+                for (String key : keep) if (old.has(key)) Store.put(night, key, old.opt(key));
+                done.put(night);
+                int slots = (int) ((end - start) / 30_000L);
+                if (Build.VERSION.SDK_INT >= 34 && slots > 20 && !night.optBoolean("short")) {
+                    HealthSteps.writeSleep(c, id, start, end, night.optString("stages"), showRem(c));
+                }
+            } catch (Exception e) {
+                done.put(old);
+            }
+        }
+        Store.put(root, "sleepNights", done);
+        Store.put(root, "sleepModel", SleepStager.MODEL);
+        Store.save(c);
     }
 
     /**
      * 0–100, from five parts that are always shown: duration (35), deep sleep (20), calm (20),
      * continuity (15) and regularity (10). Deep and calm are judged against your own past nights.
      */
-    private static void score(Context c, JSONObject night, double tst, double deepPct, double movementIndex,
-                              int awakenings, double waso, long start) {
-        JSONArray past = nights(c);
+    private static void score(Context c, JSONObject night, JSONArray past, double tst, double deepPct,
+                              double movementIndex, int awakenings, double waso, long start) {
         List<Double> deeps = new ArrayList<>(), moves = new ArrayList<>(), beds = new ArrayList<>();
         for (int i = Math.max(0, past.length() - 14); i < past.length(); i++) {
             JSONObject p = past.optJSONObject(i);

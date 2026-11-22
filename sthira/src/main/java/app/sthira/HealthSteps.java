@@ -111,7 +111,9 @@ final class HealthSteps {
                 if (b > a) list.add(new SleepSessionRecord.Stage(Instant.ofEpochMilli(a), Instant.ofEpochMilli(b), type(s, withRem)));
                 i = j;
             }
-            Metadata meta = new Metadata.Builder().setClientRecordId("sthira-sleep-" + id).build();
+            // The version goes up with the staging model, so a re-staged night replaces its old copy.
+            Metadata meta = new Metadata.Builder().setClientRecordId("sthira-sleep-" + id)
+                    .setClientRecordVersion(SleepStager.MODEL).build();
             SleepSessionRecord rec = new SleepSessionRecord.Builder(meta, Instant.ofEpochMilli(startMs), Instant.ofEpochMilli(endMs))
                     .setStartZoneOffset(off)
                     .setEndZoneOffset(off)

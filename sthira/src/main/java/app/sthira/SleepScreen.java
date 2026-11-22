@@ -380,7 +380,9 @@ final class SleepScreen {
         TextView feelHelp = Ui.text(a, "1 groggy · 5 fresh", 11, Ui.MUTED, Ui.regular);
         box.addView(feelHelp, Ui.gap(Ui.lp(Ui.WRAP, Ui.WRAP), 0, 4, 0, 0));
 
-        StringBuilder notes = new StringBuilder("Stages are estimates from sound, not a medical measurement.");
+        StringBuilder notes = new StringBuilder("Stages are estimates from sound, not a medical measurement: wake and "
+                + "sleep come from movement; deep and dream sleep follow your ~90-minute cycles, placed by movement and breathing.");
+        if (n.optInt("cycles") > 0) notes.append(" ").append(n.optInt("cycles")).append(" sleep cycles.");
         if (n.optBoolean("short")) notes.append(" Short night, so the stages are rough.");
         if (n.optBoolean("interrupted")) notes.append(" Tracking stopped early; this covers what was recorded.");
         if (n.optInt("gapMin") >= 5) notes.append(" ").append(n.optInt("gapMin"))

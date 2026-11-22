@@ -176,7 +176,7 @@ final class SleepDsp {
     final ArrayDeque<Event> recent = new ArrayDeque<>();
     final List<Double> activities = new ArrayList<>();
     final List<Character> stages = new ArrayList<>();
-    private int lowRun;
+    private int lowRun, sleepRun, onsetIndex = -1;
     volatile double level;           // last frame's dB over floor, for the night screen's dot
     private int zeroFrames, activeRun;
     private double breathConfNow;
@@ -449,12 +449,33 @@ final class SleepDsp {
 
     private char onlineStage(Epoch e) {
         double d = onlineD();
-        if (e.phone || e.activeSec >= 10 || d >= 1.2) {
+        int idx = activities.size() - 1;
+        if (e.phone || e.activeSec >= SleepStager.WAKE_ACTIVE_SEC || d >= SleepStager.WAKE_D) {
             lowRun = 0;
+            sleepRun = 0;
             return 'W';
         }
-        lowRun = d < 0.15 ? lowRun + 1 : 0;
-        return lowRun >= 6 && activities.size() > 30 ? 'D' : 'L';
+        sleepRun = d < 0.6 ? sleepRun + 1 : 0;
+        if (onsetIndex < 0 && sleepRun >= SleepStager.ONSET_RUN) onsetIndex = idx - SleepStager.ONSET_RUN + 1;
+        lowRun = d < 0.15 && e.events == 0 ? lowRun + 1 : 0;
+        // Stillness only means deep sleep where deep sleep is plausible: the first few hours after falling asleep.
+        double reg = e.breathConf >= 0.3 ? e.breathReg : -1;
+        return SleepStager.deepPlausible(hoursAsleep(), lowRun >= 6, reg) ? 'D' : 'L';
+    }
+
+    /** When tonight's tracking began (set by the service), so a restarted tracker still knows the hour. */
+    volatile long nightStartMs;
+
+    /**
+     * Hours since sleep onset as seen live, or -1 before falling asleep. If the tracker was restarted mid-night
+     * its own history is short, so the night's start (less a typical half hour to fall asleep) sets a floor.
+     */
+    double hoursAsleep() {
+        double own = onsetIndex < 0 ? -1 : (activities.size() - onsetIndex) / 120.0;
+        if (nightStartMs <= 0 || activities.isEmpty()) return own;
+        double sinceStart = (epochStartMs - nightStartMs) / 3_600_000.0 - 0.5;
+        boolean restarted = activities.size() * 30_000L < (epochStartMs - nightStartMs) - 5 * 60_000L;
+        return restarted ? Math.max(own, sinceStart) : own;
     }
 
     long epochStart() {

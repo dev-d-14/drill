@@ -58,7 +58,6 @@ public final class SleepService extends Service {
     private boolean finished;
     private volatile boolean fired;
     private int lastEpochIndex = -1;
-    private long lastDeepMs;
     private volatile double lastReg = -1;
     private volatile boolean micOk;      // started with the microphone foreground type, so recording is allowed
     private volatile boolean motion;     // currently measuring with the accelerometer
@@ -159,6 +158,7 @@ public final class SleepService extends Service {
             out = null;
         }
         dsp = new SleepDsp(this::onEpoch);
+        dsp.nightStartMs = start;
         running = true;
         thread = new Thread(this::capture, "sleep-capture");
         thread.setPriority(Thread.NORM_PRIORITY - 1);
@@ -450,7 +450,6 @@ public final class SleepService extends Service {
         PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
         if (km != null && pm != null && pm.isInteractive() && !km.isKeyguardLocked()) e.phone = true;
         if (e.phone) e.online = 'W';
-        if (e.online == 'D') lastDeepMs = e.startMs;
         lastReg = e.breathConf >= 0.3 && e.breathReg >= 0 ? e.breathReg : -1;
         int index = (int) ((e.startMs - start) / 30_000L);
         if (index <= lastEpochIndex) return;
@@ -468,12 +467,15 @@ public final class SleepService extends Service {
     // ---- the smart alarm ----
 
     /**
-     * Inside the wake window, every 5 seconds: wake on a big movement in light sleep, on a cluster of
-     * movements, when you're plainly awake, or when the night has gone light. Never out of deep sleep.
+     * Inside the wake window, every 5 seconds: wake when you're plainly awake, on a big movement, on a cluster of
+     * movements, or on the first signs of light sleep (smaller movements, uneven breathing). Never out of deep sleep,
+     * but "deep" now only counts where deep sleep is plausible (the first few hours), so a still sleeper late in the
+     * night is no longer mistaken for one in deep sleep all the way to the deadline.
      */
     private void smartCheck(long now) {
         if (fired || !Sleep.MODE_SMART.equals(mode) || target <= 0 || windowMin <= 0) return;
-        if (now < target - windowMin * 60_000L || now >= target - 30_000) return;
+        long windowStart = target - windowMin * 60_000L;
+        if (now < windowStart || now >= target - 30_000) return;
         if (now - start < 20 * 60_000L) return;                       // too little night to judge
         SleepDsp d = dsp;
         int n = d.stages.size();
@@ -482,25 +484,23 @@ public final class SleepService extends Service {
         boolean deepNow = n >= 3 && d.stages.get(n - 1) == 'D' && d.stages.get(n - 2) == 'D' && d.stages.get(n - 3) == 'D';
         if (deepNow) return;
 
-        String reason = null;
-        int bigLately = 0, majorJustNow = 0;
+        int bigLately = 0, majorJustNow = 0, mediumLately = 0, microLately = 0;
         for (Iterator<SleepDsp.Event> it = d.recent.descendingIterator(); it.hasNext(); ) {
             SleepDsp.Event ev = it.next();
             if (now - ev.endMs > 120_000) break;
             if (ev.kind != SleepDsp.MICRO) bigLately++;
             if (ev.kind == SleepDsp.MAJOR && now - ev.endMs <= 6000) majorJustNow++;
+            if (ev.kind == SleepDsp.MEDIUM && now - ev.endMs <= 60_000) mediumLately++;
+            if (ev.kind == SleepDsp.MICRO) microLately++;
         }
+        // In the last third of the window, a single small movement is enough.
+        boolean lateInWindow = now >= target - windowMin * 60_000L / 3;
+        String reason = null;
         if (last == 'W') reason = "AWAKE";
         else if (majorJustNow > 0) reason = "MAJOR_MOVEMENT";
-        else if (bigLately >= 3) reason = "RESTLESS";
-        else {
-            double dd = d.onlineD();
-            // the latest breathing regularity, if the breathing could be heard; otherwise neutral
-            double reg = lastReg >= 0 ? lastReg : 0.5;
-            double lightness = 0.5 * Math.min(1, dd / 0.8) + 0.3 * (1 - reg)
-                    + 0.2 * (now - lastDeepMs >= 10 * 60_000L ? 1 : 0);
-            if (lightness >= 0.7) reason = "LIGHTNESS";
-        }
+        else if (bigLately >= 2) reason = "RESTLESS";
+        else if (mediumLately > 0 || microLately >= 2 || (lateInWindow && microLately >= 1)) reason = "LIGHTNESS";
+        else if (lastReg >= 0 && lastReg < 0.6) reason = "LIGHTNESS";   // breathing has gone uneven
         if (reason == null) return;
         fired = true;
         final String r = reason;
