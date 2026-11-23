@@ -3,7 +3,7 @@
 Hasini's daily app, added to her iPhone home screen as a web app. Deep green, gold thread and bronze, after her dragonfly embroidery.
 
 - **Today:** exam countdowns, what she's spent this month, and a five-item flight plan: an Air Regs question, a Nav question (General and Radio Nav on alternate days), a 2-minute interview answer, a breathing session and knee exercises (done or not, with the week as dots).
-- **Money:** no budget, just what she spends. Double-tap the back of the phone, type "250 chai", and it's saved and sorted into a category. Fix a category once with "Remember" on and it learns the word. Month total, daily average, last month at the same point, last 7 days and categories.
+- **Money:** no budget, just what she spends. Add, edit or delete any spend; add, rename or delete categories (the grid button next to + Add). Double-tap the back of the phone, type "250 chai", and it's saved and sorted into a category. Fix a category once with "Remember" on and it learns the word. Month total, daily average, last month at the same point, last 7 days and categories.
 - **Study:** questions written from her books (Bali's Air Regulations, Oxford General and Radio Navigation) with the book page or chapter. Wrong answers come back after 3 days, then 7 and 16 until learned.
 - **Interview:** a first-officer interview question a day (scenario, technical, airline and HR) with what a good answer covers, a 2-minute recorder and past answers to play back.
 - **Calm:** Wim Hof breathing (rounds, breaths, pace and recovery; tap during the hold when she needs air) and a quiet timer with a bell.

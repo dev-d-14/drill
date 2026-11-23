@@ -20,7 +20,6 @@ const inr = (n) => "₹" + Math.round(Number(n) || 0).toLocaleString("en-IN");
 const SUBJ = { regs: "Air Regs", gnav: "General Nav", rnav: "Radio Nav", met: "Met" };
 const SUBJ_LONG = { regs: "Air Regulations", gnav: "General Navigation", rnav: "Radio Navigation", met: "Meteorology" };
 const KIND = { scenario: "Scenario", technical: "Technical", airline: "Airline & HR" };
-const CATS = ["Food", "Transport", "Shopping", "Bills", "Fun", "Gifts", "Health", "Study", "Other"];
 function localISO(d = new Date()) { const z = (n) => String(n).padStart(2, "0"); return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`; }
 function daysUntil(iso) { return Math.round((Date.parse(iso + "T00:00:00") - Date.parse(localISO() + "T00:00:00")) / 864e5); }
 function niceDate(iso) { return new Date(iso + "T00:00:00").toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }); }
@@ -45,6 +44,17 @@ async function api(action, data = {}, quiet = false) {
   if (!r.ok || j.ok === false) throw new Error(j.message || "Something went wrong");
   return j;
 }
+const CATS_API = API.replace("/api", "/categories");
+let CATEGORIES = null;
+async function cats(action = "list", data = {}) {
+  let r;
+  try { r = await fetch(CATS_API, { method: "POST", headers: { "content-type": "application/json", "x-dragonfly-key": KEY ?? "" }, body: JSON.stringify({ action, ...data }) }); }
+  catch { throw new Error("No internet — try again"); }
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || j.ok === false) throw new Error(j.message || "Something went wrong");
+  CATEGORIES = j.categories; return CATEGORIES;
+}
+const getCats = async () => CATEGORIES ?? (await cats());
 function fail(e) { if (e.message !== "locked") toast(e.message); }
 
 // ---------- little drawings ----------
@@ -160,10 +170,11 @@ async function money() {
   <div class="row-between">
     <div style="display:flex;align-items:center;gap:6px">
       <button class="iconbtn" id="prev" aria-label="Previous month">${BACK}</button>
-      <h1>${title}</h1>
+      <h1 style="font-size:30px">${title}</h1>
       <button class="iconbtn" id="next" aria-label="Next month" ${isCur ? "disabled style='opacity:.3'" : ""}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
     </div>
-    <button class="btn" id="add">+ Add</button>
+    <div style="display:flex;gap:8px"><button class="iconbtn" id="cats" aria-label="Edit categories"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><path d="M16.5 13.5v6M13.5 16.5h6"/></svg></button>
+    <button class="btn" id="add">+ Add</button></div>
   </div>
   <div class="card">
     <div class="lab">Spent ${isCur ? "this month" : "in " + title}</div>
@@ -175,7 +186,7 @@ async function money() {
     ${cats.map(([c, v]) => `<div class="cat"><span class="n">${c === "Needs a category" ? "To sort" : esc(c)}</span><div class="track"><span style="width:${(v / m.total) * 100}%"></span></div><span class="v">${inr(v)}</span></div>`).join("")}
   </div>` : ""}
   <div class="card" style="padding-bottom:8px">
-    <div class="row-between"><span class="lab">${isCur ? "Recent" : "All spends"}</span><span class="mut">${needs ? `${needs} need${needs === 1 ? "s" : ""} a category` : ""}</span></div>
+    <div class="row-between"><span class="lab">${isCur ? "Recent" : "All spends"}</span><span class="mut">${needs ? `${needs} need${needs === 1 ? "s" : ""} a category` : "Tap one to change or delete"}</span></div>
     <div style="margin-top:6px" id="ents">
     ${m.entries.length ? m.entries.map((e) => `<button class="ent" data-id="${e.id}">
       <span class="tile ${e.category ? "" : "q"}">${e.category ? esc(e.category[0]) : "?"}</span>
@@ -186,6 +197,7 @@ async function money() {
   $("#prev").onclick = () => { const d = new Date(y, mo - 2, 1); moneyYm = localISO(d).slice(0, 7); money(); };
   $("#next").onclick = () => { if (isCur) return; const d = new Date(y, mo, 1); moneyYm = localISO(d).slice(0, 7); money(); };
   $("#add").onclick = addSheet;
+  $("#cats").onclick = catsSheet;
   $$("#ents .ent").forEach((b) => (b.onclick = () => editSheet(m.entries.find((e) => String(e.id) === b.dataset.id))));
 }
 function openSheet(html) {
@@ -195,17 +207,41 @@ function openSheet(html) {
   return $(".sheet");
 }
 function closeSheet() { $("#sheet-root").innerHTML = ""; }
+function catPicker(el, selected, onPick, allowNone = false) {
+  const draw = async () => {
+    const list = await getCats();
+    el.innerHTML = `<div class="catgrid">${allowNone ? `<button type="button" data-c="" class="${!selected ? "on" : ""}">Auto</button>` : ""}${list.map((c) => `<button type="button" data-c="${esc(c)}" class="${c === selected ? "on" : ""}">${esc(c)}</button>`).join("")}<button type="button" data-new="1" style="border-style:dashed">+ New</button></div>
+      <div class="newcat" style="display:none;gap:8px;margin-top:8px"><input class="input" placeholder="New category, e.g. Flying" aria-label="New category name" maxlength="24" enterkeyhint="done"><button type="button" class="btn small">Add</button></div>`;
+    $$("[data-c]", el).forEach((b) => (b.onclick = () => { selected = b.dataset.c || null; $$("[data-c]", el).forEach((x) => x.classList.toggle("on", x === b)); onPick(selected); }));
+    const f = $(".newcat", el);
+    $("[data-new]", el).onclick = () => { f.style.display = "flex"; $("input", f).focus(); };
+    const addNew = async () => {
+      const name = $("input", f).value.trim(); if (!name) return;
+      try { await cats("add", { name }); selected = name; onPick(selected); draw(); toast(`Added ${name}`); } catch (err) { fail(err); }
+    };
+    $("button", f).onclick = addNew;
+    $("input", f).onkeydown = (e) => { if (e.key === "Enter") { e.preventDefault(); addNew(); } };
+  };
+  draw().catch(fail);
+}
 function addSheet() {
+  let cat = null;
   const s = openSheet(`<div class="serif" style="font-size:26px;font-weight:600">Spent?</div>
     <form id="af" style="display:flex;flex-direction:column;gap:12px">
     <input class="input" id="at" placeholder="250 chai" aria-label="What you spent" autocomplete="off" enterkeyhint="done">
-    <div class="mut">Amount and a word or two, in any order: "uber 180", "1.2k zara".</div>
+    <div class="mut">Amount and a word or two: "uber 180", "1.2k zara".</div>
+    <div><div class="lab" style="margin-bottom:8px">Category</div><div id="ap"></div></div>
     <button class="btn wide">Save</button></form>`);
+  catPicker($("#ap", s), null, (c) => (cat = c), true);
   setTimeout(() => $("#at", s).focus(), 50);
   $("#af", s).onsubmit = async (e) => {
     e.preventDefault();
     const text = $("#at", s).value.trim(); if (!text) return;
-    try { const r = await api("spend", { text, source: "app" }); closeSheet(); toast(r.message); money(); } catch (err) { fail(err); }
+    try {
+      const r = await api("spend", { text, source: "app" });
+      if (cat && r.expense) await api("expense.update", { id: r.expense.id, category: cat, remember: true });
+      closeSheet(); toast(cat ? `${r.message.split(" · ")[0]} · ${cat}` : r.message); money();
+    } catch (err) { fail(err); }
   };
 }
 function editSheet(e) {
@@ -216,15 +252,14 @@ function editSheet(e) {
       <div class="field"><label for="ea">Amount (₹)</label><input id="ea" class="input" inputmode="decimal" value="${Number(e.amount)}"></div>
       <div class="field"><label for="en">Note</label><input id="en" class="input" value="${esc(e.note)}"></div>
     </div>
-    <div><div class="lab" style="margin-bottom:8px">Category</div>
-    <div class="catgrid">${CATS.map((c) => `<button type="button" data-c="${c}" class="${c === cat ? "on" : ""}">${c}</button>`).join("")}</div></div>
+    <div><div class="lab" style="margin-bottom:8px">Category</div><div id="ep"></div></div>
     <div class="row-between" style="border:1px solid var(--stitch);border-radius:12px;padding:12px">
       <div><div style="font-weight:600;font-size:14px" id="remT">Remember this</div><div class="mut">Next time it's sorted automatically</div></div>
       <button type="button" class="toggle" role="switch" id="rem" aria-checked="${!e.category}" aria-labelledby="remT"></button></div>
     <div style="display:flex;gap:10px"><button class="btn ghost" id="del" style="flex:1;border-radius:14px;min-height:50px">Delete</button><button class="btn" id="save" style="flex:2;border-radius:14px;min-height:50px">Save</button></div>`);
   const remT = () => { $("#remT", s).textContent = cat && $("#en", s).value.trim() ? `Remember "${$("#en", s).value.trim().split(/\s+/)[0]}" → ${cat}` : "Remember this"; };
   remT();
-  $$(".catgrid button", s).forEach((b) => (b.onclick = () => { cat = b.dataset.c; $$(".catgrid button", s).forEach((x) => x.classList.toggle("on", x === b)); if (cat !== e.category) $("#rem", s).setAttribute("aria-checked", "true"); remT(); }));
+  catPicker($("#ep", s), cat, (c) => { cat = c; if (cat !== e.category) $("#rem", s).setAttribute("aria-checked", "true"); remT(); });
   $("#en", s).oninput = remT;
   $("#rem", s).onclick = () => { const t = $("#rem", s); t.setAttribute("aria-checked", t.getAttribute("aria-checked") === "true" ? "false" : "true"); };
   $("#del", s).onclick = async () => { if (!confirm(`Delete ${inr(e.amount)} ${e.note}?`)) return; try { await api("expense.delete", { id: e.id }); closeSheet(); toast("Deleted"); money(); } catch (err) { fail(err); } };
@@ -236,6 +271,30 @@ function editSheet(e) {
       closeSheet(); toast("Saved"); money();
     } catch (err) { fail(err); }
   };
+}
+function catsSheet() {
+  const s = openSheet(`<div class="serif" style="font-size:26px;font-weight:600">Categories</div>
+    <div class="mut">Renaming moves all its spends. Deleting sends its spends back to "To sort".</div>
+    <div id="cl">${spinner()}</div>
+    <form id="cf" style="display:flex;gap:8px"><input class="input" id="cn" placeholder="New category" aria-label="New category name" maxlength="24"><button class="btn">Add</button></form>`);
+  const draw = async (list) => {
+    list = list ?? (await getCats());
+    $("#cl", s).innerHTML = list.map((c) => `<div class="list-item"><div style="flex:1">${esc(c)}</div>
+      <button class="btn small ghost" data-ren="${esc(c)}">Rename</button><button class="btn small ghost" data-del="${esc(c)}" aria-label="Delete ${esc(c)}">Delete</button></div>`).join("");
+    $$("[data-ren]", s).forEach((b) => (b.onclick = () => {
+      const row = b.parentElement, from = b.dataset.ren;
+      row.innerHTML = `<form style="display:flex;gap:8px;flex:1;padding:6px 0"><input class="input" value="${esc(from)}" aria-label="New name for ${esc(from)}" maxlength="24"><button class="btn small">Save</button></form>`;
+      const f = $("form", row); $("input", f).focus();
+      f.onsubmit = async (ev) => { ev.preventDefault(); const to = $("input", f).value.trim(); if (!to || to === from) return draw(); try { draw(await cats("rename", { from, to })); toast("Renamed"); } catch (err) { fail(err); } };
+    }));
+    $$("[data-del]", s).forEach((b) => (b.onclick = async () => {
+      if (!confirm(`Delete ${b.dataset.del}? Its spends will go back to "To sort".`)) return;
+      try { draw(await cats("delete", { name: b.dataset.del })); toast("Deleted"); } catch (err) { fail(err); }
+    }));
+  };
+  draw().catch(fail);
+  $("#cf", s).onsubmit = async (e) => { e.preventDefault(); const name = $("#cn", s).value.trim(); if (!name) return; try { draw(await cats("add", { name })); $("#cn", s).value = ""; toast(`Added ${name}`); } catch (err) { fail(err); } };
+  const bg = $(".sheet-bg"); const old = bg.onclick; bg.onclick = (ev) => { old(ev); if (!$(".sheet-bg")) money(); };
 }
 
 // ---------- study ----------

@@ -25,7 +25,7 @@ h1{font-family:var(--serif);font-weight:600;font-size:34px;margin:0;line-height:
 .card::after{content:"";position:absolute;inset:6px;border:1px dashed var(--stitch);border-radius:11px;pointer-events:none}
 .card>*{position:relative;z-index:1}
 
-.btn{min-height:46px;padding:0 18px;border-radius:23px;border:0;background:var(--gold);color:var(--ink);font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn{white-space:nowrap;min-height:46px;padding:0 18px;border-radius:23px;border:0;background:var(--gold);color:var(--ink);font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px}
 .btn.ghost{background:transparent;color:var(--cream);border:1px solid var(--gold)}
 .btn.small{min-height:36px;padding:0 14px;font-size:13px;border-radius:18px}
 .btn.wide{width:100%;border-radius:14px;min-height:50px}

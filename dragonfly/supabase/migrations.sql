@@ -13,3 +13,4 @@ create table calm_sessions (id bigint generated always as identity primary key, 
 create table knee_days (day date primary key);
 create table exams (id bigint generated always as identity primary key, paper text not null, exam_date date not null, created_at timestamptz default now());
 -- + enable row level security on each, and a private storage bucket "recordings".
+create table categories (name text primary key, ord int not null default 100, created_at timestamptz default now()); -- seeded with the 9 defaults
