@@ -15,3 +15,7 @@ Hasini's daily app, added to her iPhone home screen as a web app. Deep green, go
 - `supabase/functions/api` is the one endpoint everything talks to. Every request carries the setup code in `x-dragonfly-key`; the database stores only its SHA-256. Tables have row level security on with no policies, so nothing is reachable with the public key.
 - `supabase/functions/seed` loads `content/seed.json` (built by `content/build_sql.py` from `questions.py` and `interview.py`). To add questions: edit those files, run `python3 build_sql.py`, push, then POST to the seed function with the code.
 - The back-tap shortcut posts `{"action":"spend","text":…}` to the api function and shows the `message` it returns.
+
+## Hosting
+
+Live at https://dragonfly-hasini.vercel.app (Vercel project `dragonfly`). Vercel isn't linked to this repo (the GitHub integration isn't installed), so the hosted `index.html` is `deploy-index.html` with `__SHA__` replaced by a commit id: the CSS and JS load from jsDelivr pinned to that commit. To ship a change: push, then redeploy `deploy-index.html` with the new commit id. Linking the repo in Vercel (root directory `dragonfly/web`) would make every push deploy on its own.
