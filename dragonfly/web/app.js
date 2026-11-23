@@ -34,13 +34,13 @@ const mmss = (s) => { s = Math.max(0, Math.round(s)); return `${Math.floor(s / 6
 function toast(msg, ms = 2600) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => (t.hidden = true), ms); }
 const spinner = () => `<div class="spin" aria-label="Loading"></div>`;
 
-async function api(action, data = {}) {
+async function api(action, data = {}, quiet = false) {
   let r;
   try {
     r = await fetch(API, { method: "POST", headers: { "content-type": "application/json", "x-dragonfly-key": KEY ?? "" }, body: JSON.stringify({ action, ...data }) });
   } catch { throw new Error("No internet — try again"); }
   const j = await r.json().catch(() => ({}));
-  if (r.status === 401) { store.del("df.key"); KEY = null; location.hash = "#/setup"; throw new Error("locked"); }
+  if (r.status === 401) { if (quiet) throw new Error("locked"); store.del("df.key"); KEY = null; location.hash = "#/setup"; throw new Error("locked"); }
   if (!r.ok || j.ok === false) throw new Error(j.message || "Something went wrong");
   return j;
 }
@@ -95,7 +95,7 @@ async function setup() {
     const v = $("#code").value.trim().toUpperCase();
     if (!v) return;
     KEY = v;
-    try { await api("ping"); store.set("df.key", v); location.hash = "#/today"; route(); }
+    try { await api("ping", {}, true); store.set("df.key", v); location.hash = "#/today"; if (location.hash === "#/today") route(); }
     catch { KEY = null; $("#err").textContent = "That code didn't work. Check it and try again."; }
   };
 }
