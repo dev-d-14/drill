@@ -1,6 +1,7 @@
 // Dragonfly — Hasini's daily app. Plain JS, no build step.
 const API = "https://focgmnxwdosljubcbsgw.supabase.co/functions/v1/api";
 const NAME = "Hasini";
+const SPEND = "https://focgmnxwdosljubcbsgw.supabase.co/functions/v1/spend";
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const app = $("#app");
@@ -535,11 +536,11 @@ async function settings() {
   <div class="card" style="display:flex;flex-direction:column;gap:12px">
     <div class="lab">Double back-tap to log a spend</div>
     <ol class="steps">
-      <li>Open the <b>Shortcuts</b> app → <b>+</b>. Name it <b>Spent</b>.</li>
-      <li>Add <b>Ask for Input</b>. Prompt: <code>Spent?</code></li>
-      <li>Add <b>Get Contents of URL</b>. URL: <button class="btn small ghost" data-copy="${API}">Copy URL</button><br>Tap the arrow, set Method <b>POST</b>.<br>Headers: add <code>x-dragonfly-key</code> = <button class="btn small ghost" data-copy="key">Copy code</button><br>Request Body <b>JSON</b>: <code>action</code> = <code>spend</code>, and <code>text</code> = the <b>Provided Input</b> variable.</li>
-      <li>Add <b>Get Dictionary Value</b>: Value for <code>message</code>.</li>
-      <li>Add <b>Show Notification</b> with the Dictionary Value.</li>
+      <li>Tap <button class="btn small" data-copy="link">Copy shortcut link</button></li>
+      <li>Open the <b>Shortcuts</b> app → <b>+</b> → Add Action → <b>Ask for Input</b>. Tap "Prompt" and type <code>Spent?</code></li>
+      <li>Add <b>Get Contents of URL</b>. Tap "URL", paste, then tap at the very end and pick <b>Provided Input</b> from the bar above the keyboard.</li>
+      <li>Add <b>Show Notification</b>. Tap its text and pick <b>Contents of URL</b>.</li>
+      <li>Tap the name at the top, call it <b>Spent</b>, then <b>Done</b>.</li>
       <li>Settings → Accessibility → Touch → <b>Back Tap</b> → Double Tap → <b>Spent</b>.</li>
     </ol>
     <button class="btn ghost" id="test">Test: log ₹1 "test"</button>
@@ -551,7 +552,7 @@ async function settings() {
     <button class="btn ghost" id="lock">Lock this phone</button>
   </div>
   <div class="mut" style="text-align:center">Dragonfly · made by Dharmik</div>`;
-  $$("[data-copy]").forEach((b) => (b.onclick = async () => { const v = b.dataset.copy === "key" ? KEY : b.dataset.copy; try { await navigator.clipboard.writeText(v); toast("Copied"); } catch { prompt("Copy this:", v); } }));
+  $$("[data-copy]").forEach((b) => (b.onclick = async () => { const v = b.dataset.copy === "key" ? KEY : b.dataset.copy === "link" ? `${SPEND}?k=${encodeURIComponent(KEY)}&t=` : b.dataset.copy; try { await navigator.clipboard.writeText(v); toast("Copied"); } catch { prompt("Copy this:", v); } }));
   $("#test").onclick = async () => { try { const r = await api("spend", { text: "1 test", source: "app" }); toast(r.message + " — delete it in Money"); } catch (e) { fail(e); } };
   $("#lock").onclick = () => { if (!confirm("Lock Dragonfly on this phone? You'll need the setup code again.")) return; store.del("df.key"); KEY = null; location.hash = "#/setup"; };
   $("#exp").onclick = async () => {
