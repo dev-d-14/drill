@@ -1,0 +1,1890 @@
+{
+ "questions": [
+  {
+   "id": "r01",
+   "subject": "regs",
+   "topic": "Rules of the air",
+   "question": "A steady green light from the tower to an aircraft in flight means…",
+   "options": [
+    "Give way to other aircraft and keep circling",
+    "Return for landing",
+    "Cleared to land",
+    "Aerodrome unsafe, do not land"
+   ],
+   "answer": 2,
+   "explanation": "In flight: steady green = cleared to land; flashing green = return for landing; steady red = give way and keep circling; flashing red = aerodrome unsafe, do not land.",
+   "ref": "Air Regulations (Bali), p. 95",
+   "ord": 0
+  },
+  {
+   "id": "r02",
+   "subject": "regs",
+   "topic": "Rules of the air",
+   "question": "A flashing red light from the tower to an aircraft on the ground means…",
+   "options": [
+    "Return to starting point on the aerodrome",
+    "Cleared for take-off",
+    "Stop",
+    "Taxi clear of the landing area in use"
+   ],
+   "answer": 3,
+   "explanation": "On the ground: steady red = stop; flashing red = taxi clear of the landing area in use; flashing white = return to starting point; steady green = cleared for take-off; flashing green = cleared to taxi.",
+   "ref": "Air Regulations (Bali), p. 95",
+   "ord": 1
+  },
+  {
+   "id": "r03",
+   "subject": "regs",
+   "topic": "Rules of the air",
+   "question": "Two aircraft are converging at about the same level. Which one gives way?",
+   "options": [
+    "The one that has the other on its left",
+    "The heavier one",
+    "The one that has the other on its right",
+    "The faster one"
+   ],
+   "answer": 2,
+   "explanation": "When converging at about the same level, the aircraft that has the other on its right gives way (subject to the order of right of way between aircraft types).",
+   "ref": "Air Regulations (Bali), p. 77",
+   "ord": 2
+  },
+  {
+   "id": "r04",
+   "subject": "regs",
+   "topic": "Rules of the air",
+   "question": "Two aircraft are approaching head-on. What should each do?",
+   "options": [
+    "The one with the faster speed climbs",
+    "The lower one descends",
+    "Both alter heading to the right",
+    "Both turn left"
+   ],
+   "answer": 2,
+   "explanation": "Head-on or nearly head-on with danger of collision: each alters its heading to the right.",
+   "ref": "Air Regulations (Bali), p. 77",
+   "ord": 3
+  },
+  {
+   "id": "r05",
+   "subject": "regs",
+   "topic": "Rules of the air",
+   "question": "An aircraft overtaking another keeps out of the way by…",
+   "options": [
+    "Passing above it",
+    "Passing below it",
+    "Altering heading to the left",
+    "Altering heading to the right"
+   ],
+   "answer": 3,
+   "explanation": "The aircraft being overtaken has the right of way. The overtaking aircraft keeps out of the way by altering its heading to the right, whether climbing, descending or level.",
+   "ref": "Air Regulations (Bali), p. 77",
+   "ord": 4
+  },
+  {
+   "id": "r06",
+   "subject": "regs",
+   "topic": "Rules of the air",
+   "question": "A power-driven heavier-than-air aircraft must give way to…",
+   "options": [
+    "Airships, gliders and balloons",
+    "No one — it always has right of way",
+    "Balloons only",
+    "Gliders only"
+   ],
+   "answer": 0,
+   "explanation": "Order of giving way: power-driven heavier-than-air gives way to airships, gliders and balloons; airships give way to gliders and balloons; gliders give way to balloons. Aircraft towing objects are also given way to.",
+   "ref": "Air Regulations (Bali), p. 77",
+   "ord": 5
+  },
+  {
+   "id": "r07",
+   "subject": "regs",
+   "topic": "VFR in India",
+   "question": "In India, VFR flights normally operate…",
+   "options": [
+    "From 20 minutes before sunrise to 20 minutes after sunset",
+    "From 30 minutes before sunrise to 30 minutes after sunset",
+    "From sunrise to sunset",
+    "At any time with an ATC clearance"
+   ],
+   "answer": 0,
+   "explanation": "VFR flights in India operate from 20 minutes before sunrise to 20 minutes after sunset, except local flights and flying club training flights exempted by ATC.",
+   "ref": "Air Regulations (Bali), p. 86",
+   "ord": 6
+  },
+  {
+   "id": "r08",
+   "subject": "regs",
+   "topic": "VFR in India",
+   "question": "Unless authorised by ATS, VFR flights shall not be operated above…",
+   "options": [
+    "FL150",
+    "FL245",
+    "FL100",
+    "FL290"
+   ],
+   "answer": 0,
+   "explanation": "VFR is not allowed above FL150, at transonic or supersonic speeds, or more than 100 NM seaward in controlled airspace, unless authorised by the ATS authority.",
+   "ref": "Air Regulations (Bali), p. 86",
+   "ord": 7
+  },
+  {
+   "id": "r09",
+   "subject": "regs",
+   "topic": "VFR in India",
+   "question": "Minimum height for a VFR flight over a congested area of a city is…",
+   "options": [
+    "1000 ft above the highest obstacle within 600 m",
+    "500 ft above the ground",
+    "1500 ft above the highest obstacle within 1 km",
+    "2000 ft above the highest obstacle within 8 km"
+   ],
+   "answer": 0,
+   "explanation": "Over congested areas or open-air assemblies: 300 m (1000 ft) above the highest obstacle within a radius of 600 m. Elsewhere: 150 m (500 ft) above ground or water.",
+   "ref": "Air Regulations (Bali), p. 86",
+   "ord": 8
+  },
+  {
+   "id": "r10",
+   "subject": "regs",
+   "topic": "VFR in India",
+   "question": "Away from congested areas, a VFR flight must not be flown lower than…",
+   "options": [
+    "500 ft above ground or water",
+    "300 ft above ground or water",
+    "1000 ft above ground or water",
+    "1500 ft above ground or water"
+   ],
+   "answer": 0,
+   "explanation": "Elsewhere (not congested), VFR flight must stay at least 150 m (500 ft) above the ground or water, except for take-off and landing.",
+   "ref": "Air Regulations (Bali), p. 86",
+   "ord": 9
+  },
+  {
+   "id": "r11",
+   "subject": "regs",
+   "topic": "VFR in India",
+   "question": "Without an ATC clearance, VFR flight may not take off or land at an aerodrome in a control zone when…",
+   "options": [
+    "Ceiling is below 2000 ft or ground visibility below 8 km",
+    "Ceiling is below 1500 ft or ground visibility below 5 km",
+    "Ceiling is below 1000 ft or ground visibility below 3 km",
+    "Ceiling is below 3000 ft or ground visibility below 5 km"
+   ],
+   "answer": 1,
+   "explanation": "The limits are a ceiling of 450 m (1500 ft) and ground visibility of 5 km. Below either, a VFR flight needs an ATC clearance to take off, land or enter the traffic pattern there.",
+   "ref": "Air Regulations (Bali), p. 86",
+   "ord": 10
+  },
+  {
+   "id": "r12",
+   "subject": "regs",
+   "topic": "Nationality marks",
+   "question": "The nationality mark for civil aircraft registered in India is…",
+   "options": [
+    "VT",
+    "VU",
+    "IN",
+    "AT"
+   ],
+   "answer": 0,
+   "explanation": "Indian civil aircraft carry 'VT' followed by a hyphen and three letters (e.g. VT-EPC). 'VU' is used for Air Force aircraft. India was allotted AT–AW by the ITU but kept VT.",
+   "ref": "Air Regulations (Bali), p. 67",
+   "ord": 11
+  },
+  {
+   "id": "r13",
+   "subject": "regs",
+   "topic": "Nationality marks",
+   "question": "On the wings of a heavier-than-air aircraft, registration marks must be at least…",
+   "options": [
+    "75 cm high",
+    "50 cm high",
+    "30 cm high",
+    "1 m high"
+   ],
+   "answer": 1,
+   "explanation": "Marks on the wings must be at least 50 cm high; on the fuselage and vertical tail surfaces at least 30 cm.",
+   "ref": "Air Regulations (Bali), p. 66",
+   "ord": 12
+  },
+  {
+   "id": "r14",
+   "subject": "regs",
+   "topic": "Licensing",
+   "question": "Minimum age to hold a CPL in India is…",
+   "options": [
+    "16 years",
+    "17 years",
+    "21 years",
+    "18 years"
+   ],
+   "answer": 3,
+   "explanation": "Minimum ages: SPL 16, PPL 17, CPL 18, ATPL 21.",
+   "ref": "Air Regulations (Bali), p. 424",
+   "ord": 13
+  },
+  {
+   "id": "r15",
+   "subject": "regs",
+   "topic": "Licensing",
+   "question": "Since October 2023, Indian pilot licences are valid for…",
+   "options": [
+    "Life",
+    "2 years",
+    "5 years",
+    "10 years"
+   ],
+   "answer": 3,
+   "explanation": "All licences are valid for 10 years from the date of issue since 10 Oct 2023. Renewal is done from the expiry date if applied for within one month before expiry.",
+   "ref": "Air Regulations (Bali), p. 424",
+   "ord": 14
+  },
+  {
+   "id": "r16",
+   "subject": "regs",
+   "topic": "Licensing",
+   "question": "Who may have sole control of an aircraft in motion?",
+   "options": [
+    "Only a CPL holder",
+    "Only a person who has reached 18 years",
+    "Anyone holding a student pilot licence, at any age",
+    "Only a person who has reached 16 years"
+   ],
+   "answer": 3,
+   "explanation": "No person under 16 shall have sole control of an aircraft in motion.",
+   "ref": "Air Regulations (Bali), p. 395",
+   "ord": 15
+  },
+  {
+   "id": "r17",
+   "subject": "regs",
+   "topic": "SSR codes",
+   "question": "An aircraft squawking 7600 is reporting…",
+   "options": [
+    "Radio communication failure",
+    "Unlawful interference",
+    "An emergency",
+    "Lost position"
+   ],
+   "answer": 0,
+   "explanation": "7500 = unlawful interference, 7600 = radio communication failure, 7700 = emergency.",
+   "ref": "Air Regulations (Bali), p. 84",
+   "ord": 16
+  },
+  {
+   "id": "r18",
+   "subject": "regs",
+   "topic": "SSR codes",
+   "question": "Squawk 7500 means…",
+   "options": [
+    "Emergency",
+    "Unlawful interference (hijack)",
+    "VFR conspicuity",
+    "Radio failure"
+   ],
+   "answer": 1,
+   "explanation": "7500 = unlawful interference. Remember: 75 'taken alive', 76 'radio fix', 77 'going to heaven'.",
+   "ref": "Air Regulations (Bali), p. 108",
+   "ord": 17
+  },
+  {
+   "id": "r19",
+   "subject": "regs",
+   "topic": "ICAO and conventions",
+   "question": "The Chicago Convention was signed on…",
+   "options": [
+    "7 December 1944",
+    "1 January 1919",
+    "12 October 1929",
+    "4 April 1947"
+   ],
+   "answer": 0,
+   "explanation": "Signed at Chicago on 7 December 1944; it came into force on 4 April 1947, which is when ICAO was formally established. ICAO's headquarters are in Montreal.",
+   "ref": "Air Regulations (Bali), p. 12",
+   "ord": 18
+  },
+  {
+   "id": "r20",
+   "subject": "regs",
+   "topic": "ICAO annexes",
+   "question": "ICAO Annex 2 covers…",
+   "options": [
+    "Aerodromes",
+    "Rules of the Air",
+    "Personnel Licensing",
+    "Meteorological Service"
+   ],
+   "answer": 1,
+   "explanation": "Annex 1 Personnel Licensing, Annex 2 Rules of the Air, Annex 3 Meteorology, Annex 14 Aerodromes.",
+   "ref": "Air Regulations (Bali), p. 21",
+   "ord": 19
+  },
+  {
+   "id": "r21",
+   "subject": "regs",
+   "topic": "ICAO annexes",
+   "question": "Aircraft accident and incident investigation is covered by…",
+   "options": [
+    "Annex 17",
+    "Annex 12",
+    "Annex 13",
+    "Annex 11"
+   ],
+   "answer": 2,
+   "explanation": "Annex 11 Air Traffic Services, Annex 12 Search and Rescue, Annex 13 Aircraft Accident and Incident Investigation, Annex 17 Security.",
+   "ref": "Air Regulations (Bali), p. 557",
+   "ord": 20
+  },
+  {
+   "id": "r22",
+   "subject": "regs",
+   "topic": "ICAO annexes",
+   "question": "Search and Rescue is covered by…",
+   "options": [
+    "Annex 12",
+    "Annex 15",
+    "Annex 10",
+    "Annex 18"
+   ],
+   "answer": 0,
+   "explanation": "Annex 10 Aeronautical Telecommunications, Annex 12 Search and Rescue, Annex 15 Aeronautical Information Services, Annex 18 Safe Transport of Dangerous Goods by Air.",
+   "ref": "Air Regulations (Bali), p. 8",
+   "ord": 21
+  },
+  {
+   "id": "r23",
+   "subject": "regs",
+   "topic": "ICAO annexes",
+   "question": "Security against acts of unlawful interference is covered by…",
+   "options": [
+    "Annex 9",
+    "Annex 19",
+    "Annex 16",
+    "Annex 17"
+   ],
+   "answer": 3,
+   "explanation": "Annex 9 Facilitation, Annex 16 Environmental Protection, Annex 17 Security, Annex 19 Safety Management.",
+   "ref": "Air Regulations (Bali), p. 60",
+   "ord": 22
+  },
+  {
+   "id": "r24",
+   "subject": "regs",
+   "topic": "Freedoms of the air",
+   "question": "The fifth freedom of the air is the right to…",
+   "options": [
+    "Carry traffic between two foreign States on a service to or from your own State",
+    "Land in another State for non-traffic purposes",
+    "Carry traffic between two points inside a foreign State",
+    "Fly across another State without landing"
+   ],
+   "answer": 0,
+   "explanation": "1st: overfly. 2nd: technical stop. 3rd: set down traffic from home State. 4th: pick up traffic bound for home State. 5th: carry traffic between two foreign States on a service that starts or ends at home. Cabotage is carrying traffic within another State.",
+   "ref": "Air Regulations (Bali), p. 51",
+   "ord": 23
+  },
+  {
+   "id": "r25",
+   "subject": "regs",
+   "topic": "Wake turbulence",
+   "question": "An aircraft is in the HEAVY wake turbulence category when its MTOW is…",
+   "options": [
+    "560,000 kg or more",
+    "7,000 kg or more",
+    "136,000 kg or more",
+    "300,000 kg or more"
+   ],
+   "answer": 2,
+   "explanation": "Heavy: 136,000 kg or more. Medium: more than 7,000 kg and less than 136,000 kg. Light: 7,000 kg or less. (The A380 is classed 'Super'.)",
+   "ref": "Air Regulations (Bali), p. 493",
+   "ord": 24
+  },
+  {
+   "id": "r26",
+   "subject": "regs",
+   "topic": "Wake turbulence",
+   "question": "A LIGHT aircraft has an MTOW of…",
+   "options": [
+    "2,000 kg or less",
+    "15,000 kg or less",
+    "7,000 kg or less",
+    "5,700 kg or less"
+   ],
+   "answer": 2,
+   "explanation": "Light: 7,000 kg or less. Don't mix this up with 5,700 kg, which is used for other purposes (e.g. aeroplane categories in airworthiness).",
+   "ref": "Air Regulations (Bali), p. 493",
+   "ord": 25
+  },
+  {
+   "id": "r27",
+   "subject": "regs",
+   "topic": "Wake turbulence",
+   "question": "Radar wake turbulence separation on approach: LIGHT behind HEAVY is…",
+   "options": [
+    "5 NM",
+    "4 NM",
+    "8 NM",
+    "6 NM"
+   ],
+   "answer": 3,
+   "explanation": "Radar wake minima: Heavy behind Heavy 4 NM, Medium behind Heavy 5 NM, Light behind Heavy 6 NM, Light behind Medium 5 NM.",
+   "ref": "Air Regulations (Bali), p. 503",
+   "ord": 26
+  },
+  {
+   "id": "r28",
+   "subject": "regs",
+   "topic": "Search and rescue",
+   "question": "DETRESFA is the…",
+   "options": [
+    "Alert phase",
+    "Uncertainty phase",
+    "Distress phase",
+    "Rescue completed phase"
+   ],
+   "answer": 2,
+   "explanation": "INCERFA = uncertainty, ALERFA = alert, DETRESFA = distress.",
+   "ref": "Air Regulations (Bali), p. 15",
+   "ord": 27
+  },
+  {
+   "id": "r29",
+   "subject": "regs",
+   "topic": "Search and rescue",
+   "question": "On a ground-to-air signal panel, the symbol V means…",
+   "options": [
+    "Proceeding in this direction",
+    "Yes / affirmative",
+    "Require medical assistance",
+    "Require assistance"
+   ],
+   "answer": 3,
+   "explanation": "V = require assistance; X = require medical assistance; arrow = proceeding in this direction; Y = yes; N = no.",
+   "ref": "Air Regulations (Bali), p. 253",
+   "ord": 28
+  },
+  {
+   "id": "r30",
+   "subject": "regs",
+   "topic": "Accidents",
+   "question": "For accident reporting, a fatal injury is one resulting in death within…",
+   "options": [
+    "7 days",
+    "60 days",
+    "30 days",
+    "15 days"
+   ],
+   "answer": 2,
+   "explanation": "A fatal injury is one that results in death within 30 days of the accident.",
+   "ref": "Air Regulations (Bali), p. 557",
+   "ord": 29
+  },
+  {
+   "id": "r31",
+   "subject": "regs",
+   "topic": "Accidents",
+   "question": "A serious injury includes hospitalisation for more than…",
+   "options": [
+    "48 hours, starting within 30 days of the injury",
+    "72 hours, starting within 10 days of the injury",
+    "48 hours, starting within 7 days of the injury",
+    "24 hours, starting within 3 days of the injury"
+   ],
+   "answer": 2,
+   "explanation": "Serious injury includes hospitalisation for more than 48 hours, commencing within 7 days from the date the injury was received (plus fractures, severe burns etc.).",
+   "ref": "Air Regulations (Bali), p. 470",
+   "ord": 30
+  },
+  {
+   "id": "r32",
+   "subject": "regs",
+   "topic": "Communications",
+   "question": "'PAN PAN' indicates…",
+   "options": [
+    "Distress: grave and imminent danger, immediate help needed",
+    "Urgency: a condition concerning safety, no immediate help needed",
+    "Radio failure",
+    "Cancellation of distress"
+   ],
+   "answer": 1,
+   "explanation": "MAYDAY = distress (grave and imminent danger, immediate assistance required). PAN PAN = urgency (concerning safety of an aircraft or person, no immediate assistance required).",
+   "ref": "Air Regulations (Bali), p. 523",
+   "ord": 31
+  },
+  {
+   "id": "r33",
+   "subject": "regs",
+   "topic": "Communications",
+   "question": "The aeronautical VHF emergency frequency is…",
+   "options": [
+    "243.0 MHz",
+    "123.45 MHz",
+    "118.0 MHz",
+    "121.5 MHz"
+   ],
+   "answer": 3,
+   "explanation": "121.5 MHz is the VHF emergency frequency. 243.0 MHz is the military UHF emergency frequency.",
+   "ref": "Air Regulations (Bali), p. 91",
+   "ord": 32
+  },
+  {
+   "id": "r34",
+   "subject": "regs",
+   "topic": "Communications",
+   "question": "On the readability scale, '5' means…",
+   "options": [
+    "Perfectly readable",
+    "Readable now and then",
+    "Readable but with difficulty",
+    "Unreadable"
+   ],
+   "answer": 0,
+   "explanation": "1 unreadable, 2 readable now and then, 3 readable but with difficulty, 4 readable, 5 perfectly readable.",
+   "ref": "Air Regulations (Bali), p. 531",
+   "ord": 33
+  },
+  {
+   "id": "r35",
+   "subject": "regs",
+   "topic": "Interception",
+   "question": "By day, an intercepted aircraft acknowledges 'You have been intercepted, follow me' by…",
+   "options": [
+    "Flashing its landing lights",
+    "Turning away to the left",
+    "Rocking its wings and following",
+    "Lowering its landing gear"
+   ],
+   "answer": 2,
+   "explanation": "Intercepting aircraft rocks its wings and makes a slow level turn; the intercepted aircraft rocks its wings and follows. At night it also flashes its navigation lights.",
+   "ref": "Air Regulations (Bali), p. 93",
+   "ord": 34
+  },
+  {
+   "id": "r36",
+   "subject": "regs",
+   "topic": "Aerodromes",
+   "question": "Runway designation numbers are based on…",
+   "options": [
+    "The wind direction",
+    "Magnetic direction to the nearest 5°",
+    "Magnetic direction to the nearest 10°, divided by 10",
+    "True heading to the nearest 10°"
+   ],
+   "answer": 2,
+   "explanation": "The runway number is its magnetic direction rounded to the nearest 10°, then divided by 10 (e.g. 274° M → 27).",
+   "ref": "Air Regulations (Bali), p. 259",
+   "ord": 35
+  },
+  {
+   "id": "r37",
+   "subject": "regs",
+   "topic": "Aerodromes",
+   "question": "On approach, PAPI shows two white and two red lights. You are…",
+   "options": [
+    "On the glide path",
+    "Well below",
+    "Well above the glide path",
+    "Slightly above"
+   ],
+   "answer": 0,
+   "explanation": "4 white = too high; 3 white 1 red = slightly high; 2 white 2 red = on slope; 1 white 3 red = slightly low; 4 red = too low.",
+   "ref": "Air Regulations (Bali), p. 283",
+   "ord": 36
+  },
+  {
+   "id": "r38",
+   "subject": "regs",
+   "topic": "Aerodromes",
+   "question": "Taxiway edge lights are…",
+   "options": [
+    "Blue",
+    "Yellow",
+    "Green",
+    "White"
+   ],
+   "answer": 0,
+   "explanation": "Taxiway edge lights are blue; taxiway centreline lights are green.",
+   "ref": "Air Regulations (Bali), p. 291",
+   "ord": 37
+  },
+  {
+   "id": "r39",
+   "subject": "regs",
+   "topic": "Aerodromes",
+   "question": "Runway threshold lights are…",
+   "options": [
+    "Yellow",
+    "Red",
+    "Green",
+    "White"
+   ],
+   "answer": 2,
+   "explanation": "Threshold lights are green (seen from the approach); runway end lights are red.",
+   "ref": "Air Regulations (Bali), p. 286",
+   "ord": 38
+  },
+  {
+   "id": "r40",
+   "subject": "regs",
+   "topic": "Instrument procedures",
+   "question": "A standard holding pattern uses…",
+   "options": [
+    "Right turns, 1½-minute inbound leg at or below 14,000 ft",
+    "Left turns with 2-minute legs",
+    "Right turns, 1-minute inbound leg at or below 14,000 ft",
+    "Left turns with 1-minute legs"
+   ],
+   "answer": 2,
+   "explanation": "Standard holds are right-hand. Inbound leg is 1 minute at or below 14,000 ft and 1½ minutes above 14,000 ft.",
+   "ref": "Air Regulations (Bali), p. 354",
+   "ord": 39
+  },
+  {
+   "id": "r41",
+   "subject": "regs",
+   "topic": "Altimetry",
+   "question": "Above the transition level, the altimeter is set to…",
+   "options": [
+    "QNH",
+    "1013.2 hPa (standard)",
+    "Regional QNH",
+    "QFE"
+   ],
+   "answer": 1,
+   "explanation": "Climbing through the transition altitude, set 1013.2 hPa and fly flight levels. Descending through the transition level, set QNH and fly altitudes.",
+   "ref": "Air Regulations (Bali), p. 17",
+   "ord": 40
+  },
+  {
+   "id": "r42",
+   "subject": "regs",
+   "topic": "Altimetry",
+   "question": "With QFE set, the altimeter on the aerodrome reads…",
+   "options": [
+    "Pressure altitude",
+    "Density altitude",
+    "Aerodrome elevation",
+    "Zero"
+   ],
+   "answer": 3,
+   "explanation": "QFE: reads height above the aerodrome (zero on the ground). QNH: reads altitude above MSL (aerodrome elevation on the ground).",
+   "ref": "Air Regulations (Bali), p. 17",
+   "ord": 41
+  },
+  {
+   "id": "r43",
+   "subject": "regs",
+   "topic": "Cruising levels",
+   "question": "An IFR flight on a magnetic track of 090° flies at…",
+   "options": [
+    "Even thousands of feet",
+    "Odd thousands plus 500 ft",
+    "Odd thousands of feet",
+    "Even thousands plus 500 ft"
+   ],
+   "answer": 2,
+   "explanation": "Tracks 000°–179°: odd thousands (e.g. FL70, FL90). Tracks 180°–359°: even thousands. VFR adds 500 ft.",
+   "ref": "Air Regulations (Bali), p. 110",
+   "ord": 42
+  },
+  {
+   "id": "r44",
+   "subject": "regs",
+   "topic": "Rules of the air",
+   "question": "Minimum IFR level over normal terrain is…",
+   "options": [
+    "2000 ft above the highest obstacle within 8 km",
+    "500 ft above the highest obstacle within 5 km",
+    "1500 ft above the ground",
+    "1000 ft above the highest obstacle within 8 km"
+   ],
+   "answer": 3,
+   "explanation": "IFR: at least 300 m (1000 ft) above the highest obstacle within 8 km of the estimated position; 600 m (2000 ft) over high terrain or in mountainous areas.",
+   "ref": "Air Regulations (Bali), p. 87",
+   "ord": 43
+  },
+  {
+   "id": "r45",
+   "subject": "regs",
+   "topic": "Flight plans",
+   "question": "A controlled flight's plan must be amended or re-filed when it is delayed by more than…",
+   "options": [
+    "60 minutes",
+    "30 minutes",
+    "15 minutes",
+    "2 hours"
+   ],
+   "answer": 1,
+   "explanation": "Delay of 30 minutes beyond EOBT for a controlled flight (60 minutes for an uncontrolled flight) means the flight plan must be amended or a new one filed and the old one cancelled.",
+   "ref": "Air Regulations (Bali), p. 127",
+   "ord": 44
+  },
+  {
+   "id": "r46",
+   "subject": "regs",
+   "topic": "Human factors",
+   "question": "In the SHELL model, the 'L' at the centre stands for…",
+   "options": [
+    "Licence",
+    "Liveware — the person",
+    "Lighting",
+    "Logistics"
+   ],
+   "answer": 1,
+   "explanation": "Software, Hardware, Environment, Liveware. The central Liveware is the pilot; the edges show how the person interacts with each element (including other Liveware).",
+   "ref": "Air Regulations (Bali), p. 590",
+   "ord": 45
+  },
+  {
+   "id": "r47",
+   "subject": "regs",
+   "topic": "Human factors",
+   "question": "The 'Swiss cheese' model of accident causation was developed by…",
+   "options": [
+    "Frank Hawkins",
+    "James Reason",
+    "Abraham Maslow",
+    "Elwyn Edwards"
+   ],
+   "answer": 1,
+   "explanation": "James Reason's model shows accidents when holes in several layers of defences line up. Edwards created the SHEL model; Hawkins added the second L.",
+   "ref": "Air Regulations (Bali)",
+   "ord": 46
+  },
+  {
+   "id": "r48",
+   "subject": "regs",
+   "topic": "Human factors",
+   "question": "'Empty-field myopia' is when…",
+   "options": [
+    "Night vision is lost after a bright light",
+    "The eyes relax to a short focus when there's nothing to look at",
+    "Glare off cloud tops dazzles the pilot",
+    "The runway looks narrower than it is"
+   ],
+   "answer": 1,
+   "explanation": "With nothing to focus on (haze, cloud tops, featureless sky), the eyes settle at about 1–2 m, so distant traffic is missed. Fix: focus on a distant object like a wingtip, then scan.",
+   "ref": "Air Regulations (Bali), p. 592",
+   "ord": 47
+  },
+  {
+   "id": "r49",
+   "subject": "regs",
+   "topic": "Human factors",
+   "question": "Hypoxia from the low partial pressure of oxygen at altitude is called…",
+   "options": [
+    "Hypoxic hypoxia",
+    "Histotoxic hypoxia",
+    "Hypemic hypoxia",
+    "Stagnant hypoxia"
+   ],
+   "answer": 0,
+   "explanation": "Hypoxic: low partial pressure of O2 (altitude). Hypemic (anaemic): blood can't carry O2 (e.g. CO poisoning). Stagnant: poor circulation (e.g. g-forces). Histotoxic: cells can't use O2 (alcohol, drugs).",
+   "ref": "Air Regulations (Bali), p. 659",
+   "ord": 48
+  },
+  {
+   "id": "r50",
+   "subject": "regs",
+   "topic": "Human factors",
+   "question": "A strong forward acceleration on take-off can give the false sensation of…",
+   "options": [
+    "Spinning",
+    "Rolling left",
+    "Pitching nose-up",
+    "Pitching nose-down"
+   ],
+   "answer": 2,
+   "explanation": "The somatogravic illusion: acceleration feels like a nose-up pitch, so a pilot in poor visibility may wrongly push the nose down.",
+   "ref": "Air Regulations (Bali), p. 593",
+   "ord": 49
+  },
+  {
+   "id": "g01",
+   "subject": "gnav",
+   "topic": "Direction, latitude and longitude",
+   "question": "One nautical mile is…",
+   "options": [
+    "1 degree of latitude",
+    "1 minute of longitude, anywhere",
+    "1 kilometre",
+    "1 minute of arc of a great circle"
+   ],
+   "answer": 3,
+   "explanation": "1 NM is the length of 1 minute of arc along a great circle (1° = 60 NM). A minute of longitude only equals 1 NM on the equator.",
+   "ref": "Oxford General Nav, Ch 1",
+   "ord": 0
+  },
+  {
+   "id": "g02",
+   "subject": "gnav",
+   "topic": "Conversions",
+   "question": "One nautical mile is about…",
+   "options": [
+    "1,852 m",
+    "1,000 m",
+    "1,760 m",
+    "1,609 m"
+   ],
+   "answer": 0,
+   "explanation": "1 NM = 1,852 m (6,080 ft). 1 statute mile = 1,609 m.",
+   "ref": "Oxford General Nav, Ch 5",
+   "ord": 1
+  },
+  {
+   "id": "g03",
+   "subject": "gnav",
+   "topic": "Great circles and rhumb lines",
+   "question": "The shortest distance between two points on the Earth is along…",
+   "options": [
+    "A parallel of latitude",
+    "A rhumb line",
+    "A small circle",
+    "A great circle"
+   ],
+   "answer": 3,
+   "explanation": "A great circle (a circle whose centre is the Earth's centre) gives the shortest route. A rhumb line is easier to fly (constant direction) but longer.",
+   "ref": "Oxford General Nav, Ch 2",
+   "ord": 2
+  },
+  {
+   "id": "g04",
+   "subject": "gnav",
+   "topic": "Great circles and rhumb lines",
+   "question": "A rhumb line…",
+   "options": [
+    "Is the shortest route",
+    "Is always a great circle",
+    "Crosses meridians at changing angles",
+    "Crosses all meridians at the same angle"
+   ],
+   "answer": 3,
+   "explanation": "A rhumb line cuts every meridian at the same angle, so its direction stays constant. Meridians and the equator are both rhumb lines and great circles.",
+   "ref": "Oxford General Nav, Ch 2",
+   "ord": 3
+  },
+  {
+   "id": "g05",
+   "subject": "gnav",
+   "topic": "Earth magnetism",
+   "question": "Magnetic variation is the angle between…",
+   "options": [
+    "Grid north and true north",
+    "The aircraft's heading and track",
+    "True north and magnetic north",
+    "Magnetic north and compass north"
+   ],
+   "answer": 2,
+   "explanation": "Variation: true vs magnetic north (changes with place). Deviation: magnetic vs compass north (caused by the aircraft's own magnetism).",
+   "ref": "Oxford General Nav, Ch 3",
+   "ord": 4
+  },
+  {
+   "id": "g06",
+   "subject": "gnav",
+   "topic": "Earth magnetism",
+   "question": "True track 100°, variation 5°W. The magnetic track is…",
+   "options": [
+    "095°",
+    "110°",
+    "105°",
+    "100°"
+   ],
+   "answer": 2,
+   "explanation": "'Variation west, magnetic best; variation east, magnetic least.' 100 + 5 = 105°M.",
+   "ref": "Oxford General Nav, Ch 3",
+   "ord": 5
+  },
+  {
+   "id": "g07",
+   "subject": "gnav",
+   "topic": "Earth magnetism",
+   "question": "A line joining places of zero variation is called…",
+   "options": [
+    "An aclinic line",
+    "An isogonal",
+    "An isoclinal",
+    "An agonic line"
+   ],
+   "answer": 3,
+   "explanation": "Agonic = zero variation. Isogonal = equal variation. Aclinic = zero dip (magnetic equator). Isoclinal = equal dip.",
+   "ref": "Oxford General Nav, Ch 3",
+   "ord": 6
+  },
+  {
+   "id": "g08",
+   "subject": "gnav",
+   "topic": "Earth magnetism",
+   "question": "Magnetic dip is zero at…",
+   "options": [
+    "The magnetic poles",
+    "The magnetic equator",
+    "The Greenwich meridian",
+    "The geographic poles"
+   ],
+   "answer": 1,
+   "explanation": "Dip is zero at the magnetic equator and 90° at the magnetic poles, where the horizontal field (and the compass) is useless.",
+   "ref": "Oxford General Nav, Ch 3",
+   "ord": 7
+  },
+  {
+   "id": "g09",
+   "subject": "gnav",
+   "topic": "The 1 in 60 rule",
+   "question": "After 60 NM you are 4 NM off track. Your track error is about…",
+   "options": [
+    "4°",
+    "6°",
+    "8°",
+    "2°"
+   ],
+   "answer": 0,
+   "explanation": "1 in 60 rule: 1 NM off in 60 NM ≈ 1°. Track error = distance off × 60 ÷ distance gone = 4 × 60 ÷ 60 = 4°.",
+   "ref": "Oxford General Nav, Ch 10",
+   "ord": 8
+  },
+  {
+   "id": "g10",
+   "subject": "gnav",
+   "topic": "Navigation using the 1 in 60 rule",
+   "question": "2 NM off track after 30 NM, with 60 NM to go. Alter heading by how much to reach destination?",
+   "options": [
+    "6°",
+    "2°",
+    "8°",
+    "4°"
+   ],
+   "answer": 0,
+   "explanation": "Track error = 2 × 60 ÷ 30 = 4°. Closing angle = 2 × 60 ÷ 60 = 2°. Total alteration = 4 + 2 = 6°.",
+   "ref": "Oxford General Nav, Ch 11",
+   "ord": 9
+  },
+  {
+   "id": "g11",
+   "subject": "gnav",
+   "topic": "Departure",
+   "question": "At 60°N, 60 minutes of change of longitude equals a departure of…",
+   "options": [
+    "30 NM",
+    "0 NM",
+    "52 NM",
+    "60 NM"
+   ],
+   "answer": 0,
+   "explanation": "Departure = change of longitude (minutes) × cos latitude = 60 × cos 60° = 60 × 0.5 = 30 NM.",
+   "ref": "Oxford General Nav, Ch 15",
+   "ord": 10
+  },
+  {
+   "id": "g12",
+   "subject": "gnav",
+   "topic": "TAS and altitude",
+   "question": "Flying at a constant CAS, as you climb your TAS…",
+   "options": [
+    "Decreases",
+    "Increases",
+    "Depends on the wind",
+    "Stays the same"
+   ],
+   "answer": 1,
+   "explanation": "Air density falls with height, so for the same CAS the TAS is higher. Rule of thumb: TAS ≈ CAS + 2% per 1,000 ft.",
+   "ref": "Oxford General Nav, Ch 6",
+   "ord": 11
+  },
+  {
+   "id": "g13",
+   "subject": "gnav",
+   "topic": "TAS and altitude",
+   "question": "Using the 2%-per-1,000 ft rule, CAS 100 kt at 10,000 ft is roughly…",
+   "options": [
+    "110 kt TAS",
+    "100 kt TAS",
+    "120 kt TAS",
+    "140 kt TAS"
+   ],
+   "answer": 2,
+   "explanation": "10,000 ft × 2% per 1,000 ft = +20%, so about 120 kt TAS. Use the computer for the exact answer.",
+   "ref": "Oxford General Nav, Ch 6",
+   "ord": 12
+  },
+  {
+   "id": "g14",
+   "subject": "gnav",
+   "topic": "Triangle of velocities",
+   "question": "With the wind blowing from your left, you will drift…",
+   "options": [
+    "Left",
+    "Backwards only",
+    "Right",
+    "Not at all"
+   ],
+   "answer": 2,
+   "explanation": "The wind pushes you downwind, i.e. to the right. To hold track, head into the wind (a little to the left).",
+   "ref": "Oxford General Nav, Ch 7",
+   "ord": 13
+  },
+  {
+   "id": "g15",
+   "subject": "gnav",
+   "topic": "Triangle of velocities",
+   "question": "The three vectors of the triangle of velocities are heading/TAS, wind velocity and…",
+   "options": [
+    "Variation/deviation",
+    "Bearing/distance",
+    "IAS/altitude",
+    "Track/groundspeed"
+   ],
+   "answer": 3,
+   "explanation": "Air vector (heading/TAS) + wind vector (W/V) = ground vector (track/GS).",
+   "ref": "Oxford General Nav, Ch 7",
+   "ord": 14
+  },
+  {
+   "id": "g16",
+   "subject": "gnav",
+   "topic": "Distance, speed, time",
+   "question": "You cover 150 NM in 50 minutes. Your groundspeed is…",
+   "options": [
+    "180 kt",
+    "120 kt",
+    "200 kt",
+    "150 kt"
+   ],
+   "answer": 0,
+   "explanation": "GS = 150 NM ÷ (50/60 h) = 180 kt.",
+   "ref": "Oxford General Nav, Ch 5",
+   "ord": 15
+  },
+  {
+   "id": "g17",
+   "subject": "gnav",
+   "topic": "Conversions",
+   "question": "Near sea level, 1 hPa of pressure difference is taken as about…",
+   "options": [
+    "10 ft",
+    "100 ft",
+    "27 ft",
+    "50 ft"
+   ],
+   "answer": 2,
+   "explanation": "In the exam, 1 hPa ≈ 27 ft (some texts use 30 ft). E.g. QNH 1003: pressure altitude = elevation + (1013 − 1003) × 27.",
+   "ref": "Oxford General Nav, Ch 6",
+   "ord": 16
+  },
+  {
+   "id": "g18",
+   "subject": "gnav",
+   "topic": "Time",
+   "question": "15° of longitude is equal to…",
+   "options": [
+    "15 minutes",
+    "1 hour of time",
+    "4 minutes",
+    "30 minutes"
+   ],
+   "answer": 1,
+   "explanation": "The Earth turns 360° in 24 hours: 15° = 1 hour, 1° = 4 minutes, 1' = 4 seconds.",
+   "ref": "Oxford General Nav, Ch 24",
+   "ord": 17
+  },
+  {
+   "id": "g19",
+   "subject": "gnav",
+   "topic": "Time",
+   "question": "Indian Standard Time is…",
+   "options": [
+    "UTC + 4:30",
+    "UTC + 5:00",
+    "UTC + 6:00",
+    "UTC + 5:30"
+   ],
+   "answer": 3,
+   "explanation": "IST = UTC + 5 h 30 min (based on 82°30'E). Aviation uses UTC, so subtract 5:30 from IST.",
+   "ref": "Oxford General Nav, Ch 24–26",
+   "ord": 18
+  },
+  {
+   "id": "g20",
+   "subject": "gnav",
+   "topic": "Scale",
+   "question": "On a 1:500,000 chart, 1 cm represents…",
+   "options": [
+    "500 m",
+    "0.5 km",
+    "5 km",
+    "50 km"
+   ],
+   "answer": 2,
+   "explanation": "1 cm × 500,000 = 500,000 cm = 5 km.",
+   "ref": "Oxford General Nav, Ch 16",
+   "ord": 19
+  },
+  {
+   "id": "g21",
+   "subject": "gnav",
+   "topic": "Mercator charts",
+   "question": "On a Mercator chart, which is a straight line?",
+   "options": [
+    "Lines of equal dip",
+    "Every small circle",
+    "A great circle",
+    "A rhumb line"
+   ],
+   "answer": 3,
+   "explanation": "Mercator: meridians parallel, rhumb lines are straight, great circles curve toward the pole. Scale increases with sec latitude.",
+   "ref": "Oxford General Nav, Ch 18",
+   "ord": 20
+  },
+  {
+   "id": "g22",
+   "subject": "gnav",
+   "topic": "Mercator charts",
+   "question": "Scale on a Mercator chart varies as…",
+   "options": [
+    "Not at all",
+    "sin latitude",
+    "sec latitude",
+    "cos latitude"
+   ],
+   "answer": 2,
+   "explanation": "Mercator scale = scale at the equator × sec latitude, so it expands away from the equator.",
+   "ref": "Oxford General Nav, Ch 19",
+   "ord": 21
+  },
+  {
+   "id": "g23",
+   "subject": "gnav",
+   "topic": "Lambert's conformal chart",
+   "question": "On a Lambert's conformal chart, great circles are…",
+   "options": [
+    "Always parallel",
+    "Curved toward the equator",
+    "Circles around the pole",
+    "Approximately straight lines"
+   ],
+   "answer": 3,
+   "explanation": "Lambert's: a great circle is very nearly a straight line (slightly concave toward the parallel of origin), and the chart is conformal.",
+   "ref": "Oxford General Nav, Ch 21",
+   "ord": 22
+  },
+  {
+   "id": "g24",
+   "subject": "gnav",
+   "topic": "Convergency",
+   "question": "Earth convergency between two meridians equals change of longitude ×…",
+   "options": [
+    "sec mean latitude",
+    "sin mean latitude",
+    "cos mean latitude",
+    "tan mean latitude"
+   ],
+   "answer": 1,
+   "explanation": "Earth convergency = ch long × sin mean latitude. Conversion angle = ½ convergency.",
+   "ref": "Oxford General Nav, Ch 14",
+   "ord": 23
+  },
+  {
+   "id": "g25",
+   "subject": "gnav",
+   "topic": "Direct indicating compass",
+   "question": "Northern hemisphere, heading east, accelerating: the compass shows an apparent turn towards…",
+   "options": [
+    "North",
+    "West",
+    "South",
+    "East"
+   ],
+   "answer": 0,
+   "explanation": "ANDS: Accelerate → North, Decelerate → South (northern hemisphere, on easterly or westerly headings).",
+   "ref": "Oxford General Nav, Ch 29",
+   "ord": 24
+  },
+  {
+   "id": "g26",
+   "subject": "gnav",
+   "topic": "Direct indicating compass",
+   "question": "Northern hemisphere, turning off a northerly heading, the compass at first…",
+   "options": [
+    "Leads the turn",
+    "Lags, or even shows a turn the wrong way",
+    "Sticks on north for the whole turn",
+    "Reads exactly"
+   ],
+   "answer": 1,
+   "explanation": "Through north the compass is sluggish (undershoot the roll-out); through south it is lively and leads (overshoot the roll-out), in the northern hemisphere.",
+   "ref": "Oxford General Nav, Ch 29",
+   "ord": 25
+  },
+  {
+   "id": "n01",
+   "subject": "rnav",
+   "topic": "Properties of radio waves",
+   "question": "Radio waves travel at about…",
+   "options": [
+    "300,000 m/s",
+    "30,000 km/s",
+    "186,000 km/s",
+    "300,000 km/s"
+   ],
+   "answer": 3,
+   "explanation": "c ≈ 3 × 10⁸ m/s = 300,000 km/s (about 162,000 NM/s). Wavelength = c ÷ frequency.",
+   "ref": "Oxford Radio Nav, Ch 1",
+   "ord": 0
+  },
+  {
+   "id": "n02",
+   "subject": "rnav",
+   "topic": "Properties of radio waves",
+   "question": "The wavelength of a 300 MHz signal is…",
+   "options": [
+    "1 m",
+    "0.1 m",
+    "10 m",
+    "100 m"
+   ],
+   "answer": 0,
+   "explanation": "λ = 300,000,000 ÷ 300,000,000 = 1 m. Shortcut: λ (m) = 300 ÷ f (MHz).",
+   "ref": "Oxford Radio Nav, Ch 1",
+   "ord": 1
+  },
+  {
+   "id": "n03",
+   "subject": "rnav",
+   "topic": "Radio propagation",
+   "question": "VHF signals mainly travel by…",
+   "options": [
+    "Surface waves over long distances",
+    "Sky waves",
+    "Ducting only",
+    "Direct (line-of-sight) waves"
+   ],
+   "answer": 3,
+   "explanation": "VHF and above: line of sight. LF/MF: surface waves. HF: sky waves.",
+   "ref": "Oxford Radio Nav, Ch 2",
+   "ord": 2
+  },
+  {
+   "id": "n04",
+   "subject": "rnav",
+   "topic": "Radio propagation",
+   "question": "Maximum VHF range for an aircraft at 10,000 ft from a station at sea level is about…",
+   "options": [
+    "123 NM",
+    "200 NM",
+    "50 NM",
+    "300 NM"
+   ],
+   "answer": 0,
+   "explanation": "Range (NM) ≈ 1.23 × (√transmitter height + √receiver height in ft) = 1.23 × √10,000 = 123 NM.",
+   "ref": "Oxford Radio Nav, Ch 2",
+   "ord": 3
+  },
+  {
+   "id": "n05",
+   "subject": "rnav",
+   "topic": "ADF / NDB",
+   "question": "NDBs operate in the…",
+   "options": [
+    "UHF band (962–1213 MHz)",
+    "VHF band (108–118 MHz)",
+    "SHF band",
+    "LF/MF band (about 190–1750 kHz)"
+   ],
+   "answer": 3,
+   "explanation": "NDBs use LF/MF. VOR is VHF; DME is UHF.",
+   "ref": "Oxford Radio Nav, Ch 7",
+   "ord": 4
+  },
+  {
+   "id": "n06",
+   "subject": "rnav",
+   "topic": "ADF / NDB",
+   "question": "The ADF needle shows…",
+   "options": [
+    "Magnetic track",
+    "QDR",
+    "The radial you are on",
+    "Relative bearing of the NDB"
+   ],
+   "answer": 3,
+   "explanation": "ADF gives relative bearing (from the nose). Magnetic bearing to the station (QDM) = magnetic heading + relative bearing.",
+   "ref": "Oxford Radio Nav, Ch 7",
+   "ord": 5
+  },
+  {
+   "id": "n07",
+   "subject": "rnav",
+   "topic": "ADF / NDB",
+   "question": "Magnetic heading 040°, ADF relative bearing 090°. The QDM is…",
+   "options": [
+    "220°",
+    "050°",
+    "310°",
+    "130°"
+   ],
+   "answer": 3,
+   "explanation": "QDM = MH + RB = 040 + 090 = 130°.",
+   "ref": "Oxford Radio Nav, Ch 7",
+   "ord": 6
+  },
+  {
+   "id": "n08",
+   "subject": "rnav",
+   "topic": "ADF / NDB",
+   "question": "ADF bearings are least reliable around dusk and dawn because of…",
+   "options": [
+    "Coastal refraction",
+    "Mountain effect",
+    "Night effect",
+    "Quadrantal error"
+   ],
+   "answer": 2,
+   "explanation": "Night effect: sky waves return and interfere with the surface wave, worst around dusk and dawn.",
+   "ref": "Oxford Radio Nav, Ch 7",
+   "ord": 7
+  },
+  {
+   "id": "n09",
+   "subject": "rnav",
+   "topic": "VOR",
+   "question": "VORs operate in the band…",
+   "options": [
+    "962–1213 MHz",
+    "108–117.975 MHz (VHF)",
+    "329–335 MHz",
+    "190–535 kHz"
+   ],
+   "answer": 1,
+   "explanation": "VOR is VHF, 108–117.975 MHz (the 108–112 MHz part is shared with ILS localisers).",
+   "ref": "Oxford Radio Nav, Ch 8",
+   "ord": 8
+  },
+  {
+   "id": "n10",
+   "subject": "rnav",
+   "topic": "VOR",
+   "question": "A VOR radial is…",
+   "options": [
+    "The magnetic bearing FROM the station",
+    "The true bearing TO the station",
+    "Your relative bearing",
+    "The magnetic bearing TO the station"
+   ],
+   "answer": 0,
+   "explanation": "Radial = QDR, magnetic bearing from the VOR. Bearing to the station = QDM.",
+   "ref": "Oxford Radio Nav, Ch 8",
+   "ord": 9
+  },
+  {
+   "id": "n11",
+   "subject": "rnav",
+   "topic": "VOR",
+   "question": "The VOR receiver finds bearing by comparing…",
+   "options": [
+    "Doppler shift only",
+    "Pulse travel times",
+    "Signals from two NDBs",
+    "The phase of a reference and a variable signal"
+   ],
+   "answer": 3,
+   "explanation": "The phase difference between the reference (30 Hz FM) and variable (30 Hz AM) signals equals the radial.",
+   "ref": "Oxford Radio Nav, Ch 8",
+   "ord": 10
+  },
+  {
+   "id": "n12",
+   "subject": "rnav",
+   "topic": "VOR",
+   "question": "On a VOR deviation indicator, full-scale deflection represents…",
+   "options": [
+    "0.7°",
+    "5°",
+    "10° off the selected radial",
+    "2.5°"
+   ],
+   "answer": 2,
+   "explanation": "VOR full scale is always 10°: each dot is 2° on a 5-dot display, 5° on a 2-dot display. Compare ILS: localiser about 2.5°, glide path about 0.7°.",
+   "ref": "Oxford Radio Nav, Ch 8",
+   "ord": 11
+  },
+  {
+   "id": "n13",
+   "subject": "rnav",
+   "topic": "ILS",
+   "question": "ILS localiser full-scale deflection means you are at least…",
+   "options": [
+    "0.7° off",
+    "10° off",
+    "2.5° left or right of the centreline",
+    "5° off"
+   ],
+   "answer": 2,
+   "explanation": "Localiser full scale ≈ 2.5° either side; glide path full scale ≈ 0.7° above or below.",
+   "ref": "Oxford Radio Nav, Ch 9",
+   "ord": 12
+  },
+  {
+   "id": "n14",
+   "subject": "rnav",
+   "topic": "ILS",
+   "question": "The ILS glide path transmits in the…",
+   "options": [
+    "VHF band, 108–112 MHz",
+    "LF band",
+    "UHF band, around 329–335 MHz",
+    "75 MHz band"
+   ],
+   "answer": 2,
+   "explanation": "Localiser: VHF 108–111.975 MHz (odd tenths). Glide path: UHF 329–335 MHz, paired with the localiser.",
+   "ref": "Oxford Radio Nav, Ch 9",
+   "ord": 13
+  },
+  {
+   "id": "n15",
+   "subject": "rnav",
+   "topic": "ILS",
+   "question": "The outer marker is shown by…",
+   "options": [
+    "A blue light, 2 dashes a second, 400 Hz",
+    "An amber light, alternate dots and dashes, 1300 Hz",
+    "A green light",
+    "A white light, dots, 3000 Hz"
+   ],
+   "answer": 0,
+   "explanation": "OM: blue, 2 dashes/s, 400 Hz. MM: amber, dot-dash, 1300 Hz. IM: white, dots, 3000 Hz. All on 75 MHz.",
+   "ref": "Oxford Radio Nav, Ch 9",
+   "ord": 14
+  },
+  {
+   "id": "n16",
+   "subject": "rnav",
+   "topic": "Radar principles",
+   "question": "Primary radar detects a target by…",
+   "options": [
+    "Using satellite signals",
+    "Phase comparison",
+    "Receiving its own pulses reflected back",
+    "Interrogating a transponder"
+   ],
+   "answer": 2,
+   "explanation": "Primary radar relies on echoes, so it needs nothing on board. SSR needs a transponder to reply.",
+   "ref": "Oxford Radio Nav, Ch 11",
+   "ord": 15
+  },
+  {
+   "id": "n17",
+   "subject": "rnav",
+   "topic": "SSR",
+   "question": "SSR interrogates on… and the aircraft replies on…",
+   "options": [
+    "1030 MHz / 1090 MHz",
+    "1090 MHz / 1030 MHz",
+    "962 MHz / 1213 MHz",
+    "108 MHz / 118 MHz"
+   ],
+   "answer": 0,
+   "explanation": "Ground interrogates on 1030 MHz; transponder replies on 1090 MHz.",
+   "ref": "Oxford Radio Nav, Ch 14",
+   "ord": 16
+  },
+  {
+   "id": "n18",
+   "subject": "rnav",
+   "topic": "SSR",
+   "question": "SSR Mode C provides…",
+   "options": [
+    "Airspeed",
+    "Pressure altitude",
+    "Position",
+    "Aircraft identity code"
+   ],
+   "answer": 1,
+   "explanation": "Mode A = identity (4-digit code). Mode C = pressure altitude (referenced to 1013.25 hPa). Mode S adds selective addressing and data.",
+   "ref": "Oxford Radio Nav, Ch 14",
+   "ord": 17
+  },
+  {
+   "id": "n19",
+   "subject": "rnav",
+   "topic": "DME",
+   "question": "DME operates in the…",
+   "options": [
+    "75 MHz band",
+    "VHF band, 108–118 MHz",
+    "UHF band, 962–1213 MHz",
+    "LF band"
+   ],
+   "answer": 2,
+   "explanation": "DME: UHF 962–1213 MHz, 1 MHz spacing, 252 channels; paired with VOR/ILS frequencies.",
+   "ref": "Oxford Radio Nav, Ch 15",
+   "ord": 18
+  },
+  {
+   "id": "n20",
+   "subject": "rnav",
+   "topic": "DME",
+   "question": "DME measures…",
+   "options": [
+    "Ground distance",
+    "Slant range",
+    "Bearing",
+    "Groundspeed only"
+   ],
+   "answer": 1,
+   "explanation": "DME gives slant range. The error is largest when high and close to the station (overhead at 6,000 ft, DME reads about 1 NM).",
+   "ref": "Oxford Radio Nav, Ch 15",
+   "ord": 19
+  },
+  {
+   "id": "n21",
+   "subject": "rnav",
+   "topic": "Airborne weather radar",
+   "question": "Airborne weather radar shows best…",
+   "options": [
+    "Clear air turbulence",
+    "Large water droplets and wet hail",
+    "Dry snow",
+    "Fog"
+   ],
+   "answer": 1,
+   "explanation": "It detects precipitation, strongest from large wet droplets and wet hail. It can't see CAT or dry particles well.",
+   "ref": "Oxford Radio Nav, Ch 13",
+   "ord": 20
+  },
+  {
+   "id": "n22",
+   "subject": "rnav",
+   "topic": "Airborne weather radar",
+   "question": "Airborne weather radar uses a frequency of about…",
+   "options": [
+    "300 kHz (LF)",
+    "1 GHz (UHF)",
+    "110 MHz (VHF)",
+    "9 GHz (SHF)"
+   ],
+   "answer": 3,
+   "explanation": "Around 9.4 GHz (X band, about 3 cm wavelength) — a good size for reflecting off raindrops.",
+   "ref": "Oxford Radio Nav, Ch 13",
+   "ord": 21
+  },
+  {
+   "id": "n23",
+   "subject": "rnav",
+   "topic": "GNSS",
+   "question": "The minimum number of satellites for a 3D GPS fix is…",
+   "options": [
+    "3",
+    "6",
+    "5",
+    "4"
+   ],
+   "answer": 3,
+   "explanation": "4 satellites for latitude, longitude, altitude and the receiver clock error. RAIM needs 5 to detect a fault, 6 to exclude it.",
+   "ref": "Oxford Radio Nav, Ch 18",
+   "ord": 22
+  },
+  {
+   "id": "n24",
+   "subject": "rnav",
+   "topic": "GNSS",
+   "question": "RAIM is…",
+   "options": [
+    "A ground-based augmentation system",
+    "The receiver checking integrity using extra satellites",
+    "A radar altimeter mode",
+    "Inertial alignment"
+   ],
+   "answer": 1,
+   "explanation": "Receiver Autonomous Integrity Monitoring: the receiver uses redundant satellites to spot a faulty one.",
+   "ref": "Oxford Radio Nav, Ch 18",
+   "ord": 23
+  },
+  {
+   "id": "n25",
+   "subject": "rnav",
+   "topic": "GNSS",
+   "question": "GPS satellites orbit at about…",
+   "options": [
+    "20,200 km",
+    "800 km",
+    "2,000 km",
+    "36,000 km"
+   ],
+   "answer": 0,
+   "explanation": "GPS: about 20,200 km, roughly 12-hour orbits. 36,000 km is geostationary (used by SBAS satellites).",
+   "ref": "Oxford Radio Nav, Ch 18",
+   "ord": 24
+  },
+  {
+   "id": "n26",
+   "subject": "rnav",
+   "topic": "VDF",
+   "question": "A VDF bearing is obtained when…",
+   "options": [
+    "The pilot reads a DME",
+    "The pilot transmits and the ground station measures the direction",
+    "The aircraft measures a ground beacon",
+    "A transponder replies"
+   ],
+   "answer": 1,
+   "explanation": "VHF Direction Finding: the ground station takes a bearing on the aircraft's transmission and passes QDM/QDR etc.",
+   "ref": "Oxford Radio Nav, Ch 6",
+   "ord": 25
+  }
+ ],
+ "interview": [
+  {
+   "id": "s01",
+   "kind": "scenario",
+   "question": "On approach, you think the captain has set the wrong altitude. What do you do?",
+   "covers": "Speak up early and clearly, using the captain's name and the fact (\"Captain, cleared 3000, 4000 is set\")|Follow the escalation ladder: query, suggest, then state firmly or take action if safety is at risk|Keep it about the error, not the person|Why it matters: most accidents involve a missed chance to speak up (CRM, assertiveness)",
+   "ord": 0
+  },
+  {
+   "id": "s02",
+   "kind": "scenario",
+   "question": "The weather at destination drops below minimums while you're holding. Fuel is getting low. Walk us through your thinking.",
+   "covers": "Know your fuel: minimum diversion fuel and final reserve|Decide before fuel decides for you: set a 'bingo' time to divert|Use a decision model like FORDEC (Facts, Options, Risks, Decision, Execution, Check)|Declare MINIMUM FUEL or MAYDAY FUEL as the rules require|Brief the cabin and passengers",
+   "ord": 1
+  },
+  {
+   "id": "s03",
+   "kind": "scenario",
+   "question": "A passenger becomes unruly and refuses to sit down during taxi. What do you do?",
+   "covers": "The cockpit door stays closed — the flight crew don't leave the flight deck|Cabin crew handle it, with the captain's authority behind them|Options: stop and return to stand, involve security|Follow company procedures and report it",
+   "ord": 2
+  },
+  {
+   "id": "s04",
+   "kind": "scenario",
+   "question": "You've finished your duty and are tired, but crew scheduling asks you to fly one more sector. What do you say?",
+   "covers": "Fatigue is a safety issue, not a weakness|Know the flight duty time limits (DGCA CAR on FDTL)|Say no politely if you're not fit, and report fatigue through the proper channel|Show you'd still help find a solution",
+   "ord": 3
+  },
+  {
+   "id": "s05",
+   "kind": "scenario",
+   "question": "During take-off roll at 80 knots you get an amber caution. What happens?",
+   "covers": "Know your airline's 'low speed' vs 'high speed' regimes and V1|Below 100 kt you'd usually reject for any failure; above it only for serious ones|Callouts and who decides (the captain calls 'STOP' or 'GO')|After V1 you continue and deal with it in the air",
+   "ord": 4
+  },
+  {
+   "id": "s06",
+   "kind": "scenario",
+   "question": "You notice your captain smells of alcohol before a flight. What do you do?",
+   "covers": "Safety first: the flight should not go with an impaired pilot|Raise it privately and respectfully first if possible|If not resolved, report to the company (duty manager / chief pilot)|Mention DGCA's pre-flight breath analyser checks",
+   "ord": 5
+  },
+  {
+   "id": "s07",
+   "kind": "scenario",
+   "question": "Tell us about a time you made a mistake in training. What did you learn?",
+   "covers": "Pick a real, small mistake — not a disaster and not a fake one|STAR: Situation, Task, Action, Result|Focus on what you changed afterwards|Shows honesty and a learning mindset (just culture)",
+   "ord": 6
+  },
+  {
+   "id": "s08",
+   "kind": "scenario",
+   "question": "Halfway to destination a passenger has a medical emergency. What are your options?",
+   "covers": "Ask cabin crew for details and for a doctor on board|Consider diverting to the nearest suitable airport|Declare PAN PAN or MAYDAY as appropriate and coordinate with ATC|Weigh weather, fuel and medical facilities at the options",
+   "ord": 7
+  },
+  {
+   "id": "s09",
+   "kind": "scenario",
+   "question": "You disagree with the captain's decision but it's not unsafe. What do you do?",
+   "covers": "Voice your view once, clearly, with reasons|Accept the captain's authority if it's within safe limits|Debrief it afterwards|Shows teamwork and respect for the chain of command",
+   "ord": 8
+  },
+  {
+   "id": "s10",
+   "kind": "scenario",
+   "question": "ATC gives you a clearance you're not sure you heard correctly. What do you do?",
+   "covers": "Never guess — ask 'Say again' or read back what you think and ask for confirmation|Check with the other pilot|Why: readback errors are a known cause of altitude busts",
+   "ord": 9
+  },
+  {
+   "id": "s11",
+   "kind": "scenario",
+   "question": "Describe a stressful situation and how you handled it.",
+   "covers": "STAR format|What you felt and what you did to stay calm (breathing, checklists, prioritising)|Aviate, navigate, communicate|What the result was and what you'd do again",
+   "ord": 10
+  },
+  {
+   "id": "s12",
+   "kind": "scenario",
+   "question": "You're flying with a captain who is very quiet and doesn't brief properly. How do you work with them?",
+   "covers": "Take the initiative: ask questions and brief your own parts|Keep the flight deck gradient comfortable — not too steep, not too flat|Use standard calls to build a shared picture|Stay professional, no complaining",
+   "ord": 11
+  },
+  {
+   "id": "t01",
+   "kind": "technical",
+   "question": "What is V1?",
+   "covers": "Take-off decision speed: the highest speed at which you can still reject the take-off and stop on the runway|After V1 you must continue|Compare VR (rotation) and V2 (take-off safety speed)",
+   "ord": 12
+  },
+  {
+   "id": "t02",
+   "kind": "technical",
+   "question": "Explain the difference between IAS, CAS, TAS and groundspeed.",
+   "covers": "IAS: read off the instrument|CAS: IAS corrected for instrument and position errors|TAS: CAS corrected for density (and compressibility) — speed through the air|GS: TAS corrected for wind — speed over the ground",
+   "ord": 13
+  },
+  {
+   "id": "t03",
+   "kind": "technical",
+   "question": "What are the four forces in flight and what happens in a steady climb?",
+   "covers": "Lift, weight, thrust, drag|In a steady climb, lift is slightly less than weight; part of the weight is balanced by thrust|Climb performance depends on excess thrust (angle) and excess power (rate)",
+   "ord": 14
+  },
+  {
+   "id": "t04",
+   "kind": "technical",
+   "question": "What causes a stall, and how do you recover?",
+   "covers": "Exceeding the critical angle of attack — it can happen at any speed or attitude|Recovery: reduce angle of attack (nose down) first, then roll wings level, then power|Know stall warning signs and the effect of weight, load factor and flaps on stall speed",
+   "ord": 15
+  },
+  {
+   "id": "t05",
+   "kind": "technical",
+   "question": "What is the difference between QNH, QFE and standard pressure, and when is each used?",
+   "covers": "QNH: altitude above MSL, used below transition altitude|QFE: height above the aerodrome|1013.2 hPa: flight levels above transition|Where the transition altitude and level are",
+   "ord": 16
+  },
+  {
+   "id": "t06",
+   "kind": "technical",
+   "question": "Explain how an ILS works.",
+   "covers": "Localiser: lateral guidance, VHF 108–112 MHz|Glide path: vertical guidance, UHF 329–335 MHz, usually 3°|Markers or DME for range|Categories (CAT I, II, III) and their minima",
+   "ord": 17
+  },
+  {
+   "id": "t07",
+   "kind": "technical",
+   "question": "What is the effect of high temperature and high elevation on take-off performance?",
+   "covers": "Lower air density → less lift and less engine thrust|Longer take-off run and poorer climb|Density altitude concept|Hot-and-high airports, possible weight limits",
+   "ord": 18
+  },
+  {
+   "id": "t08",
+   "kind": "technical",
+   "question": "What is a jet stream and why does it matter to us?",
+   "covers": "Narrow band of very strong wind near the tropopause|Saves time and fuel with a tailwind, costs with a headwind|Clear air turbulence near its edges|Subtropical jet over north India in winter",
+   "ord": 19
+  },
+  {
+   "id": "t09",
+   "kind": "technical",
+   "question": "Tell us about the hazards of a thunderstorm.",
+   "covers": "Turbulence, icing, hail, lightning, microbursts and wind shear|Stay at least 20 NM away from severe storms|Never fly underneath a CB on approach|Use weather radar and ATC deviations",
+   "ord": 20
+  },
+  {
+   "id": "t10",
+   "kind": "technical",
+   "question": "What is wind shear and how would you recover from it on approach?",
+   "covers": "Sudden change in wind speed or direction|Microbursts below CBs are the most dangerous|Recovery: TOGA power, pitch to the guidance (or about 15°), don't change configuration, follow through till clear|Report it to ATC",
+   "ord": 21
+  },
+  {
+   "id": "t11",
+   "kind": "technical",
+   "question": "What is the difference between an aerodrome's TORA, TODA and ASDA?",
+   "covers": "TORA: runway length available for the ground run|TODA: TORA plus clearway|ASDA: TORA plus stopway|Used to check take-off and accelerate-stop distances",
+   "ord": 22
+  },
+  {
+   "id": "t12",
+   "kind": "technical",
+   "question": "What is RVSM and what equipment does an aircraft need for it?",
+   "covers": "Reduced Vertical Separation Minimum: 1,000 ft between FL290 and FL410|Two independent altimeters, autopilot with altitude hold, altitude alerter, Mode C/S transponder|Needs approval for the aircraft and the operator",
+   "ord": 23
+  },
+  {
+   "id": "a01",
+   "kind": "airline",
+   "question": "Tell us about yourself.",
+   "covers": "About 90 seconds: who you are, your training, a highlight, why this job|Keep it professional and positive|End with why you're ready for this airline",
+   "ord": 24
+  },
+  {
+   "id": "a02",
+   "kind": "airline",
+   "question": "Why do you want to fly for us?",
+   "covers": "Name real things about the airline: fleet, network, safety record, culture|Link them to your own goals|Avoid 'because you're hiring' or salary",
+   "ord": 25
+  },
+  {
+   "id": "a03",
+   "kind": "airline",
+   "question": "Where do you see yourself in five years?",
+   "covers": "Building experience as a first officer and becoming a strong team member|Command upgrade as a longer goal|Shows loyalty and realistic ambition",
+   "ord": 26
+  },
+  {
+   "id": "a04",
+   "kind": "airline",
+   "question": "What are your strengths and weaknesses?",
+   "covers": "One real strength with a quick example|One real weakness and what you're doing about it|Avoid fake weaknesses like 'I work too hard'",
+   "ord": 27
+  },
+  {
+   "id": "a05",
+   "kind": "airline",
+   "question": "How do you handle criticism from a senior pilot?",
+   "covers": "Listen, don't argue in the moment|Take what's useful, ask questions to understand|Debrief calmly if you disagree|Example from training",
+   "ord": 28
+  },
+  {
+   "id": "a06",
+   "kind": "airline",
+   "question": "What do you know about our fleet and where we fly?",
+   "covers": "Main aircraft type(s) and roughly how many|Main bases and a few key routes, domestic and international|Recent news (new aircraft, new routes)|Shows you prepared",
+   "ord": 29
+  },
+  {
+   "id": "a07",
+   "kind": "airline",
+   "question": "Why should we choose you over the other candidates?",
+   "covers": "Two or three specific qualities with evidence|Safety mindset, teamwork, adaptability|Don't put others down",
+   "ord": 30
+  },
+  {
+   "id": "a08",
+   "kind": "airline",
+   "question": "How do you balance this job with the irregular hours?",
+   "covers": "Understand rosters, nights and time away|Good rest habits, fitness and a support system|Shows you've thought it through",
+   "ord": 31
+  },
+  {
+   "id": "a09",
+   "kind": "airline",
+   "question": "What does 'safety culture' mean to you?",
+   "covers": "Everyone reports mistakes and hazards without fear (just culture)|Following SOPs even when no one is watching|Learning from incidents|An example of you reporting or speaking up",
+   "ord": 32
+  },
+  {
+   "id": "a10",
+   "kind": "airline",
+   "question": "Tell us about a time you worked in a team that wasn't getting along.",
+   "covers": "STAR format|What you did to help: listening, clarifying roles, staying calm|Result and what you learned",
+   "ord": 33
+  },
+  {
+   "id": "a11",
+   "kind": "airline",
+   "question": "How do you keep your knowledge current while waiting for a job?",
+   "covers": "Revising technical subjects and SOPs|Simulator sessions or type-rating prep|Reading safety reports and aviation news|Keeping licence and medical valid",
+   "ord": 34
+  },
+  {
+   "id": "a12",
+   "kind": "airline",
+   "question": "Do you have any questions for us?",
+   "covers": "Always have one or two ready|Ask about training, the first year on the line, or culture|Avoid asking about pay in the first interview",
+   "ord": 35
+  }
+ ]
+}

@@ -6,6 +6,7 @@ on:
     paths-ignore:
       - "digest/**"
       - "**.md"
+      - "dragonfly/**"
   workflow_dispatch:
 
 permissions:
