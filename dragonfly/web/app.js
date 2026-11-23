@@ -425,11 +425,11 @@ function wimhof(el, lastWim) {
   <button class="btn" id="go" style="min-height:50px;padding:0 30px">Start</button></div>`;
   const CYC = { rounds: [1, 2, 3, 4, 5], breaths: [20, 30, 40], pace: ["Slow", "Med", "Fast"], recovery: [10, 15, 20, 30] };
   $$("#sets button", el).forEach((b) => (b.onclick = () => { if (running) return; const k = b.dataset.s, list = CYC[k]; S[k] = list[(list.indexOf(S[k]) + 1) % list.length]; store.set("df.wim", S); wimhof(el, lastWim); }));
-  let running = false, timerId = null, lock = null, holds = [], phase = "idle", round = 0, holdStart = 0, sessionStart = 0;
+  let running = false, timerId = null, lock = null, holds = [], phase = "idle", round = 0, holdStart = 0, sessionStart = 0, saved = false;
   const core = $("#core", el), big = $("#big", el), small = $("#small", el), cue = $("#cue", el), ph = $("#phase", el);
   const stop = (saveIt) => {
     running = false; clearTimeout(timerId); clearInterval(timerId); lock?.release?.(); core.style.transform = "";
-    if (saveIt && holds.length) api("calm.save", { kind: "wimhof", seconds: (Date.now() - sessionStart) / 1000, holds }).then(() => toast("Saved — nice work")).catch(fail);
+    if (saveIt && holds.length && !saved) (saved = true) && api("calm.save", { kind: "wimhof", seconds: (Date.now() - sessionStart) / 1000, holds }).then(() => toast("Saved — nice work")).catch(fail);
   };
   cleanup = () => stop(true);
   const breathe = () => {
@@ -468,7 +468,7 @@ function wimhof(el, lastWim) {
   $("#go", el).onclick = async () => {
     if (running) { stop(true); wimhof(el, lastWim); return; }
     chime(528, 0.6, 0.05); lock = await wake();
-    running = true; holds = []; round = 0; sessionStart = Date.now();
+    running = true; holds = []; round = 0; saved = false; sessionStart = Date.now();
     $("#go", el).textContent = "End"; breathe();
   };
 }

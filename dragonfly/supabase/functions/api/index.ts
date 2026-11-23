@@ -98,8 +98,10 @@ async function pickFor(day: string, slot: "regs" | "nav") {
   const subject = slot === "regs" ? "regs" : SLOT_SUBJECT(day);
   const qid = await nextUnseen(subject);
   if (!qid) return null;
-  must(await db.from("daily_pick").insert({ day, slot, qid }));
-  return qid;
+  // two screens may ask at once: keep whichever pick landed first
+  must(await db.from("daily_pick").upsert({ day, slot, qid }, { onConflict: "day,slot", ignoreDuplicates: true }));
+  const got = must(await db.from("daily_pick").select("qid").eq("day", day).eq("slot", slot).single()) as any;
+  return got.qid as string;
 }
 async function nextUnseen(subject: string, exclude: string[] = []) {
   const seen = (must(await db.from("qstate").select("qid")) as any[]).map((r) => r.qid);
@@ -177,7 +179,7 @@ async function today() {
   const knee = (must(await db.from("knee_days").select("day").gte("day", weekStart)) as any[]).map((r) => r.day);
   const exams = must(await db.from("exams").select("*").gte("exam_date", day).order("exam_date")) as any[];
   const money = await moneyMonth(day.slice(0, 7));
-  const topCat = Object.entries(money.byCat).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+  const topCat = Object.entries(money.byCat).filter(([k]) => k !== "Needs a category").sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
   const iq = await interviewToday();
   return {
     day, weekStart, knee,
@@ -234,7 +236,7 @@ Deno.serve(async (req) => {
       }
       case "study.more": {
         const id = await nextUnseen(body.subject, body.exclude ?? []);
-        if (id) must(await db.from("daily_pick").insert({ day: localDay(), slot: `extra-${id}`, qid: id }));
+        if (id) must(await db.from("daily_pick").upsert({ day: localDay(), slot: `extra-${id}`, qid: id }, { onConflict: "day,slot", ignoreDuplicates: true }));
         return json({ questions: id ? await getQuestions([id]) : [] });
       }
       case "study.review": return json({ questions: await getQuestions(await reviewDue()) });
