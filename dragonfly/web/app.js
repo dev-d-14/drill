@@ -171,7 +171,7 @@ async function money() {
     ${isCur ? `<div style="margin-top:14px">${bars(m.last7, 60)}</div><div class="mut row-between" style="margin-top:4px"><span>7 days ago</span><span>Today ${inr(m.today)}</span></div>` : ""}
   </div>
   ${cats.length ? `<div class="card" style="display:flex;flex-direction:column;gap:10px">
-    ${cats.map(([c, v]) => `<div class="cat"><span class="n">${esc(c)}</span><div class="track"><span style="width:${(v / m.total) * 100}%"></span></div><span class="v">${inr(v)}</span></div>`).join("")}
+    ${cats.map(([c, v]) => `<div class="cat"><span class="n">${c === "Needs a category" ? "To sort" : esc(c)}</span><div class="track"><span style="width:${(v / m.total) * 100}%"></span></div><span class="v">${inr(v)}</span></div>`).join("")}
   </div>` : ""}
   <div class="card" style="padding-bottom:8px">
     <div class="row-between"><span class="lab">${isCur ? "Recent" : "All spends"}</span><span class="mut">${needs ? `${needs} need${needs === 1 ? "s" : ""} a category` : ""}</span></div>

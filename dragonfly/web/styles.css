@@ -1,4 +1,5 @@
 :root{
+[hidden]{display:none!important}
   --green:#11371F; --green-deep:#0C2A17; --green-tile:#1B4A2C;
   --bronze:#3E3226; --gold:#D8B65C; --gold-soft:#E9D59A;
   --cream:#F2EAD3; --muted:#CBBF9C; --ink:#10301C;
