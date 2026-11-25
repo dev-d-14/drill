@@ -1,97 +1,97 @@
 {
-  "date": "2026-11-24",
+  "date": "2026-11-25",
   "items": [
     {
-      "id": "2026-11-24-1",
+      "id": "2026-11-25-1",
       "tag": "AI",
       "kind": "news",
-      "title": "An evolutionary search discovered better memory designs for AI agents",
-      "why": "MAPE evolved whole memory programs and beat hand-built agent memory by 12% accuracy at a third of the serving cost.",
-      "url": "https://arxiv.org/abs/2611.17068",
-      "source": "arXiv preprint"
+      "title": "Researchers found AI agents barely use the memories you give them",
+      "why": "Across 8,000 coding tasks, most memories agents received were irrelevant or simply ignored - temper agent-memory hype.",
+      "url": "https://arxiv.org/abs/2611.01718",
+      "source": "arXiv preprint (Xu, Li, Xu)"
     },
     {
-      "id": "2026-11-24-2",
+      "id": "2026-11-25-2",
       "tag": "Tools",
       "kind": "news",
-      "title": "A Rust rewrite of Postgres now passes all 46,000 of its regression tests",
-      "why": "PGRust used AI plus formal proofs on ~1,000 functions, catching 12 real behavior gaps versus Postgres' own C code.",
-      "url": "https://github.com/malisper/pgrust",
-      "source": "GitHub (malisper/pgrust)"
+      "title": "Karpathy built an algorithm-free YouTube clone with Claude in 2 hours",
+      "why": "6,454 videos ranked by real Hacker News praise, not an algorithm - a weekend-sized template for your own curation tool.",
+      "url": "https://kingy.ai/blog/hackertube-karpathy-claude-code/",
+      "source": "Kingy AI (on Karpathy's HackerTube)"
     },
     {
-      "id": "2026-11-24-3",
+      "id": "2026-11-25-3",
+      "tag": "Research",
+      "kind": "news",
+      "title": "A Postgres bug let ordinary SQL features forge a code-execution exploit",
+      "why": "No parser bug needed, just a mislabeled aggregate type - a reminder that privilege checks must verify, never trust, declarations.",
+      "url": "https://blog.ostorlab.co/postgresql-rce-any-login-role-cve-2026-116331.html",
+      "source": "Ostorlab (research by Depthfirst)"
+    },
+    {
+      "id": "2026-11-25-4",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "An ESP32 board turned into a pocket Ethernet network tester",
+      "why": "One cheap board now reports link status, pings, and sniffs DHCP/LLDP - a buildable diagnostic tool for your own network tinkering.",
+      "url": "https://hackaday.com/2026/11/24/troubleshooting-ethernet-networks-with-the-esp32/",
+      "source": "Hackaday"
+    },
+    {
+      "id": "2026-11-25-5",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "bpftrace one-liners that diagnose Linux latency without restarting anything",
+      "why": "Live syscall counts and scheduler-latency histograms from one command - try it on any box you can sudo into today.",
+      "url": "https://dev.to/lyraalishaikh/stop-guessing-production-latency-practical-bpftrace-one-liners-for-linux-debugging-2g71",
+      "source": "dev.to"
+    },
+    {
+      "id": "2026-11-25-6",
+      "tag": "Research",
+      "kind": "news",
+      "title": "Mo's algorithm: the sqrt-decomposition trick for queries a segment tree can't merge",
+      "why": "Handles offline range queries like 'mode in this range' that segment trees choke on - a real interview and Codeforces differentiator.",
+      "url": "https://cp-algorithms.com/data_structures/sqrt_decomposition.html",
+      "source": "cp-algorithms.com"
+    },
+    {
+      "id": "2026-11-25-7",
       "tag": "ISB",
       "kind": "news",
-      "title": "Telling yourself 'I'm excited,' not 'I'm calm,' lifts performance under pressure",
-      "why": "A Harvard study: reframing pre-performance nerves as excitement raised scores on speeches, math tests and even karaoke.",
-      "url": "https://www.apa.org/news/press/releases/2013/12/performance-anxiety.aspx",
-      "source": "Journal of Experimental Psychology: General (Brooks, Harvard Business School)"
+      "title": "The 'if X, then Y' planning trick that reliably boosts follow-through",
+      "why": "Decades of research show pre-scripting your response to tough moments beats winging it - rehearse your hardest interview moments this way.",
+      "url": "https://cancercontrol.cancer.gov/brp/research/constructs/implementation-intentions",
+      "source": "National Cancer Institute (summarizing Gollwitzer's research)"
     },
     {
-      "id": "2026-11-24-4",
-      "tag": "Research",
-      "kind": "news",
-      "title": "Segment Tree Beats: the trick for range min/max updates lazy tags can't do",
-      "why": "A potential-function proof gives it near-log-n amortized time - the answer when plain lazy propagation breaks down.",
-      "url": "https://usaco.guide/adv/segtree-beats",
-      "source": "USACO Guide"
+      "id": "2026-11-25-8",
+      "tag": "Science",
+      "kind": "science",
+      "evidence": "early",
+      "title": "A stress hormone reshapes which memories your brain locks in, Yale finds",
+      "why": "Cortisol sharpened emotion-memory coordination for charged moments in an fMRI study - early evidence, not license to cram anxious.",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261014015517.htm",
+      "source": "Science Advances (Yale, Goldfarb lab)"
     },
     {
-      "id": "2026-11-24-5",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "An open-source pool controller runs its whole brain on one small ESP32 board",
-      "why": "Swimming Pool System Open logs pH, chlorine, flow and pressure to Home Assistant - a template for any DIY sensor rig.",
-      "url": "https://hackaday.com/2026/11/21/automation-for-the-swimming-pool/",
-      "source": "Hackaday (project by Andrea Tacchelli)"
-    },
-    {
-      "id": "2026-11-24-6",
-      "tag": "Research",
-      "kind": "news",
-      "title": "One LED strip plus magnets lights up whichever drawer you open",
-      "why": "An ESP32-C6 reads reed switches over Zigbee to light only the open drawer - one wiring run, not one per LED.",
-      "url": "https://hackaday.com/2026/11/22/when-drawers-get-their-own-status-lights/",
-      "source": "Hackaday (Marcus Lab)"
-    },
-    {
-      "id": "2026-11-24-7",
+      "id": "2026-11-25-9",
       "tag": "Science",
       "kind": "science",
       "evidence": "moderate",
-      "title": "A single dose of creatine blunted the cognitive hit from an all-nighter",
-      "why": "In a 29-person crossover trial, creatine before 21 hours awake cut the drop in logic and reaction-time scores by up to 12%.",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/42075005/",
-      "source": "Nutrients (Gordji-Nejad et al.)"
+      "title": "Protein supplements add real but modest strength gains on top of lifting",
+      "why": "A 23-trial meta-analysis found about 2.6kg more on bench and 7.4kg more on squat, strongest in the first 12 weeks - timing beats hype.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13710401",
+      "source": "Frontiers in Nutrition"
     },
     {
-      "id": "2026-11-24-8",
-      "tag": "Science",
-      "kind": "science",
-      "evidence": "moderate",
-      "title": "Stress stops your brain from linking separate memories into a new insight",
-      "why": "fMRI showed stress blocks the memory replay behind inference; a follow-up found active recall practice protects it.",
-      "url": "https://www.science.org/doi/10.1126/sciadv.aea5496",
-      "source": "Science Advances (Schwabe & Preston labs)"
-    },
-    {
-      "id": "2026-11-24-9",
-      "tag": "Tools",
+      "id": "2026-11-25-10",
+      "tag": "India",
       "kind": "news",
-      "title": "Zellij 0.46 adds an inbox that flags which terminal session needs your input",
-      "why": "A built-in terminal plus a session-wide attention inbox means no more tab-hopping to find which AI agent is stuck.",
-      "url": "https://github.com/zellij-org/zellij/releases",
-      "source": "Zellij release notes"
-    },
-    {
-      "id": "2026-11-24-10",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "Pressure metrics let systemd kill the right process before an OOM death spiral",
-      "why": "Wire /proc/pressure/memory into systemd-oomd with a few drop-ins to stop swap storms before they freeze your box.",
-      "url": "https://dev.to/lyraalishaikh/stop-linux-memory-death-spirals-early-practical-systemd-oomd-with-psi-and-cgroup-policy-369j",
-      "source": "dev.to"
+      "title": "An Indian chip startup's networking SoC passed first-silicon test, no respin",
+      "why": "VIHAAN's broadband chip worked right out of the fab on its first try - a real engineering win, not just another funding headline.",
+      "url": "https://www.electronicsforu.com/news/indigenous-broadband-soc-clears-first-silicon-test",
+      "source": "Electronics For You (on Aheesa's VIHAAN chip)"
     }
   ]
 }
