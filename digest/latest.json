@@ -1,97 +1,97 @@
 {
-  "date": "2026-11-25",
+  "date": "2026-11-26",
   "items": [
     {
-      "id": "2026-11-25-1",
+      "id": "2026-11-26-1",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "A solo coder used Claude Code to build a Wi-Fi jam detector",
+      "why": "An ESP32-C5 touchscreen board learns the RF baseline then flags jamming on 2.4/5GHz - open source, build your own this weekend.",
+      "url": "https://www.rtl-sdr.com/esp-wifi-jam-detector-a-standalone-2-4-and-5-ghz-interference-detector-built-on-an-esp32-c5-touchscreen-board/",
+      "source": "rtl-sdr.com"
+    },
+    {
+      "id": "2026-11-26-2",
       "tag": "AI",
       "kind": "news",
-      "title": "Researchers found AI agents barely use the memories you give them",
-      "why": "Across 8,000 coding tasks, most memories agents received were irrelevant or simply ignored - temper agent-memory hype.",
-      "url": "https://arxiv.org/abs/2611.01718",
-      "source": "arXiv preprint (Xu, Li, Xu)"
+      "title": "A 149M local model handles 70% of phone-agent steps, Claude the rest",
+      "why": "Confident steps stay on a cheap on-device model; hard ones route to Claude - matches Claude alone at under a third the cost.",
+      "url": "https://news.ycombinator.com/item?id=50552563",
+      "source": "Hacker News (Show HN, chaitanyav33)"
     },
     {
-      "id": "2026-11-25-2",
-      "tag": "Tools",
+      "id": "2026-11-26-3",
+      "tag": "ISB",
       "kind": "news",
-      "title": "Karpathy built an algorithm-free YouTube clone with Claude in 2 hours",
-      "why": "6,454 videos ranked by real Hacker News praise, not an algorithm - a weekend-sized template for your own curation tool.",
-      "url": "https://kingy.ai/blog/hackertube-karpathy-claude-code/",
-      "source": "Kingy AI (on Karpathy's HackerTube)"
+      "title": "Box breathing before a mock job interview measurably cut stress markers",
+      "why": "A 5-min box-breathing session before a simulated hiring interview lowered heart rate and stress-hormone spikes versus normal breathing.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13321280/",
+      "source": "Comprehensive Psychoneuroendocrinology (McAllister et al.)"
     },
     {
-      "id": "2026-11-25-3",
+      "id": "2026-11-26-4",
       "tag": "Research",
       "kind": "news",
-      "title": "A Postgres bug let ordinary SQL features forge a code-execution exploit",
-      "why": "No parser bug needed, just a mislabeled aggregate type - a reminder that privilege checks must verify, never trust, declarations.",
-      "url": "https://blog.ostorlab.co/postgresql-rce-any-login-role-cve-2026-116331.html",
-      "source": "Ostorlab (research by Depthfirst)"
-    },
-    {
-      "id": "2026-11-25-4",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "An ESP32 board turned into a pocket Ethernet network tester",
-      "why": "One cheap board now reports link status, pings, and sniffs DHCP/LLDP - a buildable diagnostic tool for your own network tinkering.",
-      "url": "https://hackaday.com/2026/11/24/troubleshooting-ethernet-networks-with-the-esp32/",
-      "source": "Hackaday"
-    },
-    {
-      "id": "2026-11-25-5",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "bpftrace one-liners that diagnose Linux latency without restarting anything",
-      "why": "Live syscall counts and scheduler-latency histograms from one command - try it on any box you can sudo into today.",
-      "url": "https://dev.to/lyraalishaikh/stop-guessing-production-latency-practical-bpftrace-one-liners-for-linux-debugging-2g71",
-      "source": "dev.to"
-    },
-    {
-      "id": "2026-11-25-6",
-      "tag": "Research",
-      "kind": "news",
-      "title": "Mo's algorithm: the sqrt-decomposition trick for queries a segment tree can't merge",
-      "why": "Handles offline range queries like 'mode in this range' that segment trees choke on - a real interview and Codeforces differentiator.",
-      "url": "https://cp-algorithms.com/data_structures/sqrt_decomposition.html",
+      "title": "Heavy-light decomposition: the chain trick for fast tree path queries",
+      "why": "Splits a tree into O(log n) chains so any path query becomes a few segment-tree lookups - a real differentiator in interviews and CF.",
+      "url": "https://cp-algorithms.com/graph/hld.html",
       "source": "cp-algorithms.com"
     },
     {
-      "id": "2026-11-25-7",
-      "tag": "ISB",
+      "id": "2026-11-26-5",
+      "tag": "Tools",
       "kind": "news",
-      "title": "The 'if X, then Y' planning trick that reliably boosts follow-through",
-      "why": "Decades of research show pre-scripting your response to tough moments beats winging it - rehearse your hardest interview moments this way.",
-      "url": "https://cancercontrol.cancer.gov/brp/research/constructs/implementation-intentions",
-      "source": "National Cancer Institute (summarizing Gollwitzer's research)"
+      "title": "A full 386 PC emulator is being ported to run on a $1 RP2350 chip",
+      "why": "Tiny386, which already boots DOS and lean Linux on an ESP32, is being adapted for the RP2350 - a weekend retro-PC build on cheap hardware.",
+      "url": "https://hackaday.com/2026/09/13/a-386-pc-for-your-rp2350/",
+      "source": "Hackaday (Jenny List)"
     },
     {
-      "id": "2026-11-25-8",
+      "id": "2026-11-26-6",
       "tag": "Science",
       "kind": "science",
       "evidence": "early",
-      "title": "A stress hormone reshapes which memories your brain locks in, Yale finds",
-      "why": "Cortisol sharpened emotion-memory coordination for charged moments in an fMRI study - early evidence, not license to cram anxious.",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261014015517.htm",
-      "source": "Science Advances (Yale, Goldfarb lab)"
+      "title": "Mice replay practiced skills in sleep even with their memory hub disabled",
+      "why": "Procedural-memory replay ran fine without the hippocampus in mice - early, mouse-only evidence, not yet confirmed in humans.",
+      "url": "https://www.psypost.org/brain-replays-motor-skills-during-sleep-without-help-from-the-memory-center/",
+      "source": "Nature Neuroscience (Thompson, Rollik et al., UCL)"
     },
     {
-      "id": "2026-11-25-9",
+      "id": "2026-11-26-7",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "Someone bolted Monte Carlo tree search onto Claude Code",
+      "why": "Open-source attempt to make Claude branch and backtrack like a game-tree search instead of one linear attempt - debated, but forkable.",
+      "url": "https://news.ycombinator.com/item?id=50589235",
+      "source": "Hacker News (Show HN, natsu0529)"
+    },
+    {
+      "id": "2026-11-26-8",
       "tag": "Science",
       "kind": "science",
       "evidence": "moderate",
-      "title": "Protein supplements add real but modest strength gains on top of lifting",
-      "why": "A 23-trial meta-analysis found about 2.6kg more on bench and 7.4kg more on squat, strongest in the first 12 weeks - timing beats hype.",
-      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13710401",
-      "source": "Frontiers in Nutrition"
+      "title": "90-120 minutes of weekly strength training looks like the sweet spot",
+      "why": "A 150,000-person, 3-decade cohort found mortality benefits plateaued past 2 hours/week of lifting - more wasn't better, consistency was.",
+      "url": "https://hsph.harvard.edu/news/moderate-amount-of-strength-training-each-week-could-boost-longevity/",
+      "source": "British Journal of Sports Medicine (Harvard Chan School)"
     },
     {
-      "id": "2026-11-25-10",
-      "tag": "India",
+      "id": "2026-11-26-9",
+      "tag": "Tools",
       "kind": "news",
-      "title": "An Indian chip startup's networking SoC passed first-silicon test, no respin",
-      "why": "VIHAAN's broadband chip worked right out of the fab on its first try - a real engineering win, not just another funding headline.",
-      "url": "https://www.electronicsforu.com/news/indigenous-broadband-soc-clears-first-silicon-test",
-      "source": "Electronics For You (on Aheesa's VIHAAN chip)"
+      "title": "Linux is adding a tool whose only job is to crash your kernel on purpose",
+      "why": "hwpoison-panic injects a fake memory-failure error to verify panic-on-failure settings actually work - handy for testing your own setup.",
+      "url": "https://phoronix.com/news/Linux-7.5-hwpoison-panic",
+      "source": "Phoronix (Michael Larabel)"
+    },
+    {
+      "id": "2026-11-26-10",
+      "tag": "Industry",
+      "kind": "news",
+      "title": "AI's data glut is quietly reviving magnetic tape storage",
+      "why": "Cloud operators use offline tape vaults as a cheap, ransomware-proof place to dump AI-era data - old tech solving a new-scale problem.",
+      "url": "https://tech.slashdot.org/story/26/11/03/190206/",
+      "source": "Slashdot (citing Fujifilm)"
     }
   ]
 }
