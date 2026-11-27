@@ -1,97 +1,97 @@
 {
-  "date": "2026-11-26",
+  "date": "2026-11-27",
   "items": [
     {
-      "id": "2026-11-26-1",
+      "id": "2026-11-27-1",
       "tag": "Tools",
       "kind": "news",
-      "title": "A solo coder used Claude Code to build a Wi-Fi jam detector",
-      "why": "An ESP32-C5 touchscreen board learns the RF baseline then flags jamming on 2.4/5GHz - open source, build your own this weekend.",
-      "url": "https://www.rtl-sdr.com/esp-wifi-jam-detector-a-standalone-2-4-and-5-ghz-interference-detector-built-on-an-esp32-c5-touchscreen-board/",
-      "source": "rtl-sdr.com"
+      "title": "CAN bus turns stepper motors into daisy-chained, addressable units",
+      "why": "One ESP32+driver board per motor, chained like RGB LEDs over CAN - build multi-axis rigs with way fewer wires.",
+      "url": "https://hackaday.com/2026/11/25/daisy-chaining-stepper-motors/",
+      "source": "Hackaday"
     },
     {
-      "id": "2026-11-26-2",
+      "id": "2026-11-27-2",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "A hobbyist built a USB graphics card from a single microcontroller chip",
+      "why": "One $0.20 chip plus PCB-etched USB/RCA jacks makes a working video output - a lesson in doing more with less silicon.",
+      "url": "https://hackaday.com/2026/11/22/building-a-single-chip-usb-gpu/",
+      "source": "Hackaday"
+    },
+    {
+      "id": "2026-11-27-3",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "Someone let an AI model steer a llama.cpp fork tuned for old AMD GPUs",
+      "why": "GLM wrote tile kernels and a mixed-GPU split mode for ancient Radeon VIIs - real speed claims, but unverified by others yet.",
+      "url": "https://forum.level1techs.com/t/glm-and-i-created-a-llama-cpp-fork-optimized-for-amd-gfx906-mi50-mi60-radeon-vii-gcn-hip/254257",
+      "source": "Level1Techs Forum"
+    },
+    {
+      "id": "2026-11-27-4",
       "tag": "AI",
       "kind": "news",
-      "title": "A 149M local model handles 70% of phone-agent steps, Claude the rest",
-      "why": "Confident steps stay on a cheap on-device model; hard ones route to Claude - matches Claude alone at under a third the cost.",
-      "url": "https://news.ycombinator.com/item?id=50552563",
-      "source": "Hacker News (Show HN, chaitanyav33)"
+      "title": "A paper rethinks LLM agent caching: match structure, not meaning",
+      "why": "Splits requests into action+target instead of embeddings, fixing why semantic caches confuse 'check email' with 'send email.'",
+      "url": "https://arxiv.org/abs/2602.18922",
+      "source": "arXiv (Abhinaba Basu)"
     },
     {
-      "id": "2026-11-26-3",
-      "tag": "ISB",
-      "kind": "news",
-      "title": "Box breathing before a mock job interview measurably cut stress markers",
-      "why": "A 5-min box-breathing session before a simulated hiring interview lowered heart rate and stress-hormone spikes versus normal breathing.",
-      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13321280/",
-      "source": "Comprehensive Psychoneuroendocrinology (McAllister et al.)"
-    },
-    {
-      "id": "2026-11-26-4",
+      "id": "2026-11-27-5",
       "tag": "Research",
       "kind": "news",
-      "title": "Heavy-light decomposition: the chain trick for fast tree path queries",
-      "why": "Splits a tree into O(log n) chains so any path query becomes a few segment-tree lookups - a real differentiator in interviews and CF.",
-      "url": "https://cp-algorithms.com/graph/hld.html",
-      "source": "cp-algorithms.com"
+      "title": "A hacker reverse-engineered custom firmware for a locked RF test instrument",
+      "why": "Custom firmware adds ham-radio tools and remote access to a locked-down cellular test analyzer - real hacking, not open source.",
+      "url": "https://hackaday.com/2026/11/21/custom-firmware-for-the-cmu200/",
+      "source": "Hackaday"
     },
     {
-      "id": "2026-11-26-5",
+      "id": "2026-11-27-6",
+      "tag": "Research",
+      "kind": "news",
+      "title": "Union-Find gets an undo button: the trick behind offline dynamic connectivity",
+      "why": "DSU with rollback plus a segment tree over time turns edge deletions into a solvable offline problem - a real CF differentiator.",
+      "url": "https://napolitain.github.io/dsa/dsu-rollback",
+      "source": "napolitain.github.io"
+    },
+    {
+      "id": "2026-11-27-7",
       "tag": "Tools",
       "kind": "news",
-      "title": "A full 386 PC emulator is being ported to run on a $1 RP2350 chip",
-      "why": "Tiny386, which already boots DOS and lean Linux on an ESP32, is being adapted for the RP2350 - a weekend retro-PC build on cheap hardware.",
-      "url": "https://hackaday.com/2026/09/13/a-386-pc-for-your-rp2350/",
-      "source": "Hackaday (Jenny List)"
+      "title": "eBPF tools see Linux I/O that top and htop never show you",
+      "why": "opensnoop-bpfcc and a one-line bpftrace probe watch kernel events live instead of sampling /proc - try it on your box today.",
+      "url": "https://dev.to/lyraalishaikh/beyond-htop-modern-linux-observability-with-ebpf-148o",
+      "source": "DEV Community"
     },
     {
-      "id": "2026-11-26-6",
+      "id": "2026-11-27-8",
+      "tag": "ISB",
+      "kind": "news",
+      "title": "Reframing interview nerves as excitement actually improves performance",
+      "why": "Saying 'I am excited' before a speech, math test or karaoke beat trying to stay calm in 3 real experiments - say it before you walk in.",
+      "url": "https://www.apa.org/news/press/releases/2013/12/performance-anxiety",
+      "source": "APA, on Brooks (Harvard Business School)"
+    },
+    {
+      "id": "2026-11-27-9",
       "tag": "Science",
       "kind": "science",
       "evidence": "early",
-      "title": "Mice replay practiced skills in sleep even with their memory hub disabled",
-      "why": "Procedural-memory replay ran fine without the hippocampus in mice - early, mouse-only evidence, not yet confirmed in humans.",
-      "url": "https://www.psypost.org/brain-replays-motor-skills-during-sleep-without-help-from-the-memory-center/",
-      "source": "Nature Neuroscience (Thompson, Rollik et al., UCL)"
+      "title": "A small trial found creatine loading boosted sprints, not clearly sleep or focus",
+      "why": "14-man RCT: sprint distance jumped clearly, but sleep and focus gains rest on one self-reported measure each - stay skeptical.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12736258/",
+      "source": "Nutrients (Ben Maaoui et al.)"
     },
     {
-      "id": "2026-11-26-7",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "Someone bolted Monte Carlo tree search onto Claude Code",
-      "why": "Open-source attempt to make Claude branch and backtrack like a game-tree search instead of one linear attempt - debated, but forkable.",
-      "url": "https://news.ycombinator.com/item?id=50589235",
-      "source": "Hacker News (Show HN, natsu0529)"
-    },
-    {
-      "id": "2026-11-26-8",
+      "id": "2026-11-27-10",
       "tag": "Science",
       "kind": "science",
-      "evidence": "moderate",
-      "title": "90-120 minutes of weekly strength training looks like the sweet spot",
-      "why": "A 150,000-person, 3-decade cohort found mortality benefits plateaued past 2 hours/week of lifting - more wasn't better, consistency was.",
-      "url": "https://hsph.harvard.edu/news/moderate-amount-of-strength-training-each-week-could-boost-longevity/",
-      "source": "British Journal of Sports Medicine (Harvard Chan School)"
-    },
-    {
-      "id": "2026-11-26-9",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "Linux is adding a tool whose only job is to crash your kernel on purpose",
-      "why": "hwpoison-panic injects a fake memory-failure error to verify panic-on-failure settings actually work - handy for testing your own setup.",
-      "url": "https://phoronix.com/news/Linux-7.5-hwpoison-panic",
-      "source": "Phoronix (Michael Larabel)"
-    },
-    {
-      "id": "2026-11-26-10",
-      "tag": "Industry",
-      "kind": "news",
-      "title": "AI's data glut is quietly reviving magnetic tape storage",
-      "why": "Cloud operators use offline tape vaults as a cheap, ransomware-proof place to dump AI-era data - old tech solving a new-scale problem.",
-      "url": "https://tech.slashdot.org/story/26/11/03/190206/",
-      "source": "Slashdot (citing Fujifilm)"
+      "evidence": "early",
+      "title": "Getting sunlight before 10am was linked to earlier, better sleep",
+      "why": "A survey of 1,762 adults found more morning light tracked with an earlier sleep midpoint - plausible, not yet proven causal.",
+      "url": "https://www.psypost.org/morning-sunlight-shifts-sleep-cycles-earlier-and-boosts-quality/",
+      "source": "PsyPost, on Menezes-Junior et al. (BMC Public Health)"
     }
   ]
 }
