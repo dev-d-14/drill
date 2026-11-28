@@ -1,97 +1,97 @@
 {
-  "date": "2026-11-27",
+  "date": "2026-11-28",
   "items": [
     {
-      "id": "2026-11-27-1",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "CAN bus turns stepper motors into daisy-chained, addressable units",
-      "why": "One ESP32+driver board per motor, chained like RGB LEDs over CAN - build multi-axis rigs with way fewer wires.",
-      "url": "https://hackaday.com/2026/11/25/daisy-chaining-stepper-motors/",
-      "source": "Hackaday"
-    },
-    {
-      "id": "2026-11-27-2",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "A hobbyist built a USB graphics card from a single microcontroller chip",
-      "why": "One $0.20 chip plus PCB-etched USB/RCA jacks makes a working video output - a lesson in doing more with less silicon.",
-      "url": "https://hackaday.com/2026/11/22/building-a-single-chip-usb-gpu/",
-      "source": "Hackaday"
-    },
-    {
-      "id": "2026-11-27-3",
-      "tag": "Tools",
-      "kind": "news",
-      "title": "Someone let an AI model steer a llama.cpp fork tuned for old AMD GPUs",
-      "why": "GLM wrote tile kernels and a mixed-GPU split mode for ancient Radeon VIIs - real speed claims, but unverified by others yet.",
-      "url": "https://forum.level1techs.com/t/glm-and-i-created-a-llama-cpp-fork-optimized-for-amd-gfx906-mi50-mi60-radeon-vii-gcn-hip/254257",
-      "source": "Level1Techs Forum"
-    },
-    {
-      "id": "2026-11-27-4",
+      "id": "2026-11-28-1",
       "tag": "AI",
       "kind": "news",
-      "title": "A paper rethinks LLM agent caching: match structure, not meaning",
-      "why": "Splits requests into action+target instead of embeddings, fixing why semantic caches confuse 'check email' with 'send email.'",
-      "url": "https://arxiv.org/abs/2602.18922",
-      "source": "arXiv (Abhinaba Basu)"
+      "title": "Merge-aware fine-tuning stops quantization from erasing LoRA updates",
+      "why": "Quantizing a merged LoRA model can wipe out up to 93% of what fine-tuning added - this rounds weights to the release format each step.",
+      "url": "https://arxiv.org/abs/2611.32064",
+      "source": "arXiv"
     },
     {
-      "id": "2026-11-27-5",
-      "tag": "Research",
-      "kind": "news",
-      "title": "A hacker reverse-engineered custom firmware for a locked RF test instrument",
-      "why": "Custom firmware adds ham-radio tools and remote access to a locked-down cellular test analyzer - real hacking, not open source.",
-      "url": "https://hackaday.com/2026/11/21/custom-firmware-for-the-cmu200/",
-      "source": "Hackaday"
-    },
-    {
-      "id": "2026-11-27-6",
-      "tag": "Research",
-      "kind": "news",
-      "title": "Union-Find gets an undo button: the trick behind offline dynamic connectivity",
-      "why": "DSU with rollback plus a segment tree over time turns edge deletions into a solvable offline problem - a real CF differentiator.",
-      "url": "https://napolitain.github.io/dsa/dsu-rollback",
-      "source": "napolitain.github.io"
-    },
-    {
-      "id": "2026-11-27-7",
+      "id": "2026-11-28-2",
       "tag": "Tools",
       "kind": "news",
-      "title": "eBPF tools see Linux I/O that top and htop never show you",
-      "why": "opensnoop-bpfcc and a one-line bpftrace probe watch kernel events live instead of sampling /proc - try it on your box today.",
-      "url": "https://dev.to/lyraalishaikh/beyond-htop-modern-linux-observability-with-ebpf-148o",
-      "source": "DEV Community"
+      "title": "An ESP32 portrait tracks your face with eyes that actually follow you",
+      "why": "A $10 board, a camera and two servos do real-time face tracking at 5fps - open-source, so you could build this in a weekend.",
+      "url": "https://www.xda-developers.com/you-too-can-build-this-esp32-portrait-with-eyes-that-follow-you-around-the-room/",
+      "source": "XDA Developers"
     },
     {
-      "id": "2026-11-27-8",
+      "id": "2026-11-28-3",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "Saras lets Claude Code drive a real Raspberry Pi robot over MCP",
+      "why": "An open-source MCP server wires a Pi, ESP32 and LiDAR together - a clean blueprint if you want Claude controlling your own hardware.",
+      "url": "https://github.com/techwithanant/saras_ai_robot_v2",
+      "source": "GitHub (techwithanant)"
+    },
+    {
+      "id": "2026-11-28-4",
       "tag": "ISB",
       "kind": "news",
-      "title": "Reframing interview nerves as excitement actually improves performance",
-      "why": "Saying 'I am excited' before a speech, math test or karaoke beat trying to stay calm in 3 real experiments - say it before you walk in.",
-      "url": "https://www.apa.org/news/press/releases/2013/12/performance-anxiety",
-      "source": "APA, on Brooks (Harvard Business School)"
+      "title": "A simple breathing pattern blunted stress hormones before a mock interview",
+      "why": "In a trial built around a mock video-panel pitch, box breathing cut heart rate, anxiety and stress hormones - try it in the waiting room.",
+      "url": "https://www.psypost.org/brief-breathing-exercises-blunt-the-body-s-physical-reaction-to-acute-stress/",
+      "source": "PsyPost, on McAllister et al. (Comprehensive Psychoneuroendocrinology)"
     },
     {
-      "id": "2026-11-27-9",
+      "id": "2026-11-28-5",
+      "tag": "Science",
+      "kind": "science",
+      "evidence": "moderate",
+      "title": "Ice baths ease soreness for days but can blunt your strength gains",
+      "why": "A review pooling 3,210 people found cold immersion after lifting dulls hypertrophy - save it for cardio days, not after leg day.",
+      "url": "https://www.sciencealert.com/giant-study-finds-ice-baths-can-relieve-sore-muscles-but-theres-a-hidden-cost",
+      "source": "ScienceAlert, on Berjisian et al. (Sports Medicine - Open)"
+    },
+    {
+      "id": "2026-11-28-6",
       "tag": "Science",
       "kind": "science",
       "evidence": "early",
-      "title": "A small trial found creatine loading boosted sprints, not clearly sleep or focus",
-      "why": "14-man RCT: sprint distance jumped clearly, but sleep and focus gains rest on one self-reported measure each - stay skeptical.",
-      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12736258/",
-      "source": "Nutrients (Ben Maaoui et al.)"
+      "title": "Overtraining left mice with disrupted brain dopamine for two days",
+      "why": "Daily double training sessions kept hippocampal dopamine abnormally high 48 hours later in mice - an argument for scheduled deload weeks.",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261117033923.htm",
+      "source": "ScienceDaily, on da Rocha et al. (Neuroscience)"
     },
     {
-      "id": "2026-11-27-10",
-      "tag": "Science",
-      "kind": "science",
-      "evidence": "early",
-      "title": "Getting sunlight before 10am was linked to earlier, better sleep",
-      "why": "A survey of 1,762 adults found more morning light tracked with an earlier sleep midpoint - plausible, not yet proven causal.",
-      "url": "https://www.psypost.org/morning-sunlight-shifts-sleep-cycles-earlier-and-boosts-quality/",
-      "source": "PsyPost, on Menezes-Junior et al. (BMC Public Health)"
+      "id": "2026-11-28-7",
+      "tag": "Research",
+      "kind": "news",
+      "title": "Small-to-large merging turns tree DP into an O(n log n) trick",
+      "why": "Keep the biggest child's structure and insert only the smaller ones into it - a real differentiator for subtree-merging problems on CF.",
+      "url": "https://codeforces.com/blog/entry/152636",
+      "source": "Codeforces"
+    },
+    {
+      "id": "2026-11-28-8",
+      "tag": "Research",
+      "kind": "news",
+      "title": "A freed memory pointer let guest VMs read host memory on AMD chips",
+      "why": "A missed reset on nested VM restarts let a guest forge page-table mappings into host RAM - now patched, worth knowing how it worked.",
+      "url": "https://thehackernews.com/2026/11/new-linux-kvm-flaw-cve-2026-99312-lets.html",
+      "source": "The Hacker News"
+    },
+    {
+      "id": "2026-11-28-9",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "APT's retry logic let attackers swap verified packages for fake ones",
+      "why": "A malicious mirror could abuse ordinary HTTP retries to run attacker code as root - check your Acquire::Retries setting today.",
+      "url": "https://thehackernews.com/2026/11/debian-and-ubuntu-apt-flaw-lets-mitm.html",
+      "source": "The Hacker News"
+    },
+    {
+      "id": "2026-11-28-10",
+      "tag": "Tools",
+      "kind": "news",
+      "title": "io_uring skips syscalls by sharing two ring buffers with the kernel",
+      "why": "One shared memory region replaces per-call context switches for reads and writes - reach for it next time a service is syscall-bound.",
+      "url": "https://kishorek.dev/writing/io-uring-for-backend-engineers",
+      "source": "Kishore K Sharma's blog"
     }
   ]
 }
