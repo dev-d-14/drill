@@ -11,9 +11,9 @@ import java.util.List;
  * impact spike back up through {@link #HIGH_G}. Flight time gives jump height (h = g t² / 8), and the time from one
  * landing to the next takeoff is the ground contact time. Height over contact time is the reactive strength index.
  *
- * Microphone (phone on the floor or a bench nearby): every landing makes a thud well above the room's noise floor,
- * so the microphone counts foot contacts and the rhythm between them. It cannot see flight time on its own, so it
- * is the fallback when the motion sensor saw no jumps.
+ * Microphone (phone on the floor nearby): every landing makes a thud well above the room's noise floor, so the
+ * microphone counts foot contacts and times each one. The gap from one landing to the next is the rep time (ground
+ * contact plus flight). Take-off makes no sound, so the microphone alone cannot split that into flight and contact.
  */
 final class JumpDetector {
 
@@ -60,9 +60,14 @@ final class JumpDetector {
 
     // microphone state
     private double floor = -1;
+    private double env;            // peak-hold envelope, so a thud's ringing tail is one thud, not several
     private boolean loud;
+    private long lastAudioNs = -1;
     private long lastThudNs = -1;
     static final double THUD_FACTOR = 6, THUD_MIN_RMS = 700, THUD_GAP_S = 0.12;
+    static final double ENV_TAU_S = 0.03, FLOOR_TAU_S = 0.5;
+    /** Landing-to-landing gaps longer than this are rests or resets between reps, not one rep. */
+    static final long MAX_REP_MS = 2500;
 
     /** One accelerometer reading, in m/s² including gravity, with its timestamp in nanoseconds. */
     synchronized void accel(long tNs, float x, float y, float z) {
@@ -98,12 +103,19 @@ final class JumpDetector {
         lastG = g;
     }
 
-    /** One short microphone frame's RMS level (16-bit samples), with the time the frame ended. */
+    /**
+     * One short microphone frame's RMS level (16-bit samples) with its time. Frames of a few ms give each landing a
+     * timestamp to within a few ms; the time should come from the count of samples read, not the wall clock.
+     */
     synchronized void audio(long tNs, double rms) {
         if (floor < 0) {
-            floor = rms;
+            floor = Math.max(rms, 1);
+            lastAudioNs = tNs;
             return;
         }
+        double dt = Math.max(0, (tNs - lastAudioNs) / 1e9);
+        lastAudioNs = tNs;
+        env = Math.max(rms, env * Math.exp(-dt / ENV_TAU_S));
         double threshold = Math.max(floor * THUD_FACTOR, THUD_MIN_RMS);
         if (!loud && rms > threshold) {
             loud = true;
@@ -111,11 +123,26 @@ final class JumpDetector {
                 thuds.add(tNs);
                 lastThudNs = tNs;
             }
-        } else if (loud && rms < threshold * 0.5) {
+        } else if (loud && env < threshold * 0.5) {
             loud = false;
         }
-        // The noise floor follows the room slowly and is not pulled up by the thuds themselves.
-        if (!loud) floor = floor * 0.98 + Math.min(rms, floor * 3) * 0.02;
+        // The noise floor follows the room slowly (about half a second) and is not pulled up by the thuds themselves.
+        if (!loud) {
+            double a = 1 - Math.exp(-dt / FLOOR_TAU_S);
+            floor = Math.max(1, floor + (Math.min(rms, floor * 3) - floor) * a);
+        }
+    }
+
+    /** Time from each heard landing to the next, in ms, oldest first. Includes rests; see {@link #MAX_REP_MS}. */
+    synchronized long[] thudGapsMs() {
+        long[] g = new long[Math.max(0, thuds.size() - 1)];
+        for (int i = 1; i < thuds.size(); i++) g[i - 1] = (thuds.get(i) - thuds.get(i - 1)) / 1_000_000L;
+        return g;
+    }
+
+    /** First to last heard landing, in ms, or 0. */
+    synchronized long thudSpanMs() {
+        return thuds.size() < 2 ? 0 : (thuds.get(thuds.size() - 1) - thuds.get(0)) / 1_000_000L;
     }
 
     synchronized List<Jump> jumps() {
@@ -150,7 +177,7 @@ final class JumpDetector {
         int n = 0;
         for (int i = 1; i < thuds.size(); i++) {
             long gap = (thuds.get(i) - thuds.get(i - 1)) / 1_000_000L;
-            if (gap <= MAX_CONTACT_S * 1000 + MAX_FLIGHT_S * 1000) {
+            if (gap <= MAX_REP_MS) {
                 sum += gap;
                 n++;
             }

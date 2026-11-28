@@ -103,6 +103,11 @@ final class Plyo {
         return "plyo".equals(Store.setting(c, "trainMode", "lift"));
     }
 
+    /** Where the phone sits during a set: on the floor (microphone times each landing) or in a pocket (motion). */
+    static boolean floor(Context c) {
+        return !"pocket".equals(Store.setting(c, "plyoPlace", "floor"));
+    }
+
     static Ex find(String name) {
         for (Ex e : DRILLS) if (e.name.equals(name)) return e;
         return null;
@@ -128,6 +133,33 @@ final class Plyo {
             r.addView(t, Ui.gap(Ui.lp(0, Ui.dp(40), 1), i == 0 ? 0 : 4, 0, i == 0 ? 4 : 0, 0));
         }
         return r;
+    }
+
+    /** ON THE FLOOR | IN A POCKET switch on the tracker screen. */
+    static View places(MainActivity a) {
+        boolean floor = floor(a);
+        LinearLayout r = Ui.row(a);
+        String[] names = {"ON THE FLOOR", "IN A POCKET"};
+        for (int i = 0; i < 2; i++) {
+            boolean sel = (i == 0) == floor;
+            final String place = i == 0 ? "floor" : "pocket";
+            TextView t = Ui.text(a, names[i], 13, sel ? Ui.BLACK : Ui.MUTED, Ui.bold);
+            t.setLetterSpacing(0.08f);
+            t.setGravity(Gravity.CENTER);
+            t.setBackground(Ui.press(sel ? Ui.fill(Ui.JADE, 4) : Ui.stroke(Ui.MUTED, 4, false), 4));
+            t.setContentDescription("Phone " + names[i].toLowerCase(Locale.ROOT));
+            t.setOnClickListener(v -> {
+                Store.setSetting(a, "plyoPlace", place);
+                a.refresh();
+            });
+            r.addView(t, Ui.gap(Ui.lp(0, Ui.dp(40), 1), i == 0 ? 0 : 4, 0, i == 0 ? 4 : 0, 0));
+        }
+        return r;
+    }
+
+    /** "0.41 s" */
+    static String secs(long ms) {
+        return String.format(Locale.ROOT, "%.2f s", ms / 1000.0);
     }
 
     // ---- history ----
@@ -164,7 +196,7 @@ final class Plyo {
     static String bests(Context c, Ex ex) {
         JSONArray sets = log(c).optJSONArray(ex.name);
         if (sets == null || sets.length() == 0) return "";
-        int h = 0, rsi = 0, dist = 0, gct = Integer.MAX_VALUE;
+        int h = 0, rsi = 0, dist = 0, gct = Integer.MAX_VALUE, rep = Integer.MAX_VALUE;
         for (int i = 0; i < sets.length(); i++) {
             JSONObject s = sets.optJSONObject(i);
             if (s == null) continue;
@@ -172,13 +204,36 @@ final class Plyo {
             rsi = Math.max(rsi, s.optInt("rsi"));
             dist = Math.max(dist, s.optInt("dist"));
             if (s.optInt("gct") > 0) gct = Math.min(gct, s.optInt("gct"));
+            if (s.optInt("bestRep") > 0) rep = Math.min(rep, s.optInt("bestRep"));
         }
         StringBuilder b = new StringBuilder("best");
         if (ex.metric != COUNT && h > 0) b.append(' ').append(h / 10).append(" cm");
         if (ex.metric == REACTIVE && gct < Integer.MAX_VALUE) b.append(" · ").append(gct).append(" ms");
         if (ex.metric == REACTIVE && rsi > 0) b.append(String.format(Locale.ROOT, " · RSI %.2f", rsi / 100.0));
         if (ex.distance && dist > 0) b.append(String.format(Locale.ROOT, " · %.2f m", dist / 100.0));
+        if (rep < Integer.MAX_VALUE) b.append(" · fastest rep ").append(secs(rep));
         return b.length() > 4 ? b.toString() : sets.length() + " sets logged";
+    }
+
+    /** The last few logged sets of a drill, newest first: "28 Nov · 15 landings · avg 0.41 s". */
+    static String recent(Context c, Ex ex, int max) {
+        JSONArray sets = log(c).optJSONArray(ex.name);
+        StringBuilder b = new StringBuilder();
+        for (int i = sets == null ? -1 : sets.length() - 1, k = 0; i >= 0 && k < max; i--, k++) {
+            JSONObject s = sets.optJSONObject(i);
+            if (s == null) continue;
+            if (b.length() > 0) b.append('\n');
+            String d = s.optString("d");
+            try {
+                d = LocalDate.parse(d).format(java.time.format.DateTimeFormatter.ofPattern("d MMM", Locale.ENGLISH));
+            } catch (Exception ignored) {
+            }
+            int n = s.optInt("n");
+            b.append(d).append(" · ").append(n).append(n == 1 ? " landing" : " landings");
+            if (s.optInt("avgRep") > 0) b.append(" · avg ").append(secs(s.optInt("avgRep")));
+            if (s.optInt("h") > 0) b.append(" · ").append(s.optInt("h") / 10).append(" cm");
+        }
+        return b.toString();
     }
 
     // ---- the list on the Train tab ----
@@ -195,9 +250,9 @@ final class Plyo {
                         : "foot contacts today. Do plyos fresh, right after the warm-up.", Ui.CREAM, Ui.MUTED),
                 Ui.lp(0, Ui.WRAP, 1));
         body.addView(card, Ui.lp(Ui.MATCH, Ui.WRAP));
-        body.addView(Ui.text(a, "Tap a drill to track it. Phone in a tight pocket or the waistband: it measures each "
-                        + "jump's height, ground contact time and reactive strength (RSI). Phone on the floor nearby: "
-                        + "the microphone counts your landings.", 13, Ui.CREAM, Ui.regular),
+        body.addView(Ui.text(a, "Tap a drill to track it. Phone on the floor nearby: the microphone hears every "
+                        + "landing and logs the time from one landing to the next for each rep. Phone in a tight pocket "
+                        + "instead: it measures each jump's height, ground contact time and RSI.", 13, Ui.CREAM, Ui.regular),
                 Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 10, 0, 4));
 
         for (String[] type : TYPES) {
@@ -237,6 +292,9 @@ final class Plyo {
     static final class Result {
         int contacts, bestCm10, bestRsi100, avgGct, rhythm, dist;
         boolean motion;
+        /** Microphone: landing-to-landing time of each rep in ms (rests left out), and first to last landing. */
+        long[] reps = new long[0];
+        int avgRep, bestRep, steadyPct, spanMs;
     }
 
     static Result summarize(JumpDetector d, Ex ex) {
@@ -256,6 +314,30 @@ final class Plyo {
             }
         }
         r.avgGct = gctN == 0 ? 0 : (int) (gctSum / gctN);
+        if (!r.motion) {
+            long[] gaps = d.thudGapsMs();
+            int k = 0;
+            for (long g : gaps) if (g <= JumpDetector.MAX_REP_MS) k++;
+            r.reps = new long[k];
+            k = 0;
+            for (long g : gaps) if (g <= JumpDetector.MAX_REP_MS) r.reps[k++] = g;
+            if (k > 0) {
+                long sum = 0, best = Long.MAX_VALUE;
+                for (long g : r.reps) {
+                    sum += g;
+                    best = Math.min(best, g);
+                }
+                double mean = sum / (double) k;
+                r.avgRep = (int) Math.round(mean);
+                r.bestRep = (int) best;
+                if (k >= 3) {
+                    double var = 0;
+                    for (long g : r.reps) var += (g - mean) * (g - mean);
+                    r.steadyPct = (int) Math.round(100 * Math.sqrt(var / k) / mean);
+                }
+            }
+            r.spanMs = (int) d.thudSpanMs();
+        }
         return r;
     }
 
@@ -264,10 +346,16 @@ final class Plyo {
         StringBuilder b = new StringBuilder();
         if (!d.usingMotion()) {
             int n = d.thudCount();
-            if (n == 0) return "";
-            long rhythm = d.thudRhythmMs();
-            return "heard " + n + (n == 1 ? " landing" : " landings")
-                    + (rhythm > 0 ? " · one every " + rhythm + " ms" : "");
+            if (n == 0) return "listening for landings";
+            long[] gaps = d.thudGapsMs();
+            for (int i = Math.max(0, n - max); i < n; i++) {
+                if (b.length() > 0) b.append('\n');
+                b.append('#').append(i + 1).append("   ");
+                if (i == 0) b.append("first landing");
+                else if (gaps[i - 1] <= JumpDetector.MAX_REP_MS) b.append(secs(gaps[i - 1]));
+                else b.append("after a ").append(String.format(Locale.ROOT, "%.0f s", gaps[i - 1] / 1000.0)).append(" rest");
+            }
+            return b.toString();
         }
         List<JumpDetector.Jump> js = d.jumps();
         for (int i = Math.max(0, js.size() - max); i < js.size(); i++) {
@@ -365,7 +453,7 @@ final class Plyo {
         if (phase == COUNTDOWN || phase == RUNNING) {
             a.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             TextView stop = Ui.ghost(a, "Hold to stop", Ui.CREAM, false,
-                    v -> Toast.makeText(a, "Press and hold, so a pocket can't stop it.", Toast.LENGTH_SHORT).show());
+                    v -> Toast.makeText(a, "Press and hold to stop.", Toast.LENGTH_SHORT).show());
             stop.setOnLongClickListener(v -> {
                 if (phase == RUNNING) finish(a, drill, false);
                 else {
@@ -384,8 +472,11 @@ final class Plyo {
         big.setTextSize(64);
         sub.setText("foot contacts today, of " + CONTACT_CAP);
         String best = bests(a, drill);
-        lines.setText(drill.cue + "\n\n" + placement(drill) + (best.isEmpty() ? "" : "\n\n" + best));
+        String last = recent(a, drill, 3);
+        lines.setText(drill.cue + "\n\n" + placement(drill, floor(a)) + (best.isEmpty() ? "" : "\n\n" + best)
+                + (last.isEmpty() ? "" : "\n\nlast sets\n" + last));
         lines.setTextSize(14);
+        page.addView(places(a), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 0, 0, 10));
         TextView start = Ui.button(a, "START", Ui.JADE, Ui.BLACK, v -> begin(a));
         start.setTypeface(Ui.bebas);
         start.setTextSize(28);
@@ -394,18 +485,38 @@ final class Plyo {
         return page;
     }
 
-    private static String placement(Ex ex) {
+    private static String placement(Ex ex, boolean floor) {
+        if (floor) {
+            return "Tap start, set the phone on the floor screen up, a metre or two from where you land, and get in "
+                    + "place within 5 s. The microphone times every landing: the gap between two landings is your rep "
+                    + "time. It stops by itself after your last rep, or hold to stop."
+                    + (ex.metric == HEIGHT ? " Jump height needs the phone in a pocket." : "");
+        }
         String what = ex.metric == HEIGHT ? "your jump height"
                 : ex.metric == REACTIVE ? "height, ground contact time and RSI" : "every landing";
         return "Tap start, then put the phone in a tight pocket within 5 s. It tracks " + what
-                + " and stops by itself 5 s after your last rep. Phone on the floor instead? The mic counts landings.";
+                + " and stops by itself after your last rep.";
     }
 
     private static String summaryText(Ex ex, Result r) {
         StringBuilder b = new StringBuilder();
         if (!r.motion) {
-            b.append(r.contacts == 0 ? "Nothing picked up. Keep the phone in a snug pocket, or on the floor near you in a quiet room."
-                    : "Counted by the microphone" + (r.rhythm > 0 ? ", one landing every " + r.rhythm + " ms" : "") + ".");
+            if (r.contacts == 0) {
+                return "Nothing heard. Put the phone on the floor within a metre or two of where you land, in a quiet "
+                        + "room, and land on a hard floor rather than a mat.";
+            }
+            if (r.reps.length > 0) {
+                b.append("rep time, landing to landing\n");
+                for (int i = 0; i < r.reps.length; i++) {
+                    if (i > 0) b.append(i % 5 == 0 ? "\n" : "   ");
+                    b.append(String.format(Locale.ROOT, "%.2f", r.reps[i] / 1000.0));
+                }
+                b.append("\n\navg ").append(secs(r.avgRep)).append(" · fastest ").append(secs(r.bestRep));
+                if (r.reps.length >= 3) b.append(" · ±").append(r.steadyPct).append('%');
+            } else {
+                b.append("Counted by the microphone.");
+            }
+            if (r.spanMs > 0) b.append(String.format(Locale.ROOT, "\nset time %.1f s", r.spanMs / 1000.0));
             return b.toString();
         }
         if (r.bestCm10 > 0) b.append(String.format(Locale.ROOT, "best %.1f cm", r.bestCm10 / 10.0));
@@ -433,6 +544,14 @@ final class Plyo {
         if (r.bestRsi100 > 0) Store.put(s, "rsi", r.bestRsi100);
         if (r.avgGct > 0) Store.put(s, "gct", r.avgGct);
         if (r.dist > 0) Store.put(s, "dist", r.dist);
+        if (r.reps.length > 0) {
+            JSONArray reps = new JSONArray();
+            for (long v : r.reps) reps.put(v);
+            Store.put(s, "reps", reps);
+            Store.put(s, "avgRep", r.avgRep);
+            Store.put(s, "bestRep", r.bestRep);
+        }
+        if (r.spanMs > 0) Store.put(s, "span", r.spanMs);
         Store.put(s, "src", r.motion ? "motion" : "mic");
         Store.arr(log(c), ex.name).put(s);
         Store.save(c);
@@ -441,7 +560,8 @@ final class Plyo {
     // ---- running a set ----
 
     private static void begin(MainActivity a) {
-        if (!Sleep.micAllowed(a) && !Store.root(a).optBoolean("askedPlyoMic", false)) {
+        // On the floor the microphone is the only sensor, so ask every time; in a pocket ask once.
+        if (!Sleep.micAllowed(a) && (floor(a) || !Store.root(a).optBoolean("askedPlyoMic", false))) {
             Store.put(Store.root(a), "askedPlyoMic", true);
             Store.save(a);
             a.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, REQ_MIC);
@@ -455,6 +575,11 @@ final class Plyo {
     /** Back from the microphone question: start either way; without it the motion sensor still works. */
     static void afterPermission(MainActivity a) {
         if (a.current != MainActivity.PLYO) return;
+        if (floor(a) && !Sleep.micAllowed(a)) {
+            Toast.makeText(a, "On the floor it listens for your landings, so it needs the microphone. Allow it in "
+                    + "Settings, or switch to the pocket.", Toast.LENGTH_LONG).show();
+            return;
+        }
         phase = COUNTDOWN;
         countdownEnd = SystemClock.elapsedRealtime() + 5000;
     }
@@ -519,7 +644,7 @@ final class Plyo {
                     if (left > 0) {
                         long s = (left + 999) / 1000;
                         big.setText(String.valueOf(s));
-                        sub.setText("phone in your pocket");
+                        sub.setText(floor(a) ? "phone on the floor" : "phone in your pocket");
                         lines.setText(ex.cue);
                         if (s <= 3 && s != lastBeepSec) {
                             lastBeepSec = s;
@@ -532,7 +657,7 @@ final class Plyo {
                         big.setText("GO");
                         sub.setText("");
                         a.handler.postDelayed(() -> {
-                            if (phase == RUNNING && tracker == null) tracker = Tracker.start(a);
+                            if (phase == RUNNING && tracker == null) tracker = Tracker.start(a, !floor(a));
                         }, 450);
                     }
                 } else if (phase == RUNNING && tracker != null) {
@@ -543,7 +668,9 @@ final class Plyo {
                     lines.setText(repLines(d, ex, 6));
                     long last = d.lastContactNs();
                     long idleMs = (SystemClock.elapsedRealtimeNanos() - (last > 0 ? last : tracker.startedNs)) / 1_000_000L;
-                    if (n > 0 && idleMs > 5000) {
+                    // Continuous drills end 5 s after the last landing; drills with a reset between reps wait 15 s.
+                    long quiet = ex.metric == REACTIVE && !"DEEP".equals(ex.type) ? 5000 : 15000;
+                    if (n > 0 && idleMs > quiet) {
                         finish(a, ex, true);
                         return;
                     }
@@ -569,8 +696,8 @@ final class Plyo {
         private Thread mic;
         private volatile boolean micOn;
 
-        private Tracker(Context c) {
-            sm = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
+        private Tracker(Context c, boolean motion) {
+            sm = motion ? (SensorManager) c.getSystemService(Context.SENSOR_SERVICE) : null;
             Sensor acc = sm == null ? null : sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             hasAccel = acc != null && sm.registerListener(this, acc, SensorManager.SENSOR_DELAY_FASTEST);
             if (c.checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
@@ -579,8 +706,8 @@ final class Plyo {
             }
         }
 
-        static Tracker start(Context c) {
-            return new Tracker(c);
+        static Tracker start(Context c, boolean motion) {
+            return new Tracker(c, motion);
         }
 
         String sources(JumpDetector d) {
@@ -599,32 +726,38 @@ final class Plyo {
         }
 
         private void listen() {
-            int rate = 16000, frame = 160;
+            int rate = 16000, frame = 32;   // 2 ms frames, so each landing is timed to about 2 ms
             AudioRecord rec = null;
             try {
                 int min = AudioRecord.getMinBufferSize(rate, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
                 // Unprocessed audio keeps the thuds sharp (no noise suppression); not every phone offers it.
                 try {
                     rec = new AudioRecord(MediaRecorder.AudioSource.UNPROCESSED, rate, AudioFormat.CHANNEL_IN_MONO,
-                            AudioFormat.ENCODING_PCM_16BIT, Math.max(min, frame * 2 * 20));
+                            AudioFormat.ENCODING_PCM_16BIT, Math.max(min, rate));   // bytes: half a second of audio
                 } catch (Exception e) {
                     rec = null;
                 }
                 if (rec == null || rec.getState() != AudioRecord.STATE_INITIALIZED) {
                     if (rec != null) rec.release();
                     rec = new AudioRecord(MediaRecorder.AudioSource.MIC, rate, AudioFormat.CHANNEL_IN_MONO,
-                            AudioFormat.ENCODING_PCM_16BIT, Math.max(min, frame * 2 * 20));
+                            AudioFormat.ENCODING_PCM_16BIT, Math.max(min, rate));   // bytes: half a second of audio
                 }
                 if (rec.getState() != AudioRecord.STATE_INITIALIZED) return;
                 rec.startRecording();
                 micOn = true;
-                short[] buf = new short[frame];
+                // Landing times come from the number of samples read, the audio clock, so a late read can't shift them.
+                long t0 = SystemClock.elapsedRealtimeNanos(), samples = 0;
+                short[] buf = new short[frame * 16];
                 while (running) {
-                    int n = rec.read(buf, 0, frame);
+                    int n = rec.read(buf, 0, buf.length);
                     if (n <= 0) continue;
-                    long sum = 0;
-                    for (int i = 0; i < n; i++) sum += (long) buf[i] * buf[i];
-                    detector.audio(SystemClock.elapsedRealtimeNanos(), Math.sqrt(sum / (double) n));
+                    for (int off = 0; off + frame <= n; off += frame) {
+                        long sum = 0;
+                        for (int i = off; i < off + frame; i++) sum += (long) buf[i] * buf[i];
+                        samples += frame;
+                        detector.audio(t0 + samples * 1_000_000_000L / rate, Math.sqrt(sum / (double) frame));
+                    }
+                    samples += n % frame;   // a short read's leftover still took time
                 }
             } catch (Exception ignored) {
             } finally {

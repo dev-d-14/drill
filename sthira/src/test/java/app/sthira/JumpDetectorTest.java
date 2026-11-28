@@ -91,4 +91,41 @@ public class JumpDetectorTest {
         assertFalse(d.usingMotion());
         assertEquals(450, d.thudRhythmMs(), 5);
     }
+
+    /** 2 ms frames, like the floor mode feeds: a thud with a ringing tail, sharp onset, varied rep times and a rest. */
+    @Test
+    public void floorModeTimesEachLanding() {
+        JumpDetector d = new JumpDetector();
+        long t = 1_000_000_000L, frame = 2_000_000L;
+        java.util.Random rnd = new java.util.Random(7);
+        for (int i = 0; i < 500; i++, t += frame) d.audio(t, 120 + rnd.nextInt(80));   // 1 s of quiet room
+        long[] reps = {420, 390, 405, 380, 2300 + 4000, 410, 400};   // one 6.3 s rest in the middle
+        long[] onsets = new long[reps.length + 1];
+        for (int k = 0; k <= reps.length; k++) {
+            onsets[k] = t;
+            // thud: loud for 8 ms, then a tail decaying over ~80 ms that wobbles around the threshold
+            for (int i = 0; i < 4; i++, t += frame) d.audio(t, 9000);
+            for (int i = 0; i < 40; i++, t += frame) d.audio(t, 9000 * Math.exp(-i / 12.0) * (i % 3 == 0 ? 0.4 : 1));
+            if (k == reps.length) break;
+            long end = onsets[k] + reps[k] * 1_000_000L;
+            for (; t < end; t += frame) d.audio(t, 120 + rnd.nextInt(80));
+        }
+        for (int i = 0; i < 500; i++, t += frame) d.audio(t, 120 + rnd.nextInt(80));
+
+        assertEquals(reps.length + 1, d.thudCount());
+        long[] gaps = d.thudGapsMs();
+        for (int i = 0; i < reps.length; i++) assertEquals(reps[i], gaps[i], 3);
+        assertTrue(gaps[4] > JumpDetector.MAX_REP_MS);   // the rest is not a rep
+        assertEquals((onsets[reps.length] - onsets[0]) / 1_000_000L, d.thudSpanMs(), 3);
+    }
+
+    /** Talking-level noise well under a landing does not count. */
+    @Test
+    public void floorModeIgnoresQuietNoise() {
+        JumpDetector d = new JumpDetector();
+        long t = 1_000_000_000L, frame = 2_000_000L;
+        for (int i = 0; i < 500; i++, t += frame) d.audio(t, 150);
+        for (int i = 0; i < 1000; i++, t += frame) d.audio(t, 150 + 400 * Math.abs(Math.sin(i / 9.0)));
+        assertEquals(0, d.thudCount());
+    }
 }
