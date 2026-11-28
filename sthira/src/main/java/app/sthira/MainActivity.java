@@ -294,6 +294,12 @@ public final class MainActivity extends Activity {
     }
 
     @Override
+    public boolean dispatchTouchEvent(android.view.MotionEvent e) {
+        if (e.getActionMasked() == android.view.MotionEvent.ACTION_DOWN) Plyo.touched();
+        return super.dispatchTouchEvent(e);
+    }
+
+    @Override
     public void onBackPressed() {
         if (current == PLANS && editPlan != null) {
             editPlan = null;

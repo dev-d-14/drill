@@ -514,7 +514,7 @@ final class Plyo {
                 b.append("\n\navg ").append(secs(r.avgRep)).append(" · fastest ").append(secs(r.bestRep));
                 if (r.reps.length >= 3) b.append(" · ±").append(r.steadyPct).append('%');
             } else {
-                b.append("Counted by the microphone.");
+                b.append("Landings counted.");
             }
             if (r.spanMs > 0) b.append(String.format(Locale.ROOT, "\nset time %.1f s", r.spanMs / 1000.0));
             return b.toString();
@@ -686,20 +686,39 @@ final class Plyo {
         });
     }
 
-    /** Accelerometer at the fastest rate the phone allows, and the microphone in 10 ms frames. */
+    /** Any touch on the app's screen while a set runs (from MainActivity): handling the phone, not a jump. */
+    static void touched() {
+        Tracker t = tracker;
+        if (t != null) t.touched();
+    }
+
+    /**
+     * The accelerometer at the fastest rate the phone allows, the proximity sensor (pocket) and the microphone in
+     * 2 ms frames. Each set's raw readings are also written to files/plyo-trace so the detector can be tuned.
+     */
     static final class Tracker implements SensorEventListener {
         final JumpDetector detector = new JumpDetector();
         final long startedNs = SystemClock.elapsedRealtimeNanos();
+        private final Context app;
+        private final boolean floor;
         private final SensorManager sm;
         private final boolean hasAccel;
+        private final float proxRange;
         private volatile boolean running = true;
         private Thread mic;
         private volatile boolean micOn;
+        private final StringBuilder trace = new StringBuilder();
 
         private Tracker(Context c, boolean motion) {
-            sm = motion ? (SensorManager) c.getSystemService(Context.SENSOR_SERVICE) : null;
+            app = c.getApplicationContext();
+            floor = !motion;
+            sm = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
             Sensor acc = sm == null ? null : sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             hasAccel = acc != null && sm.registerListener(this, acc, SensorManager.SENSOR_DELAY_FASTEST);
+            Sensor prox = motion && sm != null ? sm.getDefaultSensor(Sensor.TYPE_PROXIMITY) : null;
+            proxRange = prox == null ? 0 : prox.getMaximumRange();
+            if (prox != null) sm.registerListener(this, prox, SensorManager.SENSOR_DELAY_FASTEST);
+            note("start," + (floor ? "floor" : "pocket") + "," + startedNs);
             if (c.checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
                 mic = new Thread(this::listen, "plyo-mic");
                 mic.start();
@@ -712,13 +731,38 @@ final class Plyo {
 
         String sources(JumpDetector d) {
             if (d.usingMotion()) return "motion sensor";
-            if (micOn && hasAccel) return "motion + mic";
-            return micOn ? "microphone" : hasAccel ? "motion sensor" : "no sensors";
+            if (floor) {
+                if (d.thudCount() > 0) return d.floorByMotion() ? "felt through the floor" : "microphone";
+                return micOn ? "listening" : hasAccel ? "floor sensor only" : "no sensors";
+            }
+            return hasAccel ? "motion sensor" : "no sensors";
+        }
+
+        private void note(String line) {
+            synchronized (trace) {
+                if (trace.length() < 8_000_000) trace.append(line).append('\n');
+            }
+        }
+
+        void touched() {
+            long t = SystemClock.elapsedRealtimeNanos();
+            note("touch," + t);
+            detector.touched(t);
         }
 
         @Override
         public void onSensorChanged(SensorEvent e) {
-            if (running) detector.accel(e.timestamp, e.values[0], e.values[1], e.values[2]);
+            if (!running) return;
+            if (e.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+                // Most phones report only "near" (0) or "far" (max range).
+                boolean covered = e.values[0] < proxRange;
+                note("prox," + e.timestamp + "," + e.values[0]);
+                detector.proximity(e.timestamp, covered);
+                return;
+            }
+            note("a," + e.timestamp + "," + e.values[0] + "," + e.values[1] + "," + e.values[2]);
+            if (floor) detector.floorAccel(e.timestamp, e.values[0], e.values[1], e.values[2]);
+            else detector.accel(e.timestamp, e.values[0], e.values[1], e.values[2]);
         }
 
         @Override
@@ -747,17 +791,26 @@ final class Plyo {
                 micOn = true;
                 // Landing times come from the number of samples read, the audio clock, so a late read can't shift them.
                 long t0 = SystemClock.elapsedRealtimeNanos(), samples = 0;
+                note("mic," + t0 + "," + rec.getAudioSource());
                 short[] buf = new short[frame * 16];
+                StringBuilder lines = new StringBuilder();
                 while (running) {
                     int n = rec.read(buf, 0, buf.length);
                     if (n <= 0) continue;
+                    lines.setLength(0);
                     for (int off = 0; off + frame <= n; off += frame) {
                         long sum = 0;
                         for (int i = off; i < off + frame; i++) sum += (long) buf[i] * buf[i];
                         samples += frame;
-                        detector.audio(t0 + samples * 1_000_000_000L / rate, Math.sqrt(sum / (double) frame));
+                        long t = t0 + samples * 1_000_000_000L / rate;
+                        double rms = Math.sqrt(sum / (double) frame);
+                        detector.audio(t, rms);
+                        lines.append("m,").append(t).append(',').append((int) Math.round(rms)).append('\n');
                     }
                     samples += n % frame;   // a short read's leftover still took time
+                    synchronized (trace) {
+                        if (trace.length() < 8_000_000) trace.append(lines);
+                    }
                 }
             } catch (Exception ignored) {
             } finally {
@@ -773,8 +826,30 @@ final class Plyo {
         }
 
         void stop() {
+            if (!running) return;
             running = false;
             if (sm != null) sm.unregisterListener(this);
+            final String text;
+            synchronized (trace) {
+                text = trace.toString();
+            }
+            // Keep the last 10 sets' raw readings for tuning (adb shell run-as app.sthira ls files/plyo-trace).
+            new Thread(() -> {
+                try {
+                    java.io.File dir = new java.io.File(app.getFilesDir(), "plyo-trace");
+                    if (!dir.isDirectory() && !dir.mkdirs()) return;
+                    String name = java.time.LocalDateTime.now().toString().replace(':', '-') + (floor ? "-floor" : "-pocket") + ".csv";
+                    try (java.io.FileOutputStream out = new java.io.FileOutputStream(new java.io.File(dir, name))) {
+                        out.write(text.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                    }
+                    java.io.File[] all = dir.listFiles();
+                    if (all != null && all.length > 10) {
+                        java.util.Arrays.sort(all, (x, y) -> x.getName().compareTo(y.getName()));
+                        for (int i = 0; i < all.length - 10; i++) all[i].delete();
+                    }
+                } catch (Exception ignored) {
+                }
+            }, "plyo-trace").start();
         }
     }
 }
