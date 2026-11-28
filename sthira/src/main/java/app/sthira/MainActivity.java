@@ -25,7 +25,7 @@ import java.time.YearMonth;
 /** The one activity: a stage that screens slide across, and the tab bar under it. */
 public final class MainActivity extends Activity {
 
-    static final int TODAY = 0, CAL = 1, TRAIN = 2, DIGEST = 3, REVIEW = 4, PLANS = 5, MEDITATE = 6, SHUTDOWN = 7, SLEEP = 8, DAY = 9;
+    static final int TODAY = 0, CAL = 1, TRAIN = 2, DIGEST = 3, REVIEW = 4, PLANS = 5, MEDITATE = 6, SHUTDOWN = 7, SLEEP = 8, DAY = 9, PLYO = 10;
     static final String EXTRA_OPEN = "open", EXTRA_ACTION = "action";
     static final String ACTION_SLEEP = "sleep", ACTION_MEDITATE = "meditate", ACTION_WIMHOF = "wimhof";
 
@@ -160,6 +160,8 @@ public final class MainActivity extends Activity {
             Steps.start(this);
         } else if (code == Sleep.REQ_MIC) {
             Sleep.afterPermissions(this);
+        } else if (code == Plyo.REQ_MIC) {
+            Plyo.afterPermission(this);
         }
         refresh();
         AgendaWidget.updateAll(this);
@@ -170,7 +172,7 @@ public final class MainActivity extends Activity {
     }
 
     private static int tabOf(int screen) {
-        return screen == PLANS ? TRAIN : screen;
+        return screen == PLANS || screen == PLYO ? TRAIN : screen;
     }
 
     private View build(int screen) {
@@ -193,6 +195,8 @@ public final class MainActivity extends Activity {
                 return SleepScreen.build(this);
             case DAY:
                 return DayScreen.build(this);
+            case PLYO:
+                return Plyo.buildTrack(this);
             default:
                 return TodayScreen.build(this);
         }
@@ -294,6 +298,8 @@ public final class MainActivity extends Activity {
         if (current == PLANS && editPlan != null) {
             editPlan = null;
             refresh();
+        } else if (current == PLYO) {
+            Plyo.leave(this);
         } else if (current == DAY) {
             open(editFrom);
         } else if (current == PLANS) {

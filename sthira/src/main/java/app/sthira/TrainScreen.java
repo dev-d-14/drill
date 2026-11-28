@@ -40,6 +40,7 @@ final class TrainScreen {
     }
 
     static View build(MainActivity a) {
+        if (Plyo.on(a)) return Plyo.buildList(a);
         JSONObject plan = Store.activePlan(a);
         JSONObject workout = Store.nextWorkout(a);
         boolean done = Store.sessionDone(a);
@@ -49,6 +50,7 @@ final class TrainScreen {
                 : workout.optString("name").toUpperCase(Locale.ROOT);
         View plans = Ui.ghost(a, "Plans", Ui.CREAM, false, v -> a.open(MainActivity.PLANS));
         LinearLayout body = Ui.col(a);
+        body.addView(Plyo.modes(a), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 0, 0, 12));
         body.addView(Steps.card(a), Ui.gap(Ui.lp(Ui.MATCH, Ui.WRAP), 0, 0, 0, 12));
 
         if (workout == null) {
