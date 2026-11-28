@@ -213,4 +213,25 @@ public class JumpDetectorTest {
         for (int i = 0; i < 40; i++, t += step) d.floorAccel(t, 3f, 2f, (float) (1.8 * JumpDetector.G));
         assertEquals(8, d.thudCount());
     }
+
+    /** Phone on the floor: touching it ends the counting. At most the reach just before the touch can slip in. */
+    @Test
+    public void floorTouchEndsCounting() {
+        JumpDetector d = new JumpDetector();
+        long t = 1_000_000_000L, frame = 2_000_000L;
+        for (int i = 0; i < 500; i++, t += frame) d.audio(t, 20);
+        for (int k = 0; k < 6; k++) {
+            for (int i = 0; i < 3; i++, t += frame) d.audio(t, 300);
+            for (int i = 0; i < 297; i++, t += frame) d.audio(t, 20);   // 600 ms per rep
+        }
+        for (int i = 0; i < 300; i++, t += frame) d.audio(t, 20);       // walks over to the phone
+        for (int i = 0; i < 3; i++, t += frame) d.audio(t, 300);        // hand reaches it, 0.3 s before the touch
+        for (int i = 0; i < 147; i++, t += frame) d.audio(t, 20);
+        d.touched(t);
+        for (int k = 0; k < 4; k++) {                                   // picking it up, fiddling
+            for (int i = 0; i < 150; i++, t += frame) d.audio(t, 20);
+            for (int i = 0; i < 3; i++, t += frame) d.audio(t, 400);
+        }
+        assertEquals(6, d.thudCount());
+    }
 }

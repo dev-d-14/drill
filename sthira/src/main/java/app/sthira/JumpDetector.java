@@ -69,7 +69,7 @@ final class JumpDetector {
     private boolean near;
 
     // microphone state
-    static final double MIC_FLOOR_K = 3.5, MIC_RISE_K = 3, MIC_MIN_RMS = 80, THUD_GAP_S = 0.12;
+    static final double MIC_FLOOR_K = 3.5, MIC_RISE_K = 3, MIC_MIN_RMS = 80, THUD_GAP_S = 0.2;
     static final double ENV_TAU_S = 0.03, FLOOR_TAU_S = 0.5, MAX_LOUD_S = 0.4, RISE_WINDOW_S = 0.03;
     private double floor = -1;
     private double env;            // peak-hold envelope, so a thud's ringing tail is one thud, not several
@@ -82,7 +82,9 @@ final class JumpDetector {
     private int recentN, recentAt;
 
     // floor accelerometer state
-    static final double JOLT_K = 6, JOLT_MIN_G = 0.01, JOLT_MAX_G = 0.6;
+    static final double JOLT_K = 6, JOLT_MIN_G = 0.01, JOLT_MAX_G = 0.6, JOLT_GAP_S = 0.25;   // the floor rings on
+    /** Once the phone on the floor is touched, the set is over: nothing after it counts, nor the reach just before. */
+    private long floorFrozenNs = -1;
     private double base = -1, noise = 0.003;
     private long lastFloorNs = -1, lastJoltNs = -1;
 
@@ -143,6 +145,9 @@ final class JumpDetector {
     /** The screen was touched. In a pocket the fabric touches it all the time, so that only counts when uncovered. */
     synchronized void touched(long tNs) {
         if (near) return;
+        if (floorFrozenNs < 0) floorFrozenNs = tNs - 500_000_000L;
+        dropAfter(thuds, floorFrozenNs);
+        dropAfter(jolts, floorFrozenNs);
         handled(tNs);
         // A tap on the phone is loud to its own microphone and shakes it: not a landing.
         micIgnoreUntilNs = Math.max(micIgnoreUntilNs, tNs + 300_000_000L);
@@ -184,7 +189,7 @@ final class JumpDetector {
         if (!loud && rms > threshold && rms > MIC_RISE_K * recentMean(tNs)) {
             loud = true;
             loudStartNs = tNs;
-            if (tNs >= micIgnoreUntilNs && (thuds.isEmpty() || (tNs - thuds.get(thuds.size() - 1)) / 1e9 >= THUD_GAP_S)) {
+            if (tNs >= micIgnoreUntilNs && (floorFrozenNs < 0 || tNs < floorFrozenNs) && (thuds.isEmpty() || (tNs - thuds.get(thuds.size() - 1)) / 1e9 >= THUD_GAP_S)) {
                 thuds.add(tNs);
             }
         } else if (loud && (env < threshold * 0.5 || (tNs - loudStartNs) / 1e9 > MAX_LOUD_S)) {
@@ -240,8 +245,8 @@ final class JumpDetector {
             dropAfter(thuds, tNs - 500_000_000L);
             micIgnoreUntilNs = Math.max(micIgnoreUntilNs, tNs + 1_000_000_000L);
             lastJoltNs = tNs + 1_000_000_000L;
-        } else if (dev > trigger && tNs >= micIgnoreUntilNs
-                && (lastJoltNs < 0 || (tNs - lastJoltNs) / 1e9 >= THUD_GAP_S)) {
+        } else if (dev > trigger && tNs >= micIgnoreUntilNs && (floorFrozenNs < 0 || tNs < floorFrozenNs)
+                && (lastJoltNs < 0 || (tNs - lastJoltNs) / 1e9 >= JOLT_GAP_S)) {
             jolts.add(tNs);
             lastJoltNs = tNs;
         }
@@ -252,13 +257,13 @@ final class JumpDetector {
         noise = Math.max(noise, 0.0005);
     }
 
-    /** The floor landings of this set: whichever of microphone and floor jolts caught more. */
+    /** The floor landings of this set: the microphone's, unless the floor jolts clearly caught more. */
     private List<Long> floorLandings() {
-        return jolts.size() > thuds.size() ? jolts : thuds;
+        return floorByMotion() ? jolts : thuds;
     }
 
     synchronized boolean floorByMotion() {
-        return jolts.size() > thuds.size();
+        return jolts.size() > thuds.size() + Math.max(1, thuds.size() / 5);
     }
 
     // ---- results ----
